@@ -31,7 +31,7 @@ const Hero = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-300">
             <Button 
               asChild
-              size="lg" 
+              size="sm" 
               variant="secondary"
               className="text-sm px-4 py-2 sm:text-lg sm:px-8 sm:py-6 shadow-[var(--shadow-button)] hover:shadow-[var(--shadow-hover)] transition-[var(--transition-smooth)] w-auto"
             >
