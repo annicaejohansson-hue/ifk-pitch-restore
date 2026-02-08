@@ -15,7 +15,7 @@ const Booking = () => {
           <Card className="p-8 md:p-12 shadow-[var(--shadow-card)] bg-card/80 backdrop-blur-sm border-border/50 text-center">
             <p className="text-lg md:text-xl">
               Bokningen är på <span className="font-semibold">tillfällig paus</span> med anledning av föräldraledighet.<br className="hidden md:block" />
-              Åter igen från och med <span className="font-semibold">augusti 2026</span>.
+              Välkommen att boka igen i <span className="font-semibold">augusti 2026</span>.
             </p>
             <p className="mt-4 text-base text-muted-foreground">
               Vill du komma i kontakt innan dess?

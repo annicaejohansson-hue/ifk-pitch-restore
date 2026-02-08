@@ -45,7 +45,7 @@ const Services = () => {
             return (
               <Card
                 key={index}
-                className="overflow-hidden hover:shadow-[var(--shadow-card)] transition-[var(--transition-smooth)] hover:-translate-y-2 border-border/50 bg-card/50 backdrop-blur-sm group"
+                className="overflow-hidden hover:shadow-[var(--shadow-card)] transition-[var(--transition-smooth)] border-border/50 bg-card/50 backdrop-blur-sm group"
               >
                 <div className="relative h-64 overflow-hidden">
                   <img
