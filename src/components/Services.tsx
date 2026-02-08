@@ -1,13 +1,13 @@
 import { Card } from "@/components/ui/card";
-import comebackImage from "@/assets/comeback-training.jpg";
 import preventionImage from "@/assets/prevention-training.jpg";
 const agilityImageUrl = "https://nwscdn.com/media/wysiwyg/forza/Agility-football-training-ladder.jpg?odnHeight=117&odnWidth=117&odnBg=FFFFFF";
+const leftImageUrl = "https://simplifaster.com/wp-content/uploads/2025/06/Female-Soccer-Striker.jpg";
 
 const services = [
   { 
     title: "Från skada tillbaka till spel", 
     description: "Från första undersökning till återgång på plan – evidensbaserad behandling och individuell rehab. Vi erbjuder även tillverkning av individuella hälkoppar som är effektiva vid smärta i hälen.",
-    image: comebackImage
+    image: leftImageUrl
   },
   { 
     title: "Skadeförebyggande träning", 
