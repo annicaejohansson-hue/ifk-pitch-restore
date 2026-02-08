@@ -20,7 +20,7 @@ const services = [
   { 
     icon: TrendingUp, 
     title: "Optimera din prestation", 
-    description: "Ta ditt spel till nästa nivå. Genom rörelsescreening, styrketester och prestandaanalys hittar vi dina utvecklingsområden.",
+    description: "Ta ditt idrottande till nästa nivå. Genom rörelsescreening, styrketester och prestandaanalys hittar vi dina utvecklingsområden.",
     image: teenTraining
   },
 ];
