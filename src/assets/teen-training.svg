@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-labelledby="title desc">
+  <title id="title">Tonåring tränar hårt</title>
+  <desc id="desc">Silhuett av en ung man i intensiv träning i inspirerande blå ton</desc>
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0A3D91"/>
+      <stop offset="1" stop-color="#1E66D0"/>
+    </linearGradient>
+    <linearGradient id="g2" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.08"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#g1)"/>
+
+  <!-- Subtle light sweep -->
+  <ellipse cx="900" cy="200" rx="600" ry="300" fill="url(#g2)"/>
+
+  <!-- Ground -->
+  <rect x="0" y="620" width="1200" height="180" fill="#05285F" opacity="0.6"/>
+  <rect x="0" y="650" width="1200" height="150" fill="#021C44" opacity="0.5"/>
+
+  <!-- Motion streaks -->
+  <g stroke="#ffffff" stroke-opacity="0.35" stroke-linecap="round">
+    <line x1="150" y1="300" x2="320" y2="300" stroke-width="6"/>
+    <line x1="120" y1="360" x2="300" y2="360" stroke-width="4"/>
+    <line x1="100" y1="420" x2="260" y2="420" stroke-width="3"/>
+  </g>
+
+  <!-- Athlete silhouette (stylized runner/lunge) -->
+  <g fill="#ffffff" fill-opacity="0.95">
+    <!-- Head -->
+    <circle cx="600" cy="250" r="26"/>
+
+    <!-- Torso -->
+    <path d="M585 280 C600 290, 610 315, 605 350 L590 395 L560 380 L575 340 C578 325, 575 300, 585 280 Z"/>
+
+    <!-- Right arm driving forward -->
+    <path d="M605 320 L650 305 L660 320 L620 340 Z"/>
+
+    <!-- Left arm trailing -->
+    <path d="M585 320 L555 305 L545 320 L575 335 Z"/>
+
+    <!-- Right thigh forward (lunge) -->
+    <path d="M585 395 L640 420 L650 455 L600 440 Z"/>
+
+    <!-- Right shin/foot planted -->
+    <path d="M640 420 L690 440 L695 455 L650 455 Z"/>
+
+    <!-- Left thigh back -->
+    <path d="M575 395 L540 420 L530 450 L560 430 Z"/>
+
+    <!-- Left shin/foot lifted -->
+    <path d="M530 450 L520 475 L540 480 L550 455 Z"/>
+  </g>
+
+  <!-- Highlight accents -->
+  <g fill="#9CC4FF" opacity="0.25">
+    <circle cx="600" cy="250" r="40"/>
+    <ellipse cx="660" cy="455" rx="60" ry="14"/>
+  </g>
+</svg>
+
