@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 
 const Booking = () => {
   return (
-    <section id="bokning" className="py-20 bg-gradient-to-br from-primary/5 via-secondary/5 to-primary/5">
+    <section id="bokning" className="py-20 bg-gradient-to-br from-primary/5 via-secondary/5 to-primary/5 border-t-4 border-primary">
       <div className="container px-4">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
@@ -14,7 +14,7 @@ const Booking = () => {
 
           <Card className="p-8 md:p-12 shadow-[var(--shadow-card)] bg-card/80 backdrop-blur-sm border-border/50 text-center">
             <p className="text-lg md:text-xl">
-              Välkommen att boka igen i <span className="font-semibold">augusti 2026</span>.<br className="hidden md:block" />
+              Välkommen att boka igen i <span className="font-semibold">augusti 2026</span>.{" "}<br className="hidden md:block" />
               Bokningen är på <span className="font-semibold">tillfällig paus</span> med anledning av föräldraledighet.
             </p>
             <p className="mt-4 text-base text-muted-foreground">

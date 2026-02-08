@@ -33,10 +33,10 @@ const Hero = () => {
               asChild
               size="lg" 
               variant="secondary"
-              className="text-base px-6 py-5 sm:text-lg sm:px-8 sm:py-6 shadow-[var(--shadow-button)] hover:shadow-[var(--shadow-hover)] transition-[var(--transition-smooth)]"
+              className="text-sm px-4 py-3 sm:text-lg sm:px-8 sm:py-6 shadow-[var(--shadow-button)] hover:shadow-[var(--shadow-hover)] transition-[var(--transition-smooth)] w-auto"
             >
               <a href="#bokning" aria-label="Gå till bokningssektionen">
-                <Calendar className="mr-2 h-5 w-5" />
+                <Calendar className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
                 Boka tid
               </a>
             </Button>
