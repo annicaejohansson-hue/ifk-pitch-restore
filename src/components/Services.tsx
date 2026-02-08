@@ -31,7 +31,7 @@ const Services = () => {
       <div className="container px-4">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold mb-6 whitespace-nowrap tracking-tight">
-            Snabb återgång och starkare prestation
+            Trygg återgång och starkare prestation
           </h2>
           <p className="text-lg text-muted-foreground">
             Caselo Idrottsmedicin erbjuder professionell idrottsfysioterapi för satsande idrottare.<br />
