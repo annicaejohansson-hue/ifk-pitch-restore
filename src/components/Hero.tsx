@@ -24,7 +24,8 @@ const Hero = () => {
             Tillbaka till spelet – starkare än någonsin
           </h1>
           <p className="text-xl md:text-2xl text-primary-foreground/90 mb-10 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-150">
-            Idrottsfysioterapi i Stockholm och Mariefred
+            Idrottsfysioterapi i
+            <br className="sm:hidden" /> Stockholm och Mariefred
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-300">
@@ -32,7 +33,7 @@ const Hero = () => {
               asChild
               size="lg" 
               variant="secondary"
-              className="text-lg px-8 py-6 shadow-[var(--shadow-button)] hover:shadow-[var(--shadow-hover)] transition-[var(--transition-smooth)]"
+              className="text-base px-6 py-5 sm:text-lg sm:px-8 sm:py-6 shadow-[var(--shadow-button)] hover:shadow-[var(--shadow-hover)] transition-[var(--transition-smooth)]"
             >
               <a href="#bokning" aria-label="Gå till bokningssektionen">
                 <Calendar className="mr-2 h-5 w-5" />

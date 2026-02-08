@@ -13,9 +13,6 @@ const SiteHeader = () => {
         </Link>
 
         <nav className="flex items-center gap-2">
-          <Link to="/" className={`px-3 py-2 rounded-md text-sm font-medium hover:text-primary ${isActive("/") ? "text-primary" : "text-foreground"}`}>
-            Hem
-          </Link>
           <Button asChild size="sm" className="ml-2" aria-label="Gå till bokningssektionen">
             <a href="/#bokning">
               Boka tid
