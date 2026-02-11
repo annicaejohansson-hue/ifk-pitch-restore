@@ -5,7 +5,7 @@ const Therapists = () => {
   return (
     <section className="py-16 md:py-20 bg-gradient-to-b from-background to-muted/30 border-t-4 border-primary">
       <div className="container px-4">
-        <h2 className="text-4xl md:text-5xl font-bold mb-8 text-center">Våra fysioterapeuter</h2>
+        <h2 className="text-4xl md:text-5xl font-bold mb-8 text-center">Kompetens och erfarenhet</h2>
         <Card className="max-w-5xl mx-auto p-6 md:p-10 bg-card/80 backdrop-blur-sm border-border/50">
           <div className="grid sm:grid-cols-2 gap-6 md:gap-10 items-start">
             <div className="rounded-xl overflow-hidden shadow-[var(--shadow-card)]">
