@@ -21,7 +21,7 @@ const Therapists = () => {
               <h3 className="text-xl md:text-2xl font-semibold mb-3">Henrik Nilsson</h3>
               <p className="text-base md:text-lg text-muted-foreground leading-relaxed">
                 Henrik Nilsson har tio års erfarenhet som fysioterapeut med specialisering inom idrottsskador. Han är
-                fotbollstränare med UEFA A-utbildning samt före detta elitfotbollsspelare.
+                fotbollstränare med UEFA A-utbildning samt före detta fotbollsspelare på hög nivå.
               </p>
               <div className="mt-5 p-4 md:p-5 rounded-lg border border-border/60 bg-muted/30">
                 <p className="italic text-sm md:text-base text-foreground">
