@@ -21,20 +21,18 @@ const Therapists = () => {
               <h3 className="text-xl md:text-2xl font-semibold mb-3">Henrik Nilsson</h3>
               <p className="text-base md:text-lg text-muted-foreground leading-relaxed">
                 Henrik Nilsson har tio års erfarenhet som fysioterapeut med specialisering inom idrottsskador. Han är
-                fotbollstränare med UEFA A-utbildning samt före detta fotbollsspelare på hög nivå.
+                fotbollstränare med UEFA A-utbildning samt före detta fotbollsspelare på elitnivå.
+              </p>
+              <p className="mt-6 text-base md:text-lg text-muted-foreground leading-relaxed">
+                Henrik har de senaste fem åren arbetat på OrtoMed i Stockholm med särskilt fokus på fotskador. Tidigare
+                har han varit fysioterapeut vid Motions- och idrottsskadeenheten i Norrköping, en specialistklinik för
+                idrottare. Dessförinnan arbetade han i öppenvården på Rehab Öst.
               </p>
               <div className="mt-5 p-4 md:p-5 rounded-lg border border-border/60 bg-muted/30">
                 <p className="italic text-sm md:text-base text-foreground">
                   “Jag hade en vristvrickning och ville få hjälp tillbaka till träningen. Jag träffade Henrik som var extremt professionell, tålmodig och tog sig tid att förklara allt. Riktigt bra erfarenhet - han undersökte min fot noggrant, var engagerad och intresserad. Jag skulle definitivt återvända.”
                 </p>
               </div>
-              <p className="mt-6 text-base md:text-lg text-muted-foreground leading-relaxed">
-                Henrik har de senaste fem åren arbetat på OrtoMed i Stockholm med särskilt fokus på fotskador och har
-                därigenom haft samarbeten med fotbollsklubbar i bl.a. Stockholm, Linköping och Göteborg. Tidigare har
-                han varit fysioterapeut vid Motions- och idrottsskadeenheten i Norrköping, en specialistklinik för
-                idrottare, där han var delaktig i diagnostiseringen och rehaben av bl.a. akuta korsbandsskador. Dessförinnan
-                arbetade han i öppenvården på Rehab Öst.
-              </p>
             </div>
           </div>
         </Card>
