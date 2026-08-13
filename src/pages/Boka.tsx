@@ -369,7 +369,7 @@ const Boka = () => {
 
       <section className="bg-gradient-to-b from-primary/10 to-background pt-5 pb-3 md:pt-6 md:pb-3">
         <div className="container mx-auto max-w-7xl px-4">
-          <h1 className="mb-2 text-xl font-bold tracking-tight text-primary md:mb-3 md:text-2xl">
+          <h1 className="mb-2 text-3xl font-bold tracking-tight text-foreground sm:text-4xl md:mb-3 md:text-5xl">
             Boka tid
           </h1>
           <p className="mb-3 text-base text-muted-foreground md:mb-4 md:text-lg">
