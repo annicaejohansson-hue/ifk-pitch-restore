@@ -116,12 +116,12 @@ const BOOKING_CATEGORIES: BookingCategory[] = [
   {
     id: "prestationsutveckling",
     name: "Test och träning för ökad fysisk prestation",
-    // `name` must match Kaddio booking type names exactly (slugify → /iframe/booking/cal/:slug).
-    // `label` is what we show in the UI and may differ (e.g. "Din prestationsprofil").
+    // `name` must match live Kaddio booking type names exactly (slugify → /iframe/booking/cal/:slug).
+    // Verified via publicBookingTypes on caseloidrottsmedicin.kaddio.com (regular calendar, not IFK).
     services: [
       {
         id: "prestationsprofil",
-        name: "Prestationsprofil",
+        name: "Steg 1: Test och analys av fysisk kapacitet",
         label: "Steg 1: Test och analys av fysisk kapacitet",
         durationMin: 90,
         priceSek: 1795,
@@ -130,7 +130,7 @@ const BOOKING_CATEGORIES: BookingCategory[] = [
       },
       {
         id: "resultatgenomgang",
-        name: "Träningsupplägg utifrån din prestationsprofil",
+        name: "Steg 2: Personligt träningsupplägg",
         label: "Steg 2: Personligt träningsupplägg",
         durationMin: 45,
         priceSek: 1195,
@@ -139,7 +139,7 @@ const BOOKING_CATEGORIES: BookingCategory[] = [
       },
       {
         id: "prestationsuppfoljning",
-        name: "Prestationsuppföljning",
+        name: "Steg 3: Uppföljning för att mäta din utveckling",
         label: "Steg 3: Uppföljning för att mäta din utveckling",
         durationMin: 75,
         priceSek: 1495,
@@ -148,7 +148,7 @@ const BOOKING_CATEGORIES: BookingCategory[] = [
       },
     ],
     packageNote:
-      "Köp steg 1-3 för paketpriset 3 995 kr (ord. 4 485 kr). Du bokar besöken var för sig – rabatten dras vid betalning.",
+      "Köp steg 1-3 för paketpriset 3 995 kr (ord. 4 485 kr). Du bokar besöken var för sig, rabatten dras vid betalning.",
   },
 ];
 
