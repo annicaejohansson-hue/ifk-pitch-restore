@@ -19,13 +19,13 @@ const Hero = () => {
       </div>
 
       {/* Content */}
-      <div className="container relative z-10 px-4 py-20">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-5xl md:text-7xl font-bold text-primary-foreground mb-6 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+      <div className="container relative z-10 max-w-full px-4 py-14 sm:py-20">
+        <div className="mx-auto max-w-4xl text-center">
+          <h1 className="mb-5 max-w-full text-balance text-2xl font-bold leading-tight text-primary-foreground animate-in fade-in slide-in-from-bottom-4 duration-1000 sm:mb-6 sm:text-5xl sm:leading-tight md:text-7xl">
             Tillbaka till tävling
             <br />- mer redo än någonsin
           </h1>
-          <p className="text-xl md:text-2xl text-primary-foreground/90 mb-10 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-150">
+          <p className="mb-8 max-w-full text-base leading-snug text-primary-foreground/90 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-150 sm:mb-10 sm:text-xl md:text-2xl">
             Idrottsfysioterapi i
             <br className="sm:hidden" /> Stockholm och Mariefred
           </p>
@@ -35,7 +35,7 @@ const Hero = () => {
               asChild
               size="sm" 
               variant="secondary"
-              className="text-sm px-4 py-2 sm:text-lg sm:px-8 sm:py-6 shadow-[var(--shadow-button)] hover:shadow-[var(--shadow-hover)] transition-[var(--transition-smooth)] w-auto"
+              className="min-h-11 w-full max-w-xs px-4 py-2.5 text-sm shadow-[var(--shadow-button)] transition-[var(--transition-smooth)] hover:shadow-[var(--shadow-hover)] sm:w-auto sm:px-8 sm:py-6 sm:text-lg"
             >
               <BookingLink aria-label="Gå till bokningssidan">
                 <Calendar className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />

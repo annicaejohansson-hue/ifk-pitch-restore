@@ -8,6 +8,10 @@ import NotFound from "./pages/NotFound";
 import SiteHeader from "@/components/SiteHeader";
 import Boka from "@/pages/Boka";
 import IfkStocksund from "@/pages/IfkStocksund";
+import Kontakt from "@/pages/Kontakt";
+import Om from "@/pages/Om";
+import Tjanster from "@/pages/Tjanster";
+import TjansterDetail from "@/pages/TjansterDetail";
 import { VisitorProvider } from "@/context/VisitorContext";
 
 const queryClient = new QueryClient();
@@ -24,6 +28,10 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/ifk-stocksund" element={<IfkStocksund />} />
             <Route path="/boka" element={<Boka />} />
+            <Route path="/tjanster" element={<Tjanster />} />
+            <Route path="/tjanster/:slug" element={<TjansterDetail />} />
+            <Route path="/om" element={<Om />} />
+            <Route path="/kontakt" element={<Kontakt />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

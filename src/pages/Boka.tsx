@@ -258,7 +258,7 @@ const ServiceOption = ({
         type="button"
         onClick={onSelect}
         aria-pressed={isSelected}
-        className="flex w-full flex-1 flex-col gap-0.5 rounded-md text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+      className="flex w-full flex-1 flex-col gap-0.5 rounded-md py-0.5 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
       >
         <span
           className={[
@@ -276,7 +276,7 @@ const ServiceOption = ({
       {hasDescription ? (
         <Collapsible open={infoOpen} onOpenChange={setInfoOpen} className="mt-2 border-t border-border/60 pt-1.5">
           <CollapsibleTrigger
-            className="inline-flex items-center gap-1 py-0.5 text-xs text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm sm:text-sm"
+            className="inline-flex min-h-9 items-center gap-1 py-1.5 text-xs text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm sm:min-h-0 sm:py-0.5 sm:text-sm"
             aria-label={infoOpen ? "Dölj information" : "Visa mer information"}
           >
             {infoOpen ? "Dölj info" : "Mer info"}
@@ -369,9 +369,12 @@ const Boka = () => {
 
       <section className="bg-gradient-to-b from-primary/10 to-background pt-5 pb-3 md:pt-6 md:pb-3">
         <div className="container mx-auto max-w-7xl px-4">
-          <h1 className="mb-3 text-xl font-bold tracking-tight text-primary md:mb-4 md:text-2xl">
+          <h1 className="mb-2 text-xl font-bold tracking-tight text-primary md:mb-3 md:text-2xl">
             Boka tid
           </h1>
+          <p className="mb-3 text-base text-muted-foreground md:mb-4 md:text-lg">
+            Välkommen!
+          </p>
           <StepLabel step={1}>
             Börja med att välja vilken typ av besök du vill boka. Därefter visas
             tillgängliga tider längre ned på sidan.
@@ -394,7 +397,7 @@ const Boka = () => {
                   >
                     <h2
                       id={`category-${category.id}`}
-                      className={`w-full shrink-0 whitespace-nowrap px-2.5 py-2 text-[13px] font-semibold leading-none tracking-tight sm:px-3 sm:text-sm lg:text-[13px] xl:text-[15px] ${tone.heading}`}
+                      className={`w-full shrink-0 px-2.5 py-2.5 text-[13px] font-semibold leading-snug tracking-tight text-balance break-words sm:px-3 sm:text-sm lg:text-[13px] xl:text-[15px] ${tone.heading}`}
                     >
                       {category.name}
                     </h2>
@@ -416,7 +419,7 @@ const Boka = () => {
                               <h3 className="px-0.5 text-xs font-semibold uppercase tracking-wide text-foreground/70">
                                 {subgroup.name}
                               </h3>
-                              <div className="grid grid-cols-2 gap-2 sm:gap-2.5">
+                              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 sm:gap-2.5">
                                 {subgroup.services.map((service) => (
                                   <ServiceOption
                                     key={service.id}
