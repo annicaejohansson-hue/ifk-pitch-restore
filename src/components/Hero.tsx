@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Calendar } from "lucide-react";
+import { Calendar } from "lucide-react";
 import heroImage from "@/assets/hero-football.jpg";
+import BookingLink from "@/components/BookingLink";
 
 const Hero = () => {
   return (
@@ -36,10 +37,10 @@ const Hero = () => {
               variant="secondary"
               className="text-sm px-4 py-2 sm:text-lg sm:px-8 sm:py-6 shadow-[var(--shadow-button)] hover:shadow-[var(--shadow-hover)] transition-[var(--transition-smooth)] w-auto"
             >
-              <a href="#bokning" aria-label="Gå till bokningssektionen">
+              <BookingLink aria-label="Gå till bokningssidan">
                 <Calendar className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
                 Boka tid
-              </a>
+              </BookingLink>
             </Button>
           </div>
         </div>

@@ -21,7 +21,7 @@ const Contact = () => {
             <div className="space-y-6">
               <div className="flex items-start gap-4">
                 <a
-                  href="mailto:henkenilsson@live.se"
+                  href="mailto:henrik@caseloidrottsmedicin.se"
                   aria-label="Skicka e-post"
                   className="p-3 rounded-lg bg-primary/10 text-primary shrink-0 hover:bg-primary/20 focus:outline-none focus:ring-2 focus:ring-primary"
                 >

@@ -7,6 +7,8 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import SiteHeader from "@/components/SiteHeader";
 import Boka from "@/pages/Boka";
+import IfkStocksund from "@/pages/IfkStocksund";
+import { VisitorProvider } from "@/context/VisitorContext";
 
 const queryClient = new QueryClient();
 
@@ -16,13 +18,16 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <SiteHeader />
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/boka" element={<Boka />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <VisitorProvider>
+          <SiteHeader />
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/ifk-stocksund" element={<IfkStocksund />} />
+            <Route path="/boka" element={<Boka />} />
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </VisitorProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
