@@ -17,6 +17,8 @@ type BookingService = {
   ordinaryPriceSek?: number;
   description?: string;
   variant?: "package";
+  /** Shown above the calendar when this service is selected */
+  bookingNotice?: string;
 };
 
 type BookingSubgroup = {
@@ -43,6 +45,7 @@ const STEG2_DESCRIPTION =
 const STEG3_DESCRIPTION =
   "Efter träningsperioden upprepar vi relevanta tester och jämför med dina tidigare resultat. Du ser vad som har utvecklats och får nya rekommendationer inför nästa träningsperiod.";
 const STEG1_KADDIO_NAME = "Steg 1: Test och analys av fysisk kapacitet";
+const STEG_FOLLOWUP_NOTICE = "OBS: Detta steg bokas efter att Steg 1 genomförts.";
 
 const BOOKING_CATEGORIES: BookingCategory[] = [
   {
@@ -131,8 +134,8 @@ const BOOKING_CATEGORIES: BookingCategory[] = [
         label: "Steg 2: Personligt träningsupplägg",
         durationMin: 45,
         priceSek: 1195,
-        description:
-          `${STEG2_DESCRIPTION}\n\nOBS: Detta steg bokas efter att Steg 1 genomförts.`,
+        description: `${STEG2_DESCRIPTION}\n\n${STEG_FOLLOWUP_NOTICE}`,
+        bookingNotice: STEG_FOLLOWUP_NOTICE,
       },
       {
         id: "prestationsuppfoljning",
@@ -140,8 +143,8 @@ const BOOKING_CATEGORIES: BookingCategory[] = [
         label: "Steg 3: Uppföljning för att mäta din utveckling",
         durationMin: 75,
         priceSek: 1495,
-        description:
-          `${STEG3_DESCRIPTION}\n\nOBS: Detta steg bokas efter att Steg 1 genomförts.`,
+        description: `${STEG3_DESCRIPTION}\n\n${STEG_FOLLOWUP_NOTICE}`,
+        bookingNotice: STEG_FOLLOWUP_NOTICE,
       },
     ],
     packages: [
@@ -488,6 +491,11 @@ const Boka = () => {
                       Byt tjänst
                     </button>
                   </div>
+                  {selected?.service.bookingNotice ? (
+                    <p className="rounded-md border border-primary/25 bg-primary/5 px-3 py-2.5 text-sm font-semibold leading-snug text-foreground sm:ml-9 md:text-base">
+                      {selected.service.bookingNotice}
+                    </p>
+                  ) : null}
                 </div>
 
                 <div className="w-full max-w-full overflow-x-hidden">
