@@ -12,9 +12,11 @@ type BookingService = {
   name: string;
   /** Short display title shown in the list */
   label: string;
-  durationMin: number;
+  durationMin?: number;
   priceSek: number;
+  ordinaryPriceSek?: number;
   description?: string;
+  variant?: "package";
 };
 
 type BookingSubgroup = {
@@ -30,9 +32,17 @@ type BookingCategory = {
   services?: BookingService[];
   /** Grouped services (e.g. Vuxen / Barn under Hälkoppsinlägg) */
   subgroups?: BookingSubgroup[];
-  /** Non-bookable note shown above the services (e.g. package price) */
-  packageNote?: string;
+  /** Package offers shown below the regular services */
+  packages?: BookingService[];
 };
+
+const STEG1_DESCRIPTION =
+  "Vi kartlägger din acceleration, snabbhet, hoppförmåga och/eller styrka utifrån dina målsättningar. Efter besöket analyseras resultaten och du får en personlig prestationsprofil med dina styrkor och viktigaste utvecklingsområden.";
+const STEG2_DESCRIPTION =
+  "Vi går igenom din prestationsprofil och omsätter resultaten till konkreta träningsprioriteringar. Du får ett individuellt träningsupplägg och praktisk vägledning i de viktigaste övningarna för din fortsatta träning.";
+const STEG3_DESCRIPTION =
+  "Efter träningsperioden upprepar vi relevanta tester och jämför med dina tidigare resultat. Du ser vad som har utvecklats och får nya rekommendationer inför nästa träningsperiod.";
+const STEG1_KADDIO_NAME = "Steg 1: Test och analys av fysisk kapacitet";
 
 const BOOKING_CATEGORIES: BookingCategory[] = [
   {
@@ -62,54 +72,42 @@ const BOOKING_CATEGORIES: BookingCategory[] = [
   {
     id: "halkoppsinlagg",
     name: "Tillverkning av skräddarsydda hälkoppsinlägg",
-    subgroups: [
+    services: [
       {
-        id: "halkopp-vuxen",
-        name: "Vuxen",
-        services: [
-          {
-            id: "halkopp-vuxen-nybesok",
-            name: "Hälkoppsinlägg Vuxen - NYBESÖK",
-            label: "Nybesök",
-            durationMin: 40,
-            priceSek: 1495,
-            description:
-              "För dig som ska göra hälkoppsinlägg för första gången. Besöket omfattar undersökning och tillverkning av personligt utformade hälkoppsinlägg. Inlägget formas efter din häl för att ge stöd, minska belastningen på hälen, dämpa smärta och göra det lättare att gå, springa och vara aktiv.",
-          },
-          {
-            id: "halkopp-vuxen-aterbesok",
-            name: "Hälkoppsinlägg Vuxen - ÅTERBESÖK",
-            label: "Återbesök",
-            durationMin: 30,
-            priceSek: 1295,
-            description:
-              "Tillverkning av fler personligt utformade hälkoppsinlägg. Bokas av dig som tidigare genomfört ett nybesök.",
-          },
-        ],
+        id: "halkopp-vuxen-nybesok",
+        name: "Hälkoppsinlägg Vuxen - NYBESÖK",
+        label: "Nybesök - VUXEN",
+        durationMin: 40,
+        priceSek: 1495,
+        description:
+          "För dig som ska göra hälkoppsinlägg för första gången. Besöket omfattar undersökning och tillverkning av personligt utformade hälkoppsinlägg. Inlägget formas efter din häl för att ge stöd, minska belastningen på hälen, dämpa smärta och göra det lättare att gå, springa och vara aktiv.",
       },
       {
-        id: "halkopp-barn",
-        name: "Barn",
-        services: [
-          {
-            id: "halkopp-barn-nybesok",
-            name: "Hälkoppsinlägg Barn - NYBESÖK",
-            label: "Nybesök",
-            durationMin: 40,
-            priceSek: 1295,
-            description:
-              "För dig som ska göra hälkoppsinlägg för första gången. Besöket omfattar undersökning och tillverkning av personligt utformade hälkoppsinlägg. Inlägget formas efter din häl för att ge stöd, minska belastningen på hälen, dämpa smärta och göra det lättare att gå, springa och vara aktiv.",
-          },
-          {
-            id: "halkopp-barn-aterbesok",
-            name: "Hälkoppsinlägg Barn - ÅTERBESÖK",
-            label: "Återbesök",
-            durationMin: 30,
-            priceSek: 1095,
-            description:
-              "Tillverkning av fler personligt utformade hälkoppsinlägg. Bokas av dig som tidigare genomfört ett nybesök.",
-          },
-        ],
+        id: "halkopp-vuxen-aterbesok",
+        name: "Hälkoppsinlägg Vuxen - ÅTERBESÖK",
+        label: "Återbesök - VUXEN",
+        durationMin: 30,
+        priceSek: 1295,
+        description:
+          "Tillverkning av fler personligt utformade hälkoppsinlägg. Bokas av dig som tidigare genomfört ett nybesök.",
+      },
+      {
+        id: "halkopp-barn-nybesok",
+        name: "Hälkoppsinlägg Barn - NYBESÖK",
+        label: "Nybesök - BARN",
+        durationMin: 40,
+        priceSek: 1295,
+        description:
+          "För dig som ska göra hälkoppsinlägg för första gången. Besöket omfattar undersökning och tillverkning av personligt utformade hälkoppsinlägg. Inlägget formas efter din häl för att ge stöd, minska belastningen på hälen, dämpa smärta och göra det lättare att gå, springa och vara aktiv.",
+      },
+      {
+        id: "halkopp-barn-aterbesok",
+        name: "Hälkoppsinlägg Barn - ÅTERBESÖK",
+        label: "Återbesök - BARN",
+        durationMin: 30,
+        priceSek: 1095,
+        description:
+          "Tillverkning av fler personligt utformade hälkoppsinlägg. Bokas av dig som tidigare genomfört ett nybesök.",
       },
     ],
   },
@@ -121,12 +119,11 @@ const BOOKING_CATEGORIES: BookingCategory[] = [
     services: [
       {
         id: "prestationsprofil",
-        name: "Steg 1: Test och analys av fysisk kapacitet",
+        name: STEG1_KADDIO_NAME,
         label: "Steg 1: Test och analys av fysisk kapacitet",
         durationMin: 90,
         priceSek: 1795,
-        description:
-          "Vi kartlägger din acceleration, snabbhet, hoppförmåga och/eller styrka utifrån dina målsättningar. Efter besöket analyseras resultaten och du får en personlig prestationsprofil med dina styrkor och viktigaste utvecklingsområden.",
+        description: STEG1_DESCRIPTION,
       },
       {
         id: "resultatgenomgang",
@@ -135,7 +132,7 @@ const BOOKING_CATEGORIES: BookingCategory[] = [
         durationMin: 45,
         priceSek: 1195,
         description:
-          "Vi går igenom din prestationsprofil och omsätter resultaten till konkreta träningsprioriteringar. Du får ett individuellt träningsupplägg och praktisk vägledning i de viktigaste övningarna för din fortsatta träning.",
+          `${STEG2_DESCRIPTION}\n\nOBS: Detta steg bokas efter att Steg 1 genomförts.`,
       },
       {
         id: "prestationsuppfoljning",
@@ -144,30 +141,57 @@ const BOOKING_CATEGORIES: BookingCategory[] = [
         durationMin: 75,
         priceSek: 1495,
         description:
-          "Efter träningsperioden upprepar vi relevanta tester och jämför med dina tidigare resultat. Du ser vad som har utvecklats och får nya rekommendationer inför nästa träningsperiod.",
+          `${STEG3_DESCRIPTION}\n\nOBS: Detta steg bokas efter att Steg 1 genomförts.`,
       },
     ],
-    packageNote:
-      "Köp steg 1-3 för paketpriset 3 995 kr (ord. 4 485 kr). Du bokar besöken var för sig, rabatten dras vid betalning.",
+    packages: [
+      {
+        id: "paket-steg-1-3",
+        name: STEG1_KADDIO_NAME,
+        label: "Paket: Steg 1-3",
+        priceSek: 3995,
+        ordinaryPriceSek: 4485,
+        variant: "package",
+        description:
+          `Steg 1 – Test och analys av fysisk kapacitet\n${STEG1_DESCRIPTION}\n\nSteg 2 – Personligt träningsupplägg\n${STEG2_DESCRIPTION}\n\nSteg 3 – Uppföljning för att mäta din utveckling\n${STEG3_DESCRIPTION}\n\nDu bokar endast tid för Steg 1. Tidsbokning för Steg 2 och 3 görs efter att Steg 1 genomförts.`,
+      },
+      {
+        id: "paket-steg-1-3-utan-2",
+        name: STEG1_KADDIO_NAME,
+        label: "Paket: Steg 1 och 3",
+        priceSek: 2995,
+        ordinaryPriceSek: 3290,
+        variant: "package",
+        description:
+          `Steg 1 – Test och analys av fysisk kapacitet\n${STEG1_DESCRIPTION}\n\nSteg 3 – Uppföljning för att mäta din utveckling\n${STEG3_DESCRIPTION}\n\nDu bokar endast tid för Steg 1. Tidsbokning för Steg 3 görs efter att Steg 1 genomförts.`,
+      },
+    ],
   },
 ];
 
 const allBookingEntries = () =>
   BOOKING_CATEGORIES.flatMap((category) => {
-    if (category.subgroups) {
-      return category.subgroups.flatMap((subgroup) =>
-        subgroup.services.map((service) => ({
+    const grouped = category.subgroups
+      ? category.subgroups.flatMap((subgroup) =>
+          subgroup.services.map((service) => ({
+            categoryName: category.name,
+            subgroupName: subgroup.name,
+            service,
+          })),
+        )
+      : (category.services ?? []).map((service) => ({
           categoryName: category.name,
-          subgroupName: subgroup.name,
+          subgroupName: undefined as string | undefined,
           service,
-        })),
-      );
-    }
-    return (category.services ?? []).map((service) => ({
+        }));
+
+    const packages = (category.packages ?? []).map((service) => ({
       categoryName: category.name,
       subgroupName: undefined as string | undefined,
       service,
     }));
+
+    return [...grouped, ...packages];
   });
 
 const StepLabel = ({
@@ -248,33 +272,48 @@ const ServiceOption = ({
   return (
     <div
       className={[
-        "flex h-full flex-col rounded-lg border border-border/80 bg-white p-2.5 transition-colors sm:p-3",
-        isSelected
-          ? "border-primary/40 bg-primary/[0.04]"
-          : "hover:border-primary/25 hover:bg-white",
+        "flex h-full min-h-[6.25rem] flex-col rounded-lg border p-2.5 transition-colors sm:min-h-[6.5rem] sm:p-3",
+        service.variant === "package"
+          ? isSelected
+            ? "border-primary/50 bg-[hsl(210_42%_88%)]"
+            : "border-[hsl(210_42%_70%)] bg-[hsl(210_42%_90%)] hover:border-primary/40 hover:bg-[hsl(210_42%_88%)]"
+          : isSelected
+            ? "border-primary/40 bg-primary/[0.04]"
+            : "border-border/80 bg-white hover:border-primary/25 hover:bg-white",
       ].join(" ")}
     >
       <button
         type="button"
         onClick={onSelect}
         aria-pressed={isSelected}
-      className="flex w-full flex-1 flex-col gap-0.5 rounded-md py-0.5 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+      className="flex w-full flex-col gap-0.5 rounded-md py-0.5 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
       >
         <span
           className={[
-            "text-[13px] font-semibold tracking-tight sm:text-sm",
+            "line-clamp-2 min-h-[2.5rem] text-[13px] font-semibold leading-snug tracking-tight sm:text-sm",
             isSelected ? "text-primary" : "text-foreground",
           ].join(" ")}
         >
           {service.label}
         </span>
         <span className="text-xs text-muted-foreground tabular-nums">
-          {service.durationMin} min · {formatPrice(service.priceSek)} kr
+          {service.durationMin ? `${service.durationMin} min · ` : null}
+          {formatPrice(service.priceSek)} kr
+          {service.ordinaryPriceSek
+            ? ` (ord. ${formatPrice(service.ordinaryPriceSek)} kr)`
+            : null}
         </span>
       </button>
 
       {hasDescription ? (
-        <Collapsible open={infoOpen} onOpenChange={setInfoOpen} className="mt-2 border-t border-border/60 pt-1.5">
+        <Collapsible
+          open={infoOpen}
+          onOpenChange={setInfoOpen}
+          className={[
+            "mt-2 border-t pt-1.5",
+            service.variant === "package" ? "border-[hsl(210_35%_68%)]" : "border-border/60",
+          ].join(" ")}
+        >
           <CollapsibleTrigger
             className="inline-flex min-h-9 items-center gap-1 py-1.5 text-xs text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm sm:min-h-0 sm:py-0.5 sm:text-sm"
             aria-label={infoOpen ? "Dölj information" : "Visa mer information"}
@@ -289,7 +328,7 @@ const ServiceOption = ({
             />
           </CollapsibleTrigger>
           <CollapsibleContent className="pt-1.5">
-            <p className="text-xs leading-relaxed text-muted-foreground break-words sm:text-sm">
+            <p className="whitespace-pre-line text-xs leading-relaxed text-muted-foreground break-words sm:text-sm">
               {service.description}
             </p>
           </CollapsibleContent>
@@ -303,12 +342,20 @@ const ServiceList = ({
   services,
   selectedServiceId,
   onSelect,
+  columns = 1,
 }: {
   services: BookingService[];
   selectedServiceId: string | undefined;
   onSelect: (serviceId: string) => void;
+  columns?: 1 | 2;
 }) => (
-  <div className="flex flex-col gap-2">
+  <div
+    className={
+      columns === 2
+        ? "grid grid-cols-1 items-stretch gap-2 sm:grid-cols-2 sm:gap-2.5"
+        : "grid grid-cols-1 items-stretch gap-2"
+    }
+  >
     {services.map((service) => (
       <ServiceOption
         key={service.id}
@@ -397,50 +444,23 @@ const Boka = () => {
                   >
                     <h2
                       id={`category-${category.id}`}
-                      className={`w-full shrink-0 px-2.5 py-2.5 text-[13px] font-semibold leading-snug tracking-tight text-balance break-words sm:px-3 sm:text-sm lg:text-[13px] xl:text-[15px] ${tone.heading}`}
+                      className={`flex min-h-[3.25rem] w-full shrink-0 items-center px-2.5 py-2.5 text-[13px] font-semibold leading-snug tracking-tight text-balance break-words sm:min-h-[3.5rem] sm:px-3 sm:text-sm lg:text-[13px] xl:text-[15px] ${tone.heading}`}
                     >
                       {category.name}
                     </h2>
 
-                    <div className="flex flex-1 flex-col gap-3 p-2 sm:p-2.5">
-                      {category.packageNote ? (
-                        <p className="px-0.5 text-xs leading-snug tracking-tight text-muted-foreground">
-                          {category.packageNote}
-                        </p>
-                      ) : null}
-
-                      {category.subgroups ? (
-                        <div className="flex flex-1 flex-col gap-3">
-                          {category.subgroups.map((subgroup) => (
-                            <div
-                              key={subgroup.id}
-                              className="flex min-w-0 flex-col gap-2"
-                            >
-                              <h3 className="px-0.5 text-xs font-semibold uppercase tracking-wide text-foreground/70">
-                                {subgroup.name}
-                              </h3>
-                              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 sm:gap-2.5">
-                                {subgroup.services.map((service) => (
-                                  <ServiceOption
-                                    key={service.id}
-                                    service={service}
-                                    isSelected={selectedServiceId === service.id}
-                                    onSelect={() => selectService(service.id)}
-                                  />
-                                ))}
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      ) : (
-                        <div className="flex-1">
-                          <ServiceList
-                            services={category.services ?? []}
-                            selectedServiceId={selectedServiceId}
-                            onSelect={selectService}
-                          />
-                        </div>
-                      )}
+                    <div className="flex flex-1 flex-col p-2 sm:p-2.5">
+                      <ServiceList
+                        services={[
+                          ...(category.subgroups
+                            ? category.subgroups.flatMap((subgroup) => subgroup.services)
+                            : (category.services ?? [])),
+                          ...(category.packages ?? []),
+                        ]}
+                        selectedServiceId={selectedServiceId}
+                        onSelect={selectService}
+                        columns={1}
+                      />
                     </div>
                   </section>
                 );
