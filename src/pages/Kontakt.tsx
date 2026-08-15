@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Helmet } from "react-helmet";
 import { Clock, ExternalLink, Mail, MapPin, Phone } from "lucide-react";
-import sportsImage from "@/assets/performance-training.jpg";
+import sportsImage from "@/assets/caselo-banner-kontakt.jpg";
 
 const ADDRESS_LINE_1 = "Rinkebyvägen 4";
 const ADDRESS_LINE_2 = "182 36 Danderyd";
@@ -37,78 +37,83 @@ const Kontakt = () => {
 
             <div className="rounded-2xl border border-border/60 bg-card/90 p-5 shadow-[var(--shadow-card)] backdrop-blur-sm sm:p-6 md:p-8 lg:p-10">
               <div className="grid gap-8 lg:grid-cols-2 lg:items-start lg:gap-10">
-                {/* Kontaktuppgifter */}
-                <div className="min-w-0">
-                  <h2 className="mb-5 text-xl font-bold text-foreground md:text-2xl">
-                    Kontaktuppgifter
-                  </h2>
-                  <ul className="space-y-4">
-                    <li className="flex items-start gap-3">
-                      <MapPin
+                {/* Left: contact + hours with generous spacing */}
+                <div className="flex min-w-0 flex-col justify-between gap-10 lg:min-h-[280px] lg:gap-12">
+                  <div>
+                    <h2 className="mb-5 text-xl font-bold text-foreground md:mb-6 md:text-2xl">
+                      Kontaktuppgifter
+                    </h2>
+                    <ul className="space-y-6 md:space-y-7">
+                      <li className="flex items-start gap-3">
+                        <MapPin
+                          className="mt-0.5 h-5 w-5 shrink-0 text-primary"
+                          aria-hidden="true"
+                        />
+                        <address className="not-italic text-base leading-relaxed text-foreground md:text-lg">
+                          Caselo Idrottsmedicin
+                          <br />
+                          {ADDRESS_LINE_1}
+                          <br />
+                          {ADDRESS_LINE_2}
+                        </address>
+                      </li>
+                      <li className="flex items-center gap-3">
+                        <Phone
+                          className="h-5 w-5 shrink-0 text-primary"
+                          aria-hidden="true"
+                        />
+                        <a
+                          href={PHONE_HREF}
+                          className="inline-flex min-h-11 items-center text-base text-foreground underline-offset-4 hover:underline md:min-h-0 md:text-lg"
+                        >
+                          {PHONE_DISPLAY}
+                        </a>
+                      </li>
+                      <li className="flex items-center gap-3">
+                        <Mail
+                          className="h-5 w-5 shrink-0 text-primary"
+                          aria-hidden="true"
+                        />
+                        <a
+                          href={`mailto:${EMAIL}`}
+                          className="break-all text-base text-foreground underline-offset-4 hover:underline md:text-lg"
+                        >
+                          {EMAIL}
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div>
+                    <h2 className="mb-5 text-xl font-bold text-foreground md:mb-6 md:text-2xl">
+                      Öppettider
+                    </h2>
+                    <div className="flex items-start gap-3">
+                      <Clock
                         className="mt-0.5 h-5 w-5 shrink-0 text-primary"
                         aria-hidden="true"
                       />
-                      <address className="not-italic text-base leading-relaxed text-foreground md:text-lg">
-                        {ADDRESS_LINE_1}
-                        <br />
-                        {ADDRESS_LINE_2}
-                      </address>
-                    </li>
-                    <li className="flex items-center gap-3">
-                      <Phone
-                        className="h-5 w-5 shrink-0 text-primary"
-                        aria-hidden="true"
-                      />
-                      <a
-                        href={PHONE_HREF}
-                        className="inline-flex min-h-11 items-center text-base text-foreground underline-offset-4 hover:underline md:min-h-0 md:text-lg"
-                      >
-                        {PHONE_DISPLAY}
-                      </a>
-                    </li>
-                    <li className="flex items-center gap-3">
-                      <Mail
-                        className="h-5 w-5 shrink-0 text-primary"
-                        aria-hidden="true"
-                      />
-                      <a
-                        href={`mailto:${EMAIL}`}
-                        className="break-all text-base text-foreground underline-offset-4 hover:underline md:text-lg"
-                      >
-                        {EMAIL}
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-
-                {/* Image — second on mobile, right column on desktop */}
-                <div className="min-w-0 overflow-hidden rounded-xl lg:row-span-2">
-                  <img
-                    src={sportsImage}
-                    alt="Fotbollsspelare i träning – idrott och prestation hos Caselo Idrottsmedicin"
-                    className="aspect-[4/3] w-full object-cover lg:aspect-auto lg:h-full lg:min-h-[280px]"
-                  />
-                </div>
-
-                {/* Öppettider */}
-                <div className="min-w-0">
-                  <h2 className="mb-5 text-xl font-bold text-foreground md:text-2xl">
-                    Öppettider
-                  </h2>
-                  <div className="flex items-start gap-3">
-                    <Clock
-                      className="mt-0.5 h-5 w-5 shrink-0 text-primary"
-                      aria-hidden="true"
-                    />
-                    <p className="text-base leading-relaxed text-foreground md:text-lg">
-                      Helgfria vardagar måndag–fredag kl. 08.00–16.00
-                    </p>
+                      <p className="text-base leading-relaxed text-foreground md:text-lg">
+                        Helgfria vardagar måndag–fredag kl. 08.00–16.00
+                      </p>
+                    </div>
                   </div>
                 </div>
 
-                {/* Hitta hit / map */}
+                {/* Right: smaller flag — show entire banner */}
+                <div className="mx-auto w-full max-w-[280px] overflow-hidden rounded-xl sm:max-w-[320px] lg:mx-0 lg:justify-self-end">
+                  <img
+                    src={sportsImage}
+                    alt="Caselo Idrottsmedicin-flagga vid idrottsanläggningen i Danderyd"
+                    className="h-auto w-full object-contain"
+                    width={1000}
+                    height={1472}
+                  />
+                </div>
+
+                {/* Hitta hit / map — full width under image */}
                 <div className="min-w-0 lg:col-span-2">
-                  <h2 className="mb-5 text-xl font-bold text-foreground md:text-2xl">
+                  <h2 className="mb-4 text-xl font-bold text-foreground md:text-2xl">
                     Hitta hit
                   </h2>
                   <div className="relative overflow-hidden rounded-xl border border-border/50">

@@ -1,14 +1,17 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Helmet } from "react-helmet";
+import { useSearchParams } from "react-router-dom";
 import { ChevronDown } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { useVisitor } from "@/context/VisitorContext";
+import { IFK_STOCKSUND_KADDIO_URL } from "@/lib/booking";
 
 const KADDIO_BOOKING_URL = "https://caseloidrottsmedicin.kaddio.com";
 const KADDIO_IFRAME_BASE = `${KADDIO_BOOKING_URL}/iframe/booking`;
 
 type BookingService = {
   id: string;
-  /** Full name used by Kaddio calendar URLs */
+  /** Full name used by Kaddio calendar URLs (ordinary booking) */
   name: string;
   /** Short display title shown in the list */
   label: string;
@@ -19,6 +22,12 @@ type BookingService = {
   variant?: "package";
   /** Shown above the calendar when this service is selected */
   bookingNotice?: string;
+  /** IFK Stocksund overrides — same card, partner price / Kaddio type */
+  ifk?: {
+    priceSek: number;
+    ordinaryPriceSek?: number;
+    name: string;
+  };
 };
 
 type BookingSubgroup = {
@@ -45,7 +54,17 @@ const STEG2_DESCRIPTION =
 const STEG3_DESCRIPTION =
   "Efter träningsperioden upprepar vi relevanta tester och jämför med dina tidigare resultat. Du ser vad som har utvecklats och får nya rekommendationer inför nästa träningsperiod.";
 const STEG1_KADDIO_NAME = "Steg 1: Test och analys av fysisk kapacitet";
+const STEG1_KADDIO_NAME_IFK = "Prestationsprofil (IFK Stocksund)";
 const STEG_FOLLOWUP_NOTICE = "OBS: Detta steg bokas efter att Steg 1 genomförts.";
+
+/** IFK package prices derived from live IFK step prices (same relative discount as ordinary packages). */
+const IFK_STEG1 = 1525;
+const IFK_STEG2 = 1015;
+const IFK_STEG3 = 1270;
+const IFK_PAKET_1_3_ORD = IFK_STEG1 + IFK_STEG2 + IFK_STEG3; // 3810
+const IFK_PAKET_1_3 = 3395;
+const IFK_PAKET_1_OCH_3_ORD = IFK_STEG1 + IFK_STEG3; // 2795
+const IFK_PAKET_1_OCH_3 = 2545;
 
 const BOOKING_CATEGORIES: BookingCategory[] = [
   {
@@ -58,6 +77,10 @@ const BOOKING_CATEGORIES: BookingCategory[] = [
         label: "Nybesök",
         durationMin: 40,
         priceSek: 895,
+        ifk: {
+          priceSek: 750,
+          name: "Smärta och skador - NYBESÖK (IFK Stocksund)",
+        },
         description:
           "Nybesök bokas när du kommer första gången för ett besvär. Tjänsten är för dig som har ont eller är skadad och vill få hjälp med bedömning/diagnos och individuellt anpassade åtgärder för att minska besvären och hjälpa dig återgå till idrott, arbete eller vardag. Besöket kan innehålla behandling, rehabiliteringsövningar, träningsupplägg och råd om belastning.",
       },
@@ -67,6 +90,10 @@ const BOOKING_CATEGORIES: BookingCategory[] = [
         label: "Återbesök",
         durationMin: 30,
         priceSek: 695,
+        ifk: {
+          priceSek: 590,
+          name: "Smärta och skador - ÅTERBESÖK (IFK Stocksund)",
+        },
         description:
           "Återbesök bokas när du redan har undersökts hos Caselo Idrottsmedicin för besväret du söker för.",
       },
@@ -82,6 +109,10 @@ const BOOKING_CATEGORIES: BookingCategory[] = [
         label: "Nybesök - VUXEN",
         durationMin: 40,
         priceSek: 1495,
+        ifk: {
+          priceSek: 1270,
+          name: "Hälkoppsinlägg Vuxen - NYBESÖK (IFK Stocksund)",
+        },
         description:
           "För dig som ska göra hälkoppsinlägg för första gången. Besöket omfattar undersökning och tillverkning av personligt utformade hälkoppsinlägg. Inlägget formas efter din häl för att ge stöd, minska belastningen på hälen, dämpa smärta och göra det lättare att gå, springa och vara aktiv.",
       },
@@ -91,6 +122,10 @@ const BOOKING_CATEGORIES: BookingCategory[] = [
         label: "Återbesök - VUXEN",
         durationMin: 30,
         priceSek: 1295,
+        ifk: {
+          priceSek: 1100,
+          name: "Hälkoppsinlägg Vuxen - ÅTERBESÖK (IFK Stocksund)",
+        },
         description:
           "Tillverkning av fler personligt utformade hälkoppsinlägg. Bokas av dig som tidigare genomfört ett nybesök.",
       },
@@ -100,6 +135,10 @@ const BOOKING_CATEGORIES: BookingCategory[] = [
         label: "Nybesök - BARN",
         durationMin: 40,
         priceSek: 1295,
+        ifk: {
+          priceSek: 1100,
+          name: "Hälkoppsinlägg Barn - NYBESÖK (IFK Stocksund)",
+        },
         description:
           "För dig som ska göra hälkoppsinlägg för första gången. Besöket omfattar undersökning och tillverkning av personligt utformade hälkoppsinlägg. Inlägget formas efter din häl för att ge stöd, minska belastningen på hälen, dämpa smärta och göra det lättare att gå, springa och vara aktiv.",
       },
@@ -109,6 +148,10 @@ const BOOKING_CATEGORIES: BookingCategory[] = [
         label: "Återbesök - BARN",
         durationMin: 30,
         priceSek: 1095,
+        ifk: {
+          priceSek: 930,
+          name: "Hälkoppsinlägg Barn - ÅTERBESÖK (IFK Stocksund)",
+        },
         description:
           "Tillverkning av fler personligt utformade hälkoppsinlägg. Bokas av dig som tidigare genomfört ett nybesök.",
       },
@@ -117,8 +160,8 @@ const BOOKING_CATEGORIES: BookingCategory[] = [
   {
     id: "prestationsutveckling",
     name: "Test och träning för ökad fysisk prestation",
-    // `name` must match live Kaddio booking type names exactly (slugify → /iframe/booking/cal/:slug).
-    // Verified via publicBookingTypes on caseloidrottsmedicin.kaddio.com (regular calendar, not IFK).
+    // Ordinary `name` must match live Kaddio booking type names exactly.
+    // IFK uses separate Kaddio types (verified on /booking/ifk-stocksund).
     services: [
       {
         id: "prestationsprofil",
@@ -126,6 +169,10 @@ const BOOKING_CATEGORIES: BookingCategory[] = [
         label: "Steg 1: Test och analys av fysisk kapacitet",
         durationMin: 90,
         priceSek: 1795,
+        ifk: {
+          priceSek: IFK_STEG1,
+          name: STEG1_KADDIO_NAME_IFK,
+        },
         description: STEG1_DESCRIPTION,
       },
       {
@@ -134,6 +181,10 @@ const BOOKING_CATEGORIES: BookingCategory[] = [
         label: "Steg 2: Personligt träningsupplägg",
         durationMin: 45,
         priceSek: 1195,
+        ifk: {
+          priceSek: IFK_STEG2,
+          name: "Träningsupplägg utifrån din prestationsprofil (IFK Stocksund)",
+        },
         description: `${STEG2_DESCRIPTION}\n\n${STEG_FOLLOWUP_NOTICE}`,
         bookingNotice: STEG_FOLLOWUP_NOTICE,
       },
@@ -143,6 +194,10 @@ const BOOKING_CATEGORIES: BookingCategory[] = [
         label: "Steg 3: Uppföljning för att mäta din utveckling",
         durationMin: 75,
         priceSek: 1495,
+        ifk: {
+          priceSek: IFK_STEG3,
+          name: "Prestationsuppföljning (IFK Stocksund)",
+        },
         description: `${STEG3_DESCRIPTION}\n\n${STEG_FOLLOWUP_NOTICE}`,
         bookingNotice: STEG_FOLLOWUP_NOTICE,
       },
@@ -154,6 +209,11 @@ const BOOKING_CATEGORIES: BookingCategory[] = [
         label: "Paket: Steg 1-3",
         priceSek: 3995,
         ordinaryPriceSek: 4485,
+        ifk: {
+          priceSek: IFK_PAKET_1_3,
+          ordinaryPriceSek: IFK_PAKET_1_3_ORD,
+          name: STEG1_KADDIO_NAME_IFK,
+        },
         variant: "package",
         description:
           `Steg 1 – Test och analys av fysisk kapacitet\n${STEG1_DESCRIPTION}\n\nSteg 2 – Personligt träningsupplägg\n${STEG2_DESCRIPTION}\n\nSteg 3 – Uppföljning för att mäta din utveckling\n${STEG3_DESCRIPTION}\n\nDu bokar endast tid för Steg 1. Tidsbokning för Steg 2 och 3 görs efter att Steg 1 genomförts.`,
@@ -164,6 +224,11 @@ const BOOKING_CATEGORIES: BookingCategory[] = [
         label: "Paket: Steg 1 och 3",
         priceSek: 2995,
         ordinaryPriceSek: 3290,
+        ifk: {
+          priceSek: IFK_PAKET_1_OCH_3,
+          ordinaryPriceSek: IFK_PAKET_1_OCH_3_ORD,
+          name: STEG1_KADDIO_NAME_IFK,
+        },
         variant: "package",
         description:
           `Steg 1 – Test och analys av fysisk kapacitet\n${STEG1_DESCRIPTION}\n\nSteg 3 – Uppföljning för att mäta din utveckling\n${STEG3_DESCRIPTION}\n\nDu bokar endast tid för Steg 1. Tidsbokning för Steg 3 görs efter att Steg 1 genomförts.`,
@@ -172,30 +237,61 @@ const BOOKING_CATEGORIES: BookingCategory[] = [
   },
 ];
 
-const allBookingEntries = () =>
+const resolveServiceForVisitor = (
+  service: BookingService,
+  isIfk: boolean,
+): BookingService => {
+  if (!isIfk || !service.ifk) return service;
+  return {
+    ...service,
+    name: service.ifk.name,
+    priceSek: service.ifk.priceSek,
+    // Show the ordinary Caselo price beside the IFK partner price
+    ordinaryPriceSek: service.priceSek,
+  };
+};
+
+const allBookingEntries = (isIfk: boolean) =>
   BOOKING_CATEGORIES.flatMap((category) => {
     const grouped = category.subgroups
       ? category.subgroups.flatMap((subgroup) =>
           subgroup.services.map((service) => ({
             categoryName: category.name,
             subgroupName: subgroup.name,
-            service,
+            service: resolveServiceForVisitor(service, isIfk),
           })),
         )
       : (category.services ?? []).map((service) => ({
           categoryName: category.name,
           subgroupName: undefined as string | undefined,
-          service,
+          service: resolveServiceForVisitor(service, isIfk),
         }));
 
     const packages = (category.packages ?? []).map((service) => ({
       categoryName: category.name,
       subgroupName: undefined as string | undefined,
-      service,
+      service: resolveServiceForVisitor(service, isIfk),
     }));
 
     return [...grouped, ...packages];
   });
+
+const categoriesForVisitor = (isIfk: boolean): BookingCategory[] =>
+  BOOKING_CATEGORIES.map((category) => ({
+    ...category,
+    services: category.services?.map((service) =>
+      resolveServiceForVisitor(service, isIfk),
+    ),
+    subgroups: category.subgroups?.map((subgroup) => ({
+      ...subgroup,
+      services: subgroup.services.map((service) =>
+        resolveServiceForVisitor(service, isIfk),
+      ),
+    })),
+    packages: category.packages?.map((service) =>
+      resolveServiceForVisitor(service, isIfk),
+    ),
+  }));
 
 const StepLabel = ({
   step,
@@ -299,12 +395,20 @@ const ServiceOption = ({
         >
           {service.label}
         </span>
-        <span className="text-xs text-muted-foreground tabular-nums">
-          {service.durationMin ? `${service.durationMin} min · ` : null}
-          {formatPrice(service.priceSek)} kr
-          {service.ordinaryPriceSek
-            ? ` (ord. ${formatPrice(service.ordinaryPriceSek)} kr)`
-            : null}
+        <span className="flex flex-wrap items-baseline gap-x-1.5 gap-y-0.5 text-xs tabular-nums">
+          {service.durationMin ? (
+            <span className="text-muted-foreground">{service.durationMin} min ·</span>
+          ) : null}
+          <span className="font-medium text-foreground">
+            {formatPrice(service.priceSek)} kr
+          </span>
+          {service.ordinaryPriceSek ? (
+            <span className="text-[11px] text-muted-foreground/80">
+              <span className="line-through decoration-muted-foreground/50">
+                {formatPrice(service.ordinaryPriceSek)} kr
+              </span>
+            </span>
+          ) : null}
         </span>
       </button>
 
@@ -372,12 +476,25 @@ const ServiceList = ({
 
 const Boka = () => {
   const [selectedServiceId, setSelectedServiceId] = useState<string | undefined>();
+  const [searchParams] = useSearchParams();
+  const { isIfkStocksund, setVisitorType } = useVisitor();
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  const selected = allBookingEntries().find(
+  useEffect(() => {
+    if (searchParams.get("partner") === "ifk-stocksund") {
+      setVisitorType("ifk-stocksund");
+    }
+  }, [searchParams, setVisitorType]);
+
+  const categories = useMemo(
+    () => categoriesForVisitor(isIfkStocksund),
+    [isIfkStocksund],
+  );
+
+  const selected = allBookingEntries(isIfkStocksund).find(
     ({ service }) => service.id === selectedServiceId,
   );
 
@@ -395,7 +512,9 @@ const Boka = () => {
     : undefined;
   const fallbackHref = selectedServiceName
     ? externalUrlForService(selectedServiceName)
-    : KADDIO_BOOKING_URL;
+    : isIfkStocksund
+      ? IFK_STOCKSUND_KADDIO_URL
+      : KADDIO_BOOKING_URL;
 
   const selectService = (serviceId: string) => {
     setSelectedServiceId(serviceId);
@@ -410,7 +529,11 @@ const Boka = () => {
   return (
     <main className="overflow-x-hidden">
       <Helmet>
-        <title>Boka tid – Caselo Idrottsmedicin</title>
+        <title>
+          {isIfkStocksund
+            ? "Boka tid (IFK Stocksund) – Caselo Idrottsmedicin"
+            : "Boka tid – Caselo Idrottsmedicin"}
+        </title>
         <meta
           name="description"
           content="Boka tid hos Caselo Idrottsmedicin. Välj tjänst och en tid som passar dig."
@@ -436,7 +559,7 @@ const Boka = () => {
         <div className="container mx-auto max-w-7xl px-4">
           <div className="w-full min-w-0">
             <div className="mb-6 grid grid-cols-1 items-stretch gap-4 lg:mb-8 lg:grid-cols-3 lg:gap-4">
-              {BOOKING_CATEGORIES.map((category, index) => {
+              {categories.map((category, index) => {
                 const tone = SECTION_TONES[index] ?? SECTION_TONES[0];
 
                 return (

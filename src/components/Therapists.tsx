@@ -36,10 +36,6 @@ const Therapists = () => {
               </h3>
               <ul className="list-disc space-y-3 pl-5 text-base leading-relaxed text-muted-foreground md:space-y-4 md:text-lg">
                 <li>
-                  <strong className="font-semibold text-foreground">Vård i din träningsmiljö</strong> –
-                  mottagningen ligger i direkt anslutning till fotbollsplan och löparbana.
-                </li>
-                <li>
                   <strong className="font-semibold text-foreground">En behandlare som förstår idrottens krav</strong>{" "}
                   – Caselo drivs av Henrik Nilsson, fysioterapeut med tio års erfarenhet av idrottsskador, UEFA
                   A-utbildad fotbollstränare och före detta elitspelare.
@@ -50,6 +46,10 @@ const Therapists = () => {
                   </strong>{" "}
                   – Henrik har de senaste fem åren arbetat på OrtoMed i Stockholm, tidigare vid Motions- och
                   idrottsskadeenheten i Norrköping och dessförinnan i öppenvården på Rehab Öst.
+                </li>
+                <li>
+                  <strong className="font-semibold text-foreground">Vård i din träningsmiljö</strong> –
+                  mottagningen ligger i direkt anslutning till fotbollsplan och löparbana.
                 </li>
               </ul>
             </div>

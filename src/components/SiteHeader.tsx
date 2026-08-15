@@ -1,10 +1,13 @@
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import BookingLink from "@/components/BookingLink";
+import IfkStocksundBanner from "@/components/IfkStocksundBanner";
+import { useVisitor } from "@/context/VisitorContext";
 import { GENERAL_BOOKING_URL, isExternalBookingUrl } from "@/lib/booking";
 
 const SiteHeader = () => {
   const location = useLocation();
+  const { isIfkStocksund } = useVisitor();
   const bookingPath = isExternalBookingUrl(GENERAL_BOOKING_URL)
     ? null
     : GENERAL_BOOKING_URL.split("?")[0];
@@ -28,8 +31,8 @@ const SiteHeader = () => {
 
   return (
     <header className="border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container px-4 py-2.5 sm:py-3 md:flex md:h-28 md:items-center md:justify-between md:py-0">
-        {/* Mobile: logo + optional CTA on one row; desktop: logo only here */}
+      <div className="container px-4 py-2.5 sm:py-3 md:flex md:min-h-28 md:items-center md:gap-4 md:py-2 lg:gap-6">
+        {/* Mobile: logo + optional CTA on one row */}
         <div className="flex items-center justify-between gap-3 md:contents">
           <Link
             to="/"
@@ -45,8 +48,19 @@ const SiteHeader = () => {
           <div className="md:hidden">{bookButton}</div>
         </div>
 
+        {isIfkStocksund ? (
+          <>
+            <div className="mt-2 w-fit max-w-full md:mt-0 md:px-1 lg:px-2">
+              <IfkStocksundBanner />
+            </div>
+            <div className="hidden flex-1 md:block" aria-hidden="true" />
+          </>
+        ) : (
+          <div className="hidden flex-1 md:block" aria-hidden="true" />
+        )}
+
         {/* Mobile: text links under logo; desktop: full nav with CTA */}
-        <nav className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 md:mt-0 md:gap-x-8">
+        <nav className="mt-1 flex shrink-0 flex-wrap items-center gap-x-4 gap-y-1 md:mt-0 md:gap-x-6 lg:gap-x-8">
           <Link
             to="/tjanster"
             className={linkClass(location.pathname.startsWith("/tjanster"))}
