@@ -36,7 +36,7 @@ const Kontakt = () => {
             </h1>
 
             <div className="rounded-2xl border border-border/60 bg-card/90 p-5 shadow-[var(--shadow-card)] backdrop-blur-sm sm:p-6 md:p-8 lg:p-10">
-              <div className="grid gap-8 lg:grid-cols-2 lg:items-start lg:gap-10">
+              <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start lg:gap-10">
                 {/* Left: contact + hours with generous spacing */}
                 <div className="flex min-w-0 flex-col justify-between gap-8 sm:gap-10 lg:min-h-[280px] lg:gap-12">
                   <div>
@@ -57,9 +57,9 @@ const Kontakt = () => {
                             <br />
                             {ADDRESS_LINE_2}
                           </address>
-                          <p className="mt-2 min-w-0 text-sm leading-snug text-muted-foreground break-words md:text-base md:leading-relaxed">
-                            Mottagningen ligger i direkt anslutning till fotbollsplan
-                            och löparbana.
+                          <p className="mt-2 text-sm leading-snug text-muted-foreground sm:whitespace-nowrap md:text-base md:leading-relaxed">
+                            Mottagningen ligger i direkt anslutning till fotbollsplan och
+                            löparbana.
                           </p>
                         </div>
                       </li>

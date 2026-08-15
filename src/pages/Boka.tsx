@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Helmet } from "react-helmet";
 import { useSearchParams } from "react-router-dom";
 import { ChevronDown } from "lucide-react";
@@ -8,6 +8,8 @@ import { IFK_STOCKSUND_KADDIO_URL } from "@/lib/booking";
 
 const KADDIO_BOOKING_URL = "https://caseloidrottsmedicin.kaddio.com";
 const KADDIO_IFRAME_BASE = `${KADDIO_BOOKING_URL}/iframe/booking`;
+/** Ignore Kaddio's immediate post-mount redirects (e.g. ?step=pickTime). */
+const KADDIO_IFRAME_REDIRECT_GRACE_MS = 2000;
 
 type BookingService = {
   id: string;
@@ -494,8 +496,12 @@ const ServiceList = ({
 
 const Boka = () => {
   const [selectedServiceId, setSelectedServiceId] = useState<string | undefined>();
+  const [iframeEpoch, setIframeEpoch] = useState(0);
   const [searchParams] = useSearchParams();
   const { isIfkStocksund, setVisitorType } = useVisitor();
+  const ignoreIframeLoadRef = useRef(false);
+  const iframePhaseRef = useRef<"pick" | "form">("pick");
+  const iframeReadyAtRef = useRef(0);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -533,6 +539,41 @@ const Boka = () => {
     : isIfkStocksund
       ? IFK_STOCKSUND_KADDIO_URL
       : KADDIO_BOOKING_URL;
+
+  // When the locked calendar URL changes, reset iframe navigation tracking.
+  useEffect(() => {
+    if (!iframeSrc) return;
+    iframePhaseRef.current = "pick";
+    ignoreIframeLoadRef.current = true;
+    setIframeEpoch(0);
+  }, [iframeSrc]);
+
+  /**
+   * Kaddio's "Avbryt" leaves /cal/{slug} and shows all services.
+   * We can't read the cross-origin iframe URL, so we track loads:
+   * pick → form (time chosen), form → remount locked calendar (cancel/leave form).
+   */
+  const handleIframeLoad = () => {
+    if (!iframeSrc) return;
+
+    if (ignoreIframeLoadRef.current) {
+      ignoreIframeLoadRef.current = false;
+      iframeReadyAtRef.current = Date.now();
+      return;
+    }
+
+    if (iframePhaseRef.current === "pick") {
+      if (Date.now() - iframeReadyAtRef.current < KADDIO_IFRAME_REDIRECT_GRACE_MS) {
+        return;
+      }
+      iframePhaseRef.current = "form";
+      return;
+    }
+
+    iframePhaseRef.current = "pick";
+    ignoreIframeLoadRef.current = true;
+    setIframeEpoch((n) => n + 1);
+  };
 
   const selectedCategory = selected
     ? categories.find((category) =>
@@ -640,11 +681,7 @@ const Boka = () => {
               <div id="kaddio-bokning" className="min-w-0 scroll-mt-20">
                 <div className="mb-4 space-y-3">
                   <StepLabel step={2}>
-                    Välj en tid i kalendern för ditt besök. Endast tider för{" "}
-                    <span className="font-medium text-foreground">
-                      {selected.service.label}
-                    </span>{" "}
-                    visas.
+                    Välj en tid i kalendern för ditt besök.
                   </StepLabel>
                   <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-3 sm:pl-9">
                     <p className="min-w-0 text-sm leading-snug text-muted-foreground md:text-base break-words">
@@ -670,9 +707,10 @@ const Boka = () => {
 
                 <div className="w-full max-w-full overflow-x-hidden">
                   <iframe
-                    key={`${selectedServiceId}:${iframeSrc}`}
+                    key={`${selectedServiceId}:${iframeSrc}:${iframeEpoch}`}
                     src={iframeSrc}
                     title={`Boka tid: ${selected.service.label}`}
+                    onLoad={handleIframeLoad}
                     className="w-full max-w-full min-h-[640px] border-0 sm:min-h-[800px] md:min-h-[1000px]"
                     style={{ overflowY: "auto", overflowX: "hidden" }}
                     loading="eager"
