@@ -643,16 +643,6 @@ const Boka = () => {
             Börja med att välja vilken typ av besök du vill boka. Därefter visas
             tillgängliga tider längre ned på sidan.
           </StepLabel>
-          <ul className="mt-2 list-disc space-y-0.5 pl-[2.75rem] text-[11px] leading-snug text-muted-foreground/65 sm:pl-12 sm:text-xs sm:leading-relaxed">
-            <li>Observera att högkostnadskort och frikort gäller ej.</li>
-            <li>
-              Avbokning eller ombokning ska ske senast 24 timmar innan. Avgift för
-              sen av-/ombokning motsvarar priset för besöket.
-            </li>
-            <li>
-              Vi tar emot betalning genom Swish eller faktura (ej kort/kontanter).
-            </li>
-          </ul>
         </div>
       </section>
 
