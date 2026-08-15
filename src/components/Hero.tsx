@@ -30,12 +30,12 @@ const Hero = () => {
             <br className="sm:hidden" /> Stockholm och Mariefred
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-300">
+          <div className="flex flex-col items-center sm:flex-row gap-4 justify-center animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-300">
             <Button 
               asChild
               size="sm" 
               variant="secondary"
-              className="min-h-11 w-full max-w-xs px-4 py-2.5 text-sm shadow-[var(--shadow-button)] transition-[var(--transition-smooth)] hover:shadow-[var(--shadow-hover)] sm:w-auto sm:px-8 sm:py-6 sm:text-lg"
+              className="min-h-11 w-auto px-5 py-2.5 text-sm shadow-[var(--shadow-button)] transition-[var(--transition-smooth)] hover:shadow-[var(--shadow-hover)] sm:px-8 sm:py-6 sm:text-lg"
             >
               <BookingLink aria-label="Gå till bokningssidan">
                 <Calendar className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />

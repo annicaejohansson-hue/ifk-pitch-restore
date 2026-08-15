@@ -1,38 +1,45 @@
+import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import BookingLink from "@/components/BookingLink";
+import { Menu } from "lucide-react";
 import IfkStocksundBanner from "@/components/IfkStocksundBanner";
 import { useVisitor } from "@/context/VisitorContext";
-import { GENERAL_BOOKING_URL, isExternalBookingUrl } from "@/lib/booking";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+
+const NAV_LINKS = [
+  { to: "/tjanster", label: "Tjänster", match: "prefix" as const },
+  { to: "/om", label: "Om", match: "exact" as const },
+  { to: "/kontakt", label: "Kontakt", match: "exact" as const },
+];
+
+const isActive = (pathname: string, to: string, match: "prefix" | "exact") =>
+  match === "prefix" ? pathname.startsWith(to) : pathname === to;
 
 const SiteHeader = () => {
   const location = useLocation();
   const { isIfkStocksund } = useVisitor();
-  const bookingPath = isExternalBookingUrl(GENERAL_BOOKING_URL)
-    ? null
-    : GENERAL_BOOKING_URL.split("?")[0];
-  const showBookCta = bookingPath ? location.pathname !== bookingPath : true;
+  const [menuOpen, setMenuOpen] = useState(false);
 
-  const linkClass = (active: boolean) =>
+  const desktopLinkClass = (active: boolean) =>
     [
-      "inline-flex min-h-10 items-center whitespace-nowrap text-sm font-medium transition-colors hover:text-primary sm:min-h-0 sm:text-base md:text-lg",
+      "inline-flex min-h-10 items-center text-sm font-medium transition-colors hover:text-primary sm:min-h-0 sm:text-base md:text-lg",
       active ? "text-primary" : "text-foreground/80",
     ].join(" ");
 
-  const bookButton = showBookCta ? (
-    <Button
-      asChild
-      className="h-9 shrink-0 px-3.5 text-sm sm:h-10 sm:px-5 sm:text-base md:h-11 md:px-6 md:text-lg"
-      aria-label="Gå till bokningssidan"
-    >
-      <BookingLink>Boka tid</BookingLink>
-    </Button>
-  ) : null;
+  const mobileLinkClass = (active: boolean) =>
+    [
+      "flex min-h-12 items-center px-4 text-base font-medium transition-colors hover:text-primary",
+      active ? "text-primary" : "text-foreground",
+    ].join(" ");
 
   return (
     <header className="border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container px-4 py-2.5 sm:py-3 md:flex md:min-h-28 md:items-center md:gap-4 md:py-2 lg:gap-6">
-        {/* Mobile: logo + optional CTA on one row */}
         <div className="flex items-center justify-between gap-3 md:contents">
           <Link
             to="/"
@@ -42,10 +49,41 @@ const SiteHeader = () => {
             <img
               src="/caselo-logo-blue.png"
               alt="Caselo Idrottsmedicin"
-              className="h-11 w-auto object-contain sm:h-14 md:h-20"
+              className="h-14 w-auto object-contain md:h-20"
             />
           </Link>
-          <div className="md:hidden">{bookButton}</div>
+
+          <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
+            <SheetTrigger asChild>
+              <button
+                type="button"
+                className="inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-md text-foreground hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 md:hidden"
+                aria-label="Öppna meny"
+              >
+                <Menu className="h-6 w-6" aria-hidden="true" />
+              </button>
+            </SheetTrigger>
+            <SheetContent
+              side="right"
+              className="w-[min(18rem,85vw)] p-0"
+            >
+              <SheetTitle className="sr-only">Meny</SheetTitle>
+              <nav className="flex flex-col gap-1 pt-16 pb-6" aria-label="Huvudmeny">
+                {NAV_LINKS.map((link) => (
+                  <SheetClose asChild key={link.to}>
+                    <Link
+                      to={link.to}
+                      className={mobileLinkClass(
+                        isActive(location.pathname, link.to, link.match),
+                      )}
+                    >
+                      {link.label}
+                    </Link>
+                  </SheetClose>
+                ))}
+              </nav>
+            </SheetContent>
+          </Sheet>
         </div>
 
         {isIfkStocksund ? (
@@ -59,24 +97,21 @@ const SiteHeader = () => {
           <div className="hidden flex-1 md:block" aria-hidden="true" />
         )}
 
-        {/* Mobile: text links under logo; desktop: full nav with CTA */}
-        <nav className="mt-1.5 flex shrink-0 flex-wrap items-center gap-x-3 gap-y-1 sm:gap-x-4 md:mt-0 md:gap-x-6 lg:gap-x-8">
-          <Link
-            to="/tjanster"
-            className={linkClass(location.pathname.startsWith("/tjanster"))}
-          >
-            Tjänster
-          </Link>
-          <Link to="/om" className={linkClass(location.pathname === "/om")}>
-            Om
-          </Link>
-          <Link
-            to="/kontakt"
-            className={linkClass(location.pathname === "/kontakt")}
-          >
-            Kontakt
-          </Link>
-          <div className="hidden md:block">{bookButton}</div>
+        <nav
+          className="hidden shrink-0 items-center gap-x-6 md:flex lg:gap-x-8"
+          aria-label="Huvudmeny"
+        >
+          {NAV_LINKS.map((link) => (
+            <Link
+              key={link.to}
+              to={link.to}
+              className={desktopLinkClass(
+                isActive(location.pathname, link.to, link.match),
+              )}
+            >
+              {link.label}
+            </Link>
+          ))}
         </nav>
       </div>
     </header>
