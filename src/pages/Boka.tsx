@@ -8,6 +8,8 @@ import { IFK_STOCKSUND_KADDIO_URL } from "@/lib/booking";
 
 const KADDIO_BOOKING_URL = "https://caseloidrottsmedicin.kaddio.com";
 const KADDIO_IFRAME_BASE = `${KADDIO_BOOKING_URL}/iframe/booking`;
+/** Customer-booking filter slug for IFK Stocksund (required for IFK free times). */
+const KADDIO_IFK_CAL_FILTER = "ifk-stocksund";
 /** Ignore Kaddio's immediate post-mount redirects (e.g. ?step=pickTime). */
 const KADDIO_IFRAME_REDIRECT_GRACE_MS = 2000;
 
@@ -362,11 +364,20 @@ const slugifyForKaddio = (value: string) => {
     .replace(/-+/g, "-");
 };
 
-const iframeUrlForService = (serviceName: string) =>
-  `${KADDIO_IFRAME_BASE}/cal/${slugifyForKaddio(serviceName)}`;
+/** IFK types use showOnlyInCustomerBooking — slots only appear under /cal/ifk-stocksund/... */
+const iframeUrlForService = (serviceName: string, isIfk: boolean) => {
+  const slug = slugifyForKaddio(serviceName);
+  return isIfk
+    ? `${KADDIO_IFRAME_BASE}/cal/${KADDIO_IFK_CAL_FILTER}/${slug}`
+    : `${KADDIO_IFRAME_BASE}/cal/${slug}`;
+};
 
-const externalUrlForService = (serviceName: string) =>
-  `${KADDIO_BOOKING_URL}/booking/cal/${slugifyForKaddio(serviceName)}`;
+const externalUrlForService = (serviceName: string, isIfk: boolean) => {
+  const slug = slugifyForKaddio(serviceName);
+  return isIfk
+    ? `${KADDIO_BOOKING_URL}/booking/cal/${KADDIO_IFK_CAL_FILTER}/${slug}`
+    : `${KADDIO_BOOKING_URL}/booking/cal/${slug}`;
+};
 
 const servicesInCategory = (category: BookingCategory) => [
   ...(category.subgroups
@@ -532,10 +543,10 @@ const Boka = () => {
     : undefined;
 
   const iframeSrc = selectedServiceName
-    ? iframeUrlForService(selectedServiceName)
+    ? iframeUrlForService(selectedServiceName, isIfkStocksund)
     : undefined;
   const fallbackHref = selectedServiceName
-    ? externalUrlForService(selectedServiceName)
+    ? externalUrlForService(selectedServiceName, isIfkStocksund)
     : isIfkStocksund
       ? IFK_STOCKSUND_KADDIO_URL
       : KADDIO_BOOKING_URL;
