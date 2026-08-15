@@ -71,6 +71,10 @@ const SMARTA_NYBESOK_NAME =
 const SMARTA_ATERBESOK_NAME =
   "Bedömning och behandling av smärta och skador - ÅTERBESÖK";
 const STEG_FOLLOWUP_NOTICE = "OBS: Detta steg bokas efter att Steg 1 genomförts.";
+const PAKET_1_3_NOTICE =
+  "Du bokar endast tid för Steg 1. Tidsbokning för Steg 2 och 3 görs efter att Steg 1 genomförts.";
+const PAKET_1_OCH_3_NOTICE =
+  "Du bokar endast tid för Steg 1. Tidsbokning för Steg 3 görs efter att Steg 1 genomförts.";
 
 /** IFK package prices derived from live IFK step prices (same relative discount as ordinary packages). */
 const IFK_STEG1 = 1525;
@@ -230,8 +234,9 @@ const BOOKING_CATEGORIES: BookingCategory[] = [
           name: STEG1_KADDIO_NAME_IFK,
         },
         variant: "package",
+        bookingNotice: PAKET_1_3_NOTICE,
         description:
-          `Steg 1 – Test och analys av fysisk kapacitet\n${STEG1_DESCRIPTION}\n\nSteg 2 – Personligt träningsupplägg\n${STEG2_DESCRIPTION}\n\nSteg 3 – Uppföljning för att mäta din utveckling\n${STEG3_DESCRIPTION}\n\nDu bokar endast tid för Steg 1. Tidsbokning för Steg 2 och 3 görs efter att Steg 1 genomförts.`,
+          `Steg 1 – Test och analys av fysisk kapacitet\n${STEG1_DESCRIPTION}\n\nSteg 2 – Personligt träningsupplägg\n${STEG2_DESCRIPTION}\n\nSteg 3 – Uppföljning för att mäta din utveckling\n${STEG3_DESCRIPTION}\n\n${PAKET_1_3_NOTICE}`,
       },
       {
         id: "paket-steg-1-3-utan-2",
@@ -245,8 +250,9 @@ const BOOKING_CATEGORIES: BookingCategory[] = [
           name: STEG1_KADDIO_NAME_IFK,
         },
         variant: "package",
+        bookingNotice: PAKET_1_OCH_3_NOTICE,
         description:
-          `Steg 1 – Test och analys av fysisk kapacitet\n${STEG1_DESCRIPTION}\n\nSteg 3 – Uppföljning för att mäta din utveckling\n${STEG3_DESCRIPTION}\n\nDu bokar endast tid för Steg 1. Tidsbokning för Steg 3 görs efter att Steg 1 genomförts.`,
+          `Steg 1 – Test och analys av fysisk kapacitet\n${STEG1_DESCRIPTION}\n\nSteg 3 – Uppföljning för att mäta din utveckling\n${STEG3_DESCRIPTION}\n\n${PAKET_1_OCH_3_NOTICE}`,
       },
     ],
   },
@@ -637,6 +643,16 @@ const Boka = () => {
             Börja med att välja vilken typ av besök du vill boka. Därefter visas
             tillgängliga tider längre ned på sidan.
           </StepLabel>
+          <ul className="mt-2 list-disc space-y-0.5 pl-[2.75rem] text-[11px] leading-snug text-muted-foreground/65 sm:pl-12 sm:text-xs sm:leading-relaxed">
+            <li>Observera att högkostnadskort och frikort gäller ej.</li>
+            <li>
+              Avbokning eller ombokning ska ske senast 24 timmar innan. Avgift för
+              sen av-/ombokning motsvarar priset för besöket.
+            </li>
+            <li>
+              Vi tar emot betalning genom Swish eller faktura (ej kort/kontanter).
+            </li>
+          </ul>
         </div>
       </section>
 
@@ -694,6 +710,11 @@ const Boka = () => {
                   <StepLabel step={2}>
                     Välj en tid i kalendern för ditt besök.
                   </StepLabel>
+                  {selected?.service.bookingNotice ? (
+                    <p className="rounded-md border border-primary/25 bg-primary/5 px-3 py-2.5 text-sm font-semibold leading-snug text-foreground sm:ml-9 md:text-base">
+                      {selected.service.bookingNotice}
+                    </p>
+                  ) : null}
                   <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-3 sm:pl-9">
                     <p className="min-w-0 text-sm leading-snug text-muted-foreground md:text-base break-words">
                       Vald tjänst:{" "}
@@ -709,11 +730,6 @@ const Boka = () => {
                       Byt tjänst
                     </button>
                   </div>
-                  {selected?.service.bookingNotice ? (
-                    <p className="rounded-md border border-primary/25 bg-primary/5 px-3 py-2.5 text-sm font-semibold leading-snug text-foreground sm:ml-9 md:text-base">
-                      {selected.service.bookingNotice}
-                    </p>
-                  ) : null}
                 </div>
 
                 <div className="w-full max-w-full overflow-x-hidden">
