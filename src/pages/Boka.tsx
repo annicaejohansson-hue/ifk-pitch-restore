@@ -54,7 +54,18 @@ const STEG2_DESCRIPTION =
 const STEG3_DESCRIPTION =
   "Efter träningsperioden upprepar vi relevanta tester och jämför med dina tidigare resultat. Du ser vad som har utvecklats och får nya rekommendationer inför nästa träningsperiod.";
 const STEG1_KADDIO_NAME = "Steg 1: Test och analys av fysisk kapacitet";
-const STEG1_KADDIO_NAME_IFK = "Prestationsprofil (IFK Stocksund)";
+const STEG1_KADDIO_NAME_IFK =
+  "Steg 1: Test och analys av fysisk kapacitet (IFK Stocksund)";
+const STEG2_KADDIO_NAME = "Steg 2: Personligt träningsupplägg";
+const STEG2_KADDIO_NAME_IFK =
+  "Steg 2: Personligt träningsupplägg (IFK Stocksund)";
+const STEG3_KADDIO_NAME = "Steg 3: Uppföljning för att mäta din utveckling";
+const STEG3_KADDIO_NAME_IFK =
+  "Steg 3: Uppföljning för att mäta din utveckling (IFK Stocksund)";
+const SMARTA_NYBESOK_NAME =
+  "Bedömning och behandling av smärta och skador - NYBESÖK";
+const SMARTA_ATERBESOK_NAME =
+  "Bedömning och behandling av smärta och skador - ÅTERBESÖK";
 const STEG_FOLLOWUP_NOTICE = "OBS: Detta steg bokas efter att Steg 1 genomförts.";
 
 /** IFK package prices derived from live IFK step prices (same relative discount as ordinary packages). */
@@ -73,26 +84,26 @@ const BOOKING_CATEGORIES: BookingCategory[] = [
     services: [
       {
         id: "smarta-nybesok",
-        name: "Smärta och skador - NYBESÖK",
+        name: SMARTA_NYBESOK_NAME,
         label: "Nybesök",
         durationMin: 40,
         priceSek: 895,
         ifk: {
           priceSek: 750,
-          name: "Smärta och skador - NYBESÖK (IFK Stocksund)",
+          name: `${SMARTA_NYBESOK_NAME} (IFK Stocksund)`,
         },
         description:
           "Nybesök bokas när du kommer första gången för ett besvär. Tjänsten är för dig som har ont eller är skadad och vill få hjälp med bedömning/diagnos och individuellt anpassade åtgärder för att minska besvären och hjälpa dig återgå till idrott, arbete eller vardag. Besöket kan innehålla behandling, rehabiliteringsövningar, träningsupplägg och råd om belastning.",
       },
       {
         id: "smarta-aterbesok",
-        name: "Smärta och skador - ÅTERBESÖK",
+        name: SMARTA_ATERBESOK_NAME,
         label: "Återbesök",
         durationMin: 30,
         priceSek: 695,
         ifk: {
           priceSek: 590,
-          name: "Smärta och skador - ÅTERBESÖK (IFK Stocksund)",
+          name: `${SMARTA_ATERBESOK_NAME} (IFK Stocksund)`,
         },
         description:
           "Återbesök bokas när du redan har undersökts hos Caselo Idrottsmedicin för besväret du söker för.",
@@ -177,26 +188,26 @@ const BOOKING_CATEGORIES: BookingCategory[] = [
       },
       {
         id: "resultatgenomgang",
-        name: "Steg 2: Personligt träningsupplägg",
+        name: STEG2_KADDIO_NAME,
         label: "Steg 2: Personligt träningsupplägg",
         durationMin: 45,
         priceSek: 1195,
         ifk: {
           priceSek: IFK_STEG2,
-          name: "Träningsupplägg utifrån din prestationsprofil (IFK Stocksund)",
+          name: STEG2_KADDIO_NAME_IFK,
         },
         description: `${STEG2_DESCRIPTION}\n\n${STEG_FOLLOWUP_NOTICE}`,
         bookingNotice: STEG_FOLLOWUP_NOTICE,
       },
       {
         id: "prestationsuppfoljning",
-        name: "Steg 3: Uppföljning för att mäta din utveckling",
+        name: STEG3_KADDIO_NAME,
         label: "Steg 3: Uppföljning för att mäta din utveckling",
         durationMin: 75,
         priceSek: 1495,
         ifk: {
           priceSek: IFK_STEG3,
-          name: "Prestationsuppföljning (IFK Stocksund)",
+          name: STEG3_KADDIO_NAME_IFK,
         },
         description: `${STEG3_DESCRIPTION}\n\n${STEG_FOLLOWUP_NOTICE}`,
         bookingNotice: STEG_FOLLOWUP_NOTICE,
