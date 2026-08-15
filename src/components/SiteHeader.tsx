@@ -50,7 +50,7 @@ const SiteHeader = () => {
 
         {isIfkStocksund ? (
           <>
-            <div className="mt-2 w-fit max-w-full md:mt-0 md:px-1 lg:px-2">
+            <div className="mt-2 w-full min-w-0 md:mt-0 md:w-fit md:max-w-full md:px-1 lg:px-2">
               <IfkStocksundBanner />
             </div>
             <div className="hidden flex-1 md:block" aria-hidden="true" />
@@ -60,7 +60,7 @@ const SiteHeader = () => {
         )}
 
         {/* Mobile: text links under logo; desktop: full nav with CTA */}
-        <nav className="mt-1 flex shrink-0 flex-wrap items-center gap-x-4 gap-y-1 md:mt-0 md:gap-x-6 lg:gap-x-8">
+        <nav className="mt-1.5 flex shrink-0 flex-wrap items-center gap-x-3 gap-y-1 sm:gap-x-4 md:mt-0 md:gap-x-6 lg:gap-x-8">
           <Link
             to="/tjanster"
             className={linkClass(location.pathname.startsWith("/tjanster"))}

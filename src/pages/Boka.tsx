@@ -106,7 +106,7 @@ const BOOKING_CATEGORIES: BookingCategory[] = [
       {
         id: "halkopp-vuxen-nybesok",
         name: "Hälkoppsinlägg Vuxen - NYBESÖK",
-        label: "Nybesök - VUXEN",
+        label: "Nybesök - VUXEN (fyllda 18 år eller äldre)",
         durationMin: 40,
         priceSek: 1495,
         ifk: {
@@ -119,7 +119,7 @@ const BOOKING_CATEGORIES: BookingCategory[] = [
       {
         id: "halkopp-vuxen-aterbesok",
         name: "Hälkoppsinlägg Vuxen - ÅTERBESÖK",
-        label: "Återbesök - VUXEN",
+        label: "Återbesök - VUXEN (fyllda 18 år eller äldre)",
         durationMin: 30,
         priceSek: 1295,
         ifk: {
@@ -132,7 +132,7 @@ const BOOKING_CATEGORIES: BookingCategory[] = [
       {
         id: "halkopp-barn-nybesok",
         name: "Hälkoppsinlägg Barn - NYBESÖK",
-        label: "Nybesök - BARN",
+        label: "Nybesök - BARN (ej fyllda 18 år)",
         durationMin: 40,
         priceSek: 1295,
         ifk: {
@@ -145,7 +145,7 @@ const BOOKING_CATEGORIES: BookingCategory[] = [
       {
         id: "halkopp-barn-aterbesok",
         name: "Hälkoppsinlägg Barn - ÅTERBESÖK",
-        label: "Återbesök - BARN",
+        label: "Återbesök - BARN (ej fyllda 18 år)",
         durationMin: 30,
         priceSek: 1095,
         ifk: {
@@ -307,7 +307,7 @@ const StepLabel = ({
     >
       {step}
     </span>
-    <p className="min-w-0 flex-1 pt-0.5 text-sm leading-snug text-muted-foreground">
+    <p className="min-w-0 flex-1 break-words pt-0.5 text-sm leading-snug text-muted-foreground">
       {children}
     </p>
   </div>
@@ -337,11 +337,11 @@ const formatPrice = (priceSek: number) =>
 
 /** Match Kaddio's slugify so /booking/cal/:path locks the selected service */
 const slugifyForKaddio = (value: string) => {
+  let slug = value.replace(/^\s+|\s+$/g, "").toLowerCase();
   const from = "åàáãäâèéëêìíïîòóöôùúüûñç·/_,:;";
   const to = "aaaaaaeeeeiiiioooouuuunc------";
-  let slug = value.trim().toLowerCase();
   for (let i = 0; i < from.length; i++) {
-    slug = slug.replaceAll(from.charAt(i), to.charAt(i));
+    slug = slug.replace(new RegExp(from.charAt(i), "g"), to.charAt(i));
   }
   return slug
     .replace(/[^a-z0-9 -]/g, "")
@@ -354,6 +354,13 @@ const iframeUrlForService = (serviceName: string) =>
 
 const externalUrlForService = (serviceName: string) =>
   `${KADDIO_BOOKING_URL}/booking/cal/${slugifyForKaddio(serviceName)}`;
+
+const servicesInCategory = (category: BookingCategory) => [
+  ...(category.subgroups
+    ? category.subgroups.flatMap((subgroup) => subgroup.services)
+    : (category.services ?? [])),
+  ...(category.packages ?? []),
+];
 
 
 const ServiceOption = ({
@@ -389,7 +396,7 @@ const ServiceOption = ({
       >
         <span
           className={[
-            "line-clamp-2 min-h-[2.5rem] text-[13px] font-semibold leading-snug tracking-tight sm:text-sm",
+            "line-clamp-3 min-h-[2.5rem] text-[13px] font-semibold leading-snug tracking-tight sm:line-clamp-2 sm:text-sm",
             isSelected ? "text-primary" : "text-foreground",
           ].join(" ")}
         >
@@ -516,6 +523,14 @@ const Boka = () => {
       ? IFK_STOCKSUND_KADDIO_URL
       : KADDIO_BOOKING_URL;
 
+  const selectedCategory = selected
+    ? categories.find((category) =>
+        servicesInCategory(category).some(
+          (service) => service.id === selectedServiceId,
+        ),
+      )
+    : undefined;
+
   const selectService = (serviceId: string) => {
     setSelectedServiceId(serviceId);
     requestAnimationFrame(() => {
@@ -523,6 +538,13 @@ const Boka = () => {
         behavior: "smooth",
         block: "start",
       });
+    });
+  };
+
+  const clearSelectedService = () => {
+    setSelectedServiceId(undefined);
+    requestAnimationFrame(() => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
     });
   };
 
@@ -559,14 +581,29 @@ const Boka = () => {
         <div className="container mx-auto max-w-7xl px-4">
           <div className="w-full min-w-0">
             <div className="mb-6 grid grid-cols-1 items-stretch gap-4 lg:mb-8 lg:grid-cols-3 lg:gap-4">
-              {categories.map((category, index) => {
-                const tone = SECTION_TONES[index] ?? SECTION_TONES[0];
+              {(selected && selectedCategory
+                ? [selectedCategory]
+                : categories
+              ).map((category, index) => {
+                const tone =
+                  SECTION_TONES[
+                    selectedCategory
+                      ? categories.findIndex((c) => c.id === category.id)
+                      : index
+                  ] ?? SECTION_TONES[0];
+                const services = selected
+                  ? servicesInCategory(category).filter(
+                      (service) => service.id === selectedServiceId,
+                    )
+                  : servicesInCategory(category);
 
                 return (
                   <section
                     key={category.id}
                     aria-labelledby={`category-${category.id}`}
-                    className={`flex h-full min-w-0 flex-col overflow-hidden rounded-lg border ${tone.frame}`}
+                    className={`flex h-full min-w-0 flex-col overflow-hidden rounded-lg border ${
+                      selected ? "lg:col-span-1" : ""
+                    } ${tone.frame}`}
                   >
                     <h2
                       id={`category-${category.id}`}
@@ -577,12 +614,7 @@ const Boka = () => {
 
                     <div className="flex flex-1 flex-col p-2 sm:p-2.5">
                       <ServiceList
-                        services={[
-                          ...(category.subgroups
-                            ? category.subgroups.flatMap((subgroup) => subgroup.services)
-                            : (category.services ?? [])),
-                          ...(category.packages ?? []),
-                        ]}
+                        services={services}
                         selectedServiceId={selectedServiceId}
                         onSelect={selectService}
                         columns={1}
@@ -597,7 +629,11 @@ const Boka = () => {
               <div id="kaddio-bokning" className="min-w-0 scroll-mt-20">
                 <div className="mb-4 space-y-3">
                   <StepLabel step={2}>
-                    Välj en tid i kalendern för ditt besök.
+                    Välj en tid i kalendern för ditt besök. Endast tider för{" "}
+                    <span className="font-medium text-foreground">
+                      {selected.service.label}
+                    </span>{" "}
+                    visas.
                   </StepLabel>
                   <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-3 sm:pl-9">
                     <p className="min-w-0 text-sm leading-snug text-muted-foreground md:text-base break-words">
@@ -608,7 +644,7 @@ const Boka = () => {
                     </p>
                     <button
                       type="button"
-                      onClick={() => setSelectedServiceId(undefined)}
+                      onClick={clearSelectedService}
                       className="self-start text-sm font-medium text-primary underline underline-offset-4 hover:text-primary/80"
                     >
                       Byt tjänst
@@ -623,12 +659,12 @@ const Boka = () => {
 
                 <div className="w-full max-w-full overflow-x-hidden">
                   <iframe
-                    key={iframeSrc}
+                    key={`${selectedServiceId}:${iframeSrc}`}
                     src={iframeSrc}
-                    title="Boka tid via Kaddio"
+                    title={`Boka tid: ${selected.service.label}`}
                     className="w-full max-w-full min-h-[640px] border-0 sm:min-h-[800px] md:min-h-[1000px]"
                     style={{ overflowY: "auto", overflowX: "hidden" }}
-                    loading="lazy"
+                    loading="eager"
                     referrerPolicy="no-referrer-when-downgrade"
                   />
                 </div>

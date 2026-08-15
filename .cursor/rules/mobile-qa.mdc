@@ -1,0 +1,22 @@
+---
+description: Always quality-assure UI changes in mobile viewport
+alwaysApply: true
+---
+
+# Mobile quality assurance
+
+Every UI change must be checked for mobile before considering the task done.
+
+## Required checks
+
+1. Verify layout at ~375px width (iPhone) and ideally ~320px (small phones).
+2. No horizontal overflow or cut-off text from `whitespace-nowrap`, fixed widths, or long labels.
+3. Touch targets for links/buttons should be comfortably tappable (about 40px+ height where practical).
+4. Header, CTAs, booking cards, and forms must remain readable and usable without zooming.
+5. Prefer wrapping text on small screens; use `whitespace-nowrap` only from `sm:`/`md:` upward when a single line is required on desktop.
+
+## When making changes
+
+- After editing UI, explicitly review the mobile result (screenshot, browser responsive mode, or equivalent).
+- If a desktop-only constraint fights mobile readability, adapt with responsive classes rather than forcing one layout everywhere.
+- Do not ship a visual polish that only looks correct on desktop.

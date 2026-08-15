@@ -21,11 +21,11 @@ const Hero = () => {
       {/* Content */}
       <div className="container relative z-10 max-w-full px-4 py-14 sm:py-20">
         <div className="mx-auto max-w-4xl text-center">
-          <h1 className="mb-5 max-w-full text-balance text-2xl font-bold leading-tight text-primary-foreground animate-in fade-in slide-in-from-bottom-4 duration-1000 sm:mb-6 sm:text-5xl sm:leading-tight md:text-7xl">
+          <h1 className="mb-5 max-w-full px-1 text-balance text-[1.35rem] font-bold leading-snug text-primary-foreground animate-in fade-in slide-in-from-bottom-4 duration-1000 break-words sm:mb-6 sm:px-0 sm:text-5xl sm:leading-tight md:text-7xl">
             Tillbaka till tävling
             <br />- mer redo än någonsin
           </h1>
-          <p className="mb-8 max-w-full text-base leading-snug text-primary-foreground/90 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-150 sm:mb-10 sm:text-xl md:text-2xl">
+          <p className="mb-8 max-w-full px-1 text-sm leading-snug text-primary-foreground/90 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-150 break-words sm:mb-10 sm:px-0 sm:text-xl md:text-2xl">
             Idrottsfysioterapi i
             <br className="sm:hidden" /> Stockholm och Mariefred
           </p>

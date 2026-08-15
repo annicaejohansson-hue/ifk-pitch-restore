@@ -38,24 +38,30 @@ const Kontakt = () => {
             <div className="rounded-2xl border border-border/60 bg-card/90 p-5 shadow-[var(--shadow-card)] backdrop-blur-sm sm:p-6 md:p-8 lg:p-10">
               <div className="grid gap-8 lg:grid-cols-2 lg:items-start lg:gap-10">
                 {/* Left: contact + hours with generous spacing */}
-                <div className="flex min-w-0 flex-col justify-between gap-10 lg:min-h-[280px] lg:gap-12">
+                <div className="flex min-w-0 flex-col justify-between gap-8 sm:gap-10 lg:min-h-[280px] lg:gap-12">
                   <div>
-                    <h2 className="mb-5 text-xl font-bold text-foreground md:mb-6 md:text-2xl">
+                    <h2 className="mb-4 text-xl font-bold text-foreground sm:mb-5 md:mb-6 md:text-2xl">
                       Kontaktuppgifter
                     </h2>
-                    <ul className="space-y-6 md:space-y-7">
+                    <ul className="space-y-5 sm:space-y-6 md:space-y-7">
                       <li className="flex items-start gap-3">
                         <MapPin
                           className="mt-0.5 h-5 w-5 shrink-0 text-primary"
                           aria-hidden="true"
                         />
-                        <address className="not-italic text-base leading-relaxed text-foreground md:text-lg">
-                          Caselo Idrottsmedicin
-                          <br />
-                          {ADDRESS_LINE_1}
-                          <br />
-                          {ADDRESS_LINE_2}
-                        </address>
+                        <div className="min-w-0">
+                          <address className="not-italic text-base leading-relaxed text-foreground md:text-lg">
+                            Caselo Idrottsmedicin
+                            <br />
+                            {ADDRESS_LINE_1}
+                            <br />
+                            {ADDRESS_LINE_2}
+                          </address>
+                          <p className="mt-2 min-w-0 text-sm leading-snug text-muted-foreground break-words md:text-base md:leading-relaxed">
+                            Mottagningen ligger i direkt anslutning till fotbollsplan
+                            och löparbana.
+                          </p>
+                        </div>
                       </li>
                       <li className="flex items-center gap-3">
                         <Phone
@@ -93,15 +99,17 @@ const Kontakt = () => {
                         className="mt-0.5 h-5 w-5 shrink-0 text-primary"
                         aria-hidden="true"
                       />
-                      <p className="text-base leading-relaxed text-foreground md:text-lg">
-                        Helgfria vardagar måndag–fredag kl. 08.00–16.00
+                      <p className="min-w-0 flex-1 text-base leading-relaxed text-foreground md:text-lg">
+                        Helgfria vardagar måndag–fredag
+                        <br className="sm:hidden" />{" "}
+                        <span className="sm:ml-0">kl.&nbsp;08.00–16.00</span>
                       </p>
                     </div>
                   </div>
                 </div>
 
-                {/* Right: smaller flag — show entire banner */}
-                <div className="mx-auto w-full max-w-[280px] overflow-hidden rounded-xl sm:max-w-[320px] lg:mx-0 lg:justify-self-end">
+                {/* Right: flag — full width on mobile, constrained on larger */}
+                <div className="mx-auto w-full max-w-[240px] overflow-hidden rounded-xl sm:max-w-[280px] md:max-w-[320px] lg:mx-0 lg:justify-self-end">
                   <img
                     src={sportsImage}
                     alt="Caselo Idrottsmedicin-flagga vid idrottsanläggningen i Danderyd"
