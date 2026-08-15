@@ -25,7 +25,7 @@ const Hero = () => {
             Tillbaka till tävling
             <br />- mer redo än någonsin
           </h1>
-          <p className="mb-8 max-w-full px-1 text-sm leading-snug text-primary-foreground/90 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-150 break-words sm:mb-10 sm:px-0 sm:text-xl md:text-2xl">
+          <p className="mb-8 max-w-full px-1 text-base leading-snug text-primary-foreground/90 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-150 break-words sm:mb-10 sm:px-0 sm:text-xl md:text-2xl">
             Idrottsfysioterapi i
             <br className="sm:hidden" /> Stockholm och Mariefred
           </p>

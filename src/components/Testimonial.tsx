@@ -9,7 +9,7 @@ const Testimonial = () => {
     <section className="bg-gradient-to-b from-background to-muted/30 py-20 md:py-28">
       <div className="container px-4">
         <div className="mx-auto max-w-5xl">
-          <h2 className="mb-6 text-left text-balance text-xl font-bold tracking-tight text-primary sm:mb-8 sm:text-3xl md:mb-10 md:text-5xl">
+          <h2 className="mb-6 text-left text-balance text-3xl font-bold tracking-tight text-primary sm:mb-8 md:mb-10 md:text-5xl">
             Vad patienter säger
           </h2>
           <div className="grid grid-cols-1 items-stretch gap-12 md:grid-cols-3 md:gap-16">
@@ -20,11 +20,11 @@ const Testimonial = () => {
               >
                 <span
                   aria-hidden="true"
-                  className="mb-4 block select-none font-serif text-5xl leading-none text-primary/25 sm:mb-5 sm:text-6xl md:text-7xl"
+                  className="mb-0 block select-none font-serif text-8xl leading-none text-primary/25 sm:mb-5 sm:text-7xl"
                 >
                   “
                 </span>
-                <p className="break-words text-sm leading-relaxed text-muted-foreground md:text-base">
+                <p className="-mt-12 break-words text-sm leading-relaxed text-muted-foreground sm:mt-0 md:text-base">
                   {quote}
                 </p>
               </blockquote>

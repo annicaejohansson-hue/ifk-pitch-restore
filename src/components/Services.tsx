@@ -7,7 +7,7 @@ const Services = () => {
     <section className="bg-gradient-to-b from-background via-muted/30 to-background pb-0 pt-12 sm:pt-16 md:pt-20">
       <div className="container px-4">
         <div className="mx-auto mb-10 max-w-3xl text-center md:mb-16">
-          <h2 className="mb-4 text-balance text-xl font-bold tracking-tight sm:mb-6 sm:text-3xl md:text-5xl">
+          <h2 className="mb-4 text-balance text-3xl font-bold tracking-tight sm:mb-6 md:text-5xl">
             Trygg återgång och starkare prestation
           </h2>
           <p className="text-base text-muted-foreground sm:text-lg">

@@ -513,6 +513,7 @@ const ServiceList = ({
 
 const Boka = () => {
   const [selectedServiceId, setSelectedServiceId] = useState<string | undefined>();
+  const [openCategoryId, setOpenCategoryId] = useState<string | undefined>();
   const [iframeEpoch, setIframeEpoch] = useState(0);
   const [searchParams] = useSearchParams();
   const { isIfkStocksund, setVisitorType } = useVisitor();
@@ -600,6 +601,15 @@ const Boka = () => {
       )
     : undefined;
 
+  const isCategoryExpanded = (categoryId: string) =>
+    selectedCategory?.id === categoryId || openCategoryId === categoryId;
+
+  const toggleCategory = (categoryId: string) => {
+    setOpenCategoryId((current) =>
+      current === categoryId ? undefined : categoryId,
+    );
+  };
+
   const selectService = (serviceId: string) => {
     setSelectedServiceId(serviceId);
     requestAnimationFrame(() => {
@@ -666,6 +676,8 @@ const Boka = () => {
                     )
                   : servicesInCategory(category);
 
+                const expanded = isCategoryExpanded(category.id);
+
                 return (
                   <section
                     key={category.id}
@@ -674,14 +686,36 @@ const Boka = () => {
                       selected ? "lg:col-span-1" : ""
                     } ${tone.frame}`}
                   >
-                    <h2
-                      id={`category-${category.id}`}
-                      className={`flex min-h-[3.25rem] w-full shrink-0 items-center px-2.5 py-2.5 text-[13px] font-semibold leading-snug tracking-tight text-balance break-words sm:min-h-[3.5rem] sm:px-3 sm:text-sm lg:text-[13px] xl:text-[15px] ${tone.heading}`}
-                    >
-                      {category.name}
+                    <h2 id={`category-${category.id}`} className="m-0">
+                      <button
+                        type="button"
+                        aria-expanded={expanded}
+                        aria-controls={`category-panel-${category.id}`}
+                        onClick={() => toggleCategory(category.id)}
+                        className={`flex min-h-12 w-full items-center justify-between gap-2 px-2.5 py-2.5 text-left text-[13px] font-semibold leading-snug tracking-tight text-balance break-words focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 lg:hidden sm:min-h-[3.5rem] sm:px-3 sm:text-sm ${tone.heading}`}
+                      >
+                        <span className="min-w-0 flex-1">{category.name}</span>
+                        <ChevronDown
+                          className={[
+                            "h-5 w-5 shrink-0 transition-transform duration-200",
+                            expanded ? "rotate-180" : "",
+                          ].join(" ")}
+                          aria-hidden="true"
+                        />
+                      </button>
+                      <span
+                        className={`hidden min-h-[3.5rem] w-full items-center px-3 text-sm font-semibold leading-snug tracking-tight text-balance break-words lg:flex lg:text-[13px] xl:text-[15px] ${tone.heading}`}
+                      >
+                        {category.name}
+                      </span>
                     </h2>
 
-                    <div className="flex flex-1 flex-col p-2 sm:p-2.5">
+                    <div
+                      id={`category-panel-${category.id}`}
+                      className={`flex flex-1 flex-col p-2 sm:p-2.5 ${
+                        expanded ? "" : "max-lg:hidden"
+                      }`}
+                    >
                       <ServiceList
                         services={services}
                         selectedServiceId={selectedServiceId}

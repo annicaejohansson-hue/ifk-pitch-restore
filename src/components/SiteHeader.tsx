@@ -1,15 +1,13 @@
-import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu } from "lucide-react";
 import IfkStocksundBanner from "@/components/IfkStocksundBanner";
 import { useVisitor } from "@/context/VisitorContext";
 import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const NAV_LINKS = [
   { to: "/tjanster", label: "Tjänster", match: "prefix" as const },
@@ -23,7 +21,6 @@ const isActive = (pathname: string, to: string, match: "prefix" | "exact") =>
 const SiteHeader = () => {
   const location = useLocation();
   const { isIfkStocksund } = useVisitor();
-  const [menuOpen, setMenuOpen] = useState(false);
 
   const desktopLinkClass = (active: boolean) =>
     [
@@ -53,8 +50,8 @@ const SiteHeader = () => {
             />
           </Link>
 
-          <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
-            <SheetTrigger asChild>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
               <button
                 type="button"
                 className="inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-md text-foreground hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 md:hidden"
@@ -62,28 +59,26 @@ const SiteHeader = () => {
               >
                 <Menu className="h-6 w-6" aria-hidden="true" />
               </button>
-            </SheetTrigger>
-            <SheetContent
-              side="right"
-              className="w-[min(18rem,85vw)] p-0"
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="end"
+              sideOffset={6}
+              className="w-52 p-1.5"
             >
-              <SheetTitle className="sr-only">Meny</SheetTitle>
-              <nav className="flex flex-col gap-1 pt-16 pb-6" aria-label="Huvudmeny">
-                {NAV_LINKS.map((link) => (
-                  <SheetClose asChild key={link.to}>
-                    <Link
-                      to={link.to}
-                      className={mobileLinkClass(
-                        isActive(location.pathname, link.to, link.match),
-                      )}
-                    >
-                      {link.label}
-                    </Link>
-                  </SheetClose>
-                ))}
-              </nav>
-            </SheetContent>
-          </Sheet>
+              {NAV_LINKS.map((link) => (
+                <DropdownMenuItem key={link.to} asChild>
+                  <Link
+                    to={link.to}
+                    className={mobileLinkClass(
+                      isActive(location.pathname, link.to, link.match),
+                    )}
+                  >
+                    {link.label}
+                  </Link>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
 
         {isIfkStocksund ? (

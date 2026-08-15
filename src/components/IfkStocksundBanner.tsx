@@ -28,7 +28,7 @@ const IfkStocksundBanner = () => {
           Som spelare i IFK Stocksund har du rabatterade priser hos Caselo
           Idrottsmedicin.
         </p>
-        <p className="mt-px text-[9px] leading-none text-muted-foreground/70 break-words sm:mt-0.5 sm:text-[11px] sm:leading-snug">
+        <p className="mt-px text-[length:clamp(5.5px,2.38cqw,0.875rem)] font-normal leading-none text-muted-foreground/70 break-words sm:mt-0.5 sm:text-[11px] sm:leading-snug">
           Är du inte spelare i IFK Stocksund?{" "}
           <Link
             to="/"
