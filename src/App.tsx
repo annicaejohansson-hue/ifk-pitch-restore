@@ -13,6 +13,7 @@ import Om from "@/pages/Om";
 import Tjanster from "@/pages/Tjanster";
 import TjansterDetail from "@/pages/TjansterDetail";
 import { VisitorProvider } from "@/context/VisitorContext";
+import Analytics from "@/components/Analytics";
 
 const queryClient = new QueryClient();
 
@@ -23,6 +24,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <VisitorProvider>
+          <Analytics />
           <SiteHeader />
           <Routes>
             <Route path="/" element={<Index />} />

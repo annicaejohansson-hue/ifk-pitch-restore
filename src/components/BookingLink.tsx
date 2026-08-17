@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
-import type { ComponentPropsWithoutRef, ReactNode } from "react";
-import { useBookingUrl } from "@/context/VisitorContext";
+import type { ComponentPropsWithoutRef, MouseEvent, ReactNode } from "react";
+import { useVisitor } from "@/context/VisitorContext";
 import { isExternalBookingUrl } from "@/lib/booking";
+import { trackBokaTid } from "@/lib/analytics";
 
 type BookingLinkProps = Omit<ComponentPropsWithoutRef<"a">, "href"> & {
   children: ReactNode;
@@ -11,19 +12,29 @@ type BookingLinkProps = Omit<ComponentPropsWithoutRef<"a">, "href"> & {
  * Renders a booking CTA that follows the current visitor type.
  * Uses React Router for internal paths and <a> for external URLs.
  */
-const BookingLink = ({ children, ...props }: BookingLinkProps) => {
-  const bookingUrl = useBookingUrl();
+const BookingLink = ({ children, onClick, ...props }: BookingLinkProps) => {
+  const { bookingUrl, visitorType } = useVisitor();
+
+  const handleClick = (event: MouseEvent<HTMLAnchorElement>) => {
+    trackBokaTid(visitorType);
+    onClick?.(event);
+  };
 
   if (isExternalBookingUrl(bookingUrl)) {
     return (
-      <a href={bookingUrl} rel="noopener noreferrer" {...props}>
+      <a
+        href={bookingUrl}
+        rel="noopener noreferrer"
+        onClick={handleClick}
+        {...props}
+      >
         {children}
       </a>
     );
   }
 
   return (
-    <Link to={bookingUrl} {...props}>
+    <Link to={bookingUrl} onClick={handleClick} {...props}>
       {children}
     </Link>
   );
