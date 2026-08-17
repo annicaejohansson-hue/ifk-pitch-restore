@@ -10,7 +10,7 @@ declare global {
   }
 }
 
-const DEFAULT_MEASUREMENT_ID = "G-PXRM4N9YSH";
+const DEFAULT_MEASUREMENT_ID = "G-DH1939Q66S";
 
 export const getMeasurementId = () => {
   const fromEnv = import.meta.env.VITE_GA_MEASUREMENT_ID?.trim() ?? "";
