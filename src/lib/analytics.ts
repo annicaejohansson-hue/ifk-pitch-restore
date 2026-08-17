@@ -38,11 +38,12 @@ export const setAnalyticsConsent = (consent: AnalyticsConsent) => {
 
 const ensureGtag = () => {
   window.dataLayer = window.dataLayer ?? [];
-  window.gtag =
-    window.gtag ??
-    function gtag(...args: unknown[]) {
-      window.dataLayer.push(args);
+  if (typeof window.gtag !== "function") {
+    window.gtag = function gtag() {
+      // Google's snippet pushes `arguments`, not a rest-parameter array.
+      window.dataLayer.push(arguments);
     };
+  }
 };
 
 let scriptRequested = false;
