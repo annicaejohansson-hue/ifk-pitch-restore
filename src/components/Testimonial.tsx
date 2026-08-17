@@ -20,11 +20,11 @@ const Testimonial = () => {
               >
                 <span
                   aria-hidden="true"
-                  className="mb-0 block select-none font-serif text-8xl leading-none text-primary/25 sm:mb-5 sm:text-7xl"
+                  className="block h-9 overflow-hidden select-none font-serif text-8xl leading-none text-primary/25 sm:h-8 sm:text-7xl"
                 >
                   “
                 </span>
-                <p className="-mt-12 break-words text-sm leading-relaxed text-muted-foreground sm:mt-0 md:text-base">
+                <p className="mt-1 break-words text-sm leading-relaxed text-muted-foreground md:text-base">
                   {quote}
                 </p>
               </blockquote>

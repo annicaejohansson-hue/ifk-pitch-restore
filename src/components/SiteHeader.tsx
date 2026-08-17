@@ -1,6 +1,8 @@
 import { Link, useLocation } from "react-router-dom";
-import { Menu } from "lucide-react";
+import { Calendar, Menu } from "lucide-react";
+import BookingLink from "@/components/BookingLink";
 import IfkStocksundBanner from "@/components/IfkStocksundBanner";
+import { Button } from "@/components/ui/button";
 import { useVisitor } from "@/context/VisitorContext";
 import {
   DropdownMenu,
@@ -33,6 +35,8 @@ const SiteHeader = () => {
       "flex min-h-12 items-center px-4 text-base font-medium transition-colors hover:text-primary",
       active ? "text-primary" : "text-foreground",
     ].join(" ");
+
+  const showHeaderBooking = location.pathname !== "/boka";
 
   return (
     <header className="border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -107,6 +111,19 @@ const SiteHeader = () => {
               {link.label}
             </Link>
           ))}
+          {showHeaderBooking ? (
+            <Button
+              asChild
+              size="sm"
+              variant="secondary"
+              className="min-h-11 shrink-0 px-4 text-sm shadow-[var(--shadow-button)]"
+            >
+              <BookingLink aria-label="Gå till bokningssidan">
+                <Calendar className="h-4 w-4" aria-hidden="true" />
+                Boka tid
+              </BookingLink>
+            </Button>
+          ) : null}
         </nav>
       </div>
     </header>
