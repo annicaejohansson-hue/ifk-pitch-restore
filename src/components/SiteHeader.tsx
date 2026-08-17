@@ -116,7 +116,7 @@ const SiteHeader = () => {
               asChild
               size="sm"
               variant="secondary"
-              className="min-h-11 shrink-0 px-4 text-sm shadow-[var(--shadow-button)]"
+              className="min-h-11 shrink-0 px-4 text-sm shadow-[var(--shadow-button)] transition-[var(--transition-smooth)] hover:shadow-[var(--shadow-hover)]"
             >
               <BookingLink aria-label="Gå till bokningssidan">
                 <Calendar className="h-4 w-4" aria-hidden="true" />

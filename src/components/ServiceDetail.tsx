@@ -109,7 +109,8 @@ const ServiceDetail = ({
           </p>
           <Button
             asChild
-            className="h-11 w-full max-w-xs px-6 text-base sm:h-12 sm:w-auto sm:px-8 sm:text-lg"
+            variant="secondary"
+            className="h-11 w-full max-w-xs px-6 text-base shadow-[var(--shadow-button)] transition-[var(--transition-smooth)] hover:shadow-[var(--shadow-hover)] sm:h-12 sm:w-auto sm:px-8 sm:text-lg"
             aria-label="Gå till bokningssidan"
           >
             <BookingLink>Boka tid</BookingLink>
