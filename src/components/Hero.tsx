@@ -55,13 +55,64 @@ const Hero = () => {
     const video = videoRef.current;
     if (!playVideo || !video) return;
 
+    video.muted = true;
+    video.defaultMuted = true;
+    video.playsInline = true;
+    video.loop = true;
+
+    const tryPlay = () => {
+      const playAttempt = video.play();
+      if (playAttempt) playAttempt.catch(() => {});
+    };
+
+    const restart = () => {
+      try {
+        video.currentTime = 0;
+      } catch {
+        // Some mobile browsers throw if seek happens during an invalid state.
+      }
+      tryPlay();
+    };
+
+    const onEnded = () => restart();
+    const onPause = () => {
+      if (document.hidden) return;
+      if (video.ended || (video.duration > 0 && video.currentTime >= video.duration - 0.25)) {
+        restart();
+      }
+    };
+    const onTimeUpdate = () => {
+      // iOS Safari often never fires `ended` / ignores `loop`.
+      if (video.duration > 0 && video.currentTime >= video.duration - 0.12) {
+        restart();
+      }
+    };
+    const onVisibility = () => {
+      if (!document.hidden) tryPlay();
+    };
+
+    video.addEventListener("ended", onEnded);
+    video.addEventListener("pause", onPause);
+    video.addEventListener("timeupdate", onTimeUpdate);
+    video.addEventListener("canplay", tryPlay);
+    document.addEventListener("visibilitychange", onVisibility);
+    tryPlay();
+
     let frame = 0;
     const tick = () => {
       video.style.objectPosition = `${focusXAt(video.currentTime)}% 50%`;
       frame = requestAnimationFrame(tick);
     };
     frame = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(frame);
+
+    return () => {
+      cancelAnimationFrame(frame);
+      video.removeEventListener("ended", onEnded);
+      video.removeEventListener("pause", onPause);
+      video.removeEventListener("timeupdate", onTimeUpdate);
+      video.removeEventListener("canplay", tryPlay);
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
   }, [playVideo]);
 
   return (
@@ -84,8 +135,10 @@ const Hero = () => {
             muted
             loop
             playsInline
-            preload="metadata"
+            preload="auto"
             poster={heroImage}
+            disablePictureInPicture
+            disableRemotePlayback
             onError={() => setPlayVideo(false)}
           >
             <source src={HERO_VIDEO_SRC} type="video/mp4" />
