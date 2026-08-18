@@ -40,7 +40,12 @@ const SiteHeader = () => {
 
   return (
     <header className="border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container px-4 py-2.5 sm:py-3 md:flex md:min-h-28 md:items-center md:gap-4 md:py-2 lg:gap-6">
+      <div
+        className={[
+          "container px-4 py-2.5 sm:py-3 md:flex md:min-h-28 md:items-center md:gap-4 md:py-2 lg:gap-6",
+          isIfkStocksund ? "md:flex-wrap lg:flex-nowrap" : "",
+        ].join(" ")}
+      >
         <div className="flex items-center justify-between gap-3 md:contents">
           <Link
             to="/"
@@ -87,10 +92,10 @@ const SiteHeader = () => {
 
         {isIfkStocksund ? (
           <>
-            <div className="mt-2 w-full min-w-0 md:mt-0 md:w-fit md:max-w-full md:px-1 lg:px-2">
+            <div className="hidden flex-1 md:block lg:hidden" aria-hidden="true" />
+            <div className="mt-2 w-full min-w-0 md:order-last md:mt-2 lg:order-none lg:mt-0 lg:w-0 lg:min-w-[12rem] lg:flex-1 lg:px-2">
               <IfkStocksundBanner />
             </div>
-            <div className="hidden flex-1 md:block" aria-hidden="true" />
           </>
         ) : (
           <div className="hidden flex-1 md:block" aria-hidden="true" />
