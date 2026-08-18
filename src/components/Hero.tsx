@@ -8,21 +8,21 @@ const HERO_VIDEO_SRC = "/hero.mp4";
 
 /** Horizontal focus in the 16:9 frame (0–100). Used when mobile crops the sides. */
 const MOBILE_FOCUS_X: ReadonlyArray<readonly [number, number]> = [
-  [0, 60],
-  [1.5, 68],
-  [3, 74],
-  [4.5, 80],
-  [6, 52],
-  [7, 42],
-  [7.6, 50],
-  [8, 70],
-  [8.5, 55],
-  [9.5, 85],
-  [11.5, 84],
-  [13.5, 20],
-  [15.5, 42],
-  [17.5, 78],
-  [20.5, 62],
+  [0, 63],
+  [1, 68],
+  [2.5, 74],
+  [4, 80],
+  [5.5, 52],
+  [6.5, 42],
+  [7.1, 50],
+  [7.5, 70],
+  [8, 55],
+  [9, 85],
+  [11, 84],
+  [13, 20],
+  [15, 42],
+  [17, 78],
+  [20, 62],
 ];
 
 const focusXAt = (time: number) => {
