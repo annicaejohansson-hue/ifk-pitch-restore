@@ -1,9 +1,10 @@
+import performanceImage from "@/assets/IMG_9118.jpg";
+
 export const injuryImageUrl =
   "https://simplifaster.com/wp-content/uploads/2025/06/Female-Soccer-Striker.jpg";
 export const heelCupImageUrl =
   "https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?auto=format&fit=crop&w=800&q=80";
-export const performanceImageUrl =
-  "https://nwscdn.com/media/wysiwyg/forza/Agility-football-training-ladder.jpg?odnHeight=117&odnWidth=117&odnBg=FFFFFF";
+export const performanceImageUrl = performanceImage;
 
 export type ServiceSlug =
   | "smarta-och-skador"
@@ -118,7 +119,7 @@ export const services: ServiceContent[] = [
     metaDescription:
       "Test och träning för ökad fysisk prestation hos Caselo Idrottsmedicin – kapacitetstest, personligt träningsupplägg och uppföljning.",
     image: performanceImageUrl,
-    imageAlt: "Test och träning för ökad fysisk prestation",
+    imageAlt: "Test och träning för ökad fysisk prestation på planen",
     accentClass: "bg-[hsl(210_42%_52%)]",
     imagePosition: "left",
     intro: [

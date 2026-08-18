@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/card";
-import henrikFoto from "@/assets/Henrik Foto.jpeg";
+import henrikFoto from "@/assets/IMG_9111.jpg";
 
 const Therapists = () => {
   return (
@@ -49,7 +49,7 @@ const Therapists = () => {
                 </li>
                 <li>
                   <strong className="font-semibold text-foreground">Vård i din träningsmiljö</strong> –
-                  mottagningen ligger i direkt anslutning till fotbollsplan och löparbana.
+                  Mottagningen ligger i direkt anslutning till fotbollsplan och löparbana.
                 </li>
               </ul>
             </div>

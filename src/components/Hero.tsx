@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "lucide-react";
 import heroImage from "@/assets/hero-football.jpg";
@@ -6,8 +6,42 @@ import BookingLink from "@/components/BookingLink";
 
 const HERO_VIDEO_SRC = "/hero.mp4";
 
+/** Horizontal focus in the 16:9 frame (0–100). Used when mobile crops the sides. */
+const MOBILE_FOCUS_X: ReadonlyArray<readonly [number, number]> = [
+  [0, 60],
+  [1.5, 68],
+  [3, 74],
+  [4.5, 80],
+  [6, 52],
+  [7, 42],
+  [7.6, 50],
+  [8, 70],
+  [8.5, 55],
+  [9.5, 85],
+  [11.5, 84],
+  [13.5, 20],
+  [15.5, 42],
+  [17.5, 78],
+  [20.5, 62],
+];
+
+const focusXAt = (time: number) => {
+  const keys = MOBILE_FOCUS_X;
+  if (time <= keys[0][0]) return keys[0][1];
+  for (let i = 1; i < keys.length; i++) {
+    if (time <= keys[i][0]) {
+      const [t0, x0] = keys[i - 1];
+      const [t1, x1] = keys[i];
+      const u = (time - t0) / (t1 - t0);
+      return x0 + (x1 - x0) * u;
+    }
+  }
+  return keys[keys.length - 1][1];
+};
+
 const Hero = () => {
   const [playVideo, setPlayVideo] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -16,6 +50,19 @@ const Hero = () => {
     motionQuery.addEventListener("change", sync);
     return () => motionQuery.removeEventListener("change", sync);
   }, []);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!playVideo || !video) return;
+
+    let frame = 0;
+    const tick = () => {
+      video.style.objectPosition = `${focusXAt(video.currentTime)}% 50%`;
+      frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, [playVideo]);
 
   return (
     <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
@@ -31,6 +78,7 @@ const Hero = () => {
         />
         {playVideo ? (
           <video
+            ref={videoRef}
             className="absolute inset-0 h-full w-full object-cover object-center"
             autoPlay
             muted

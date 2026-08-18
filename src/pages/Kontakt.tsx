@@ -1,13 +1,11 @@
 import { useEffect } from "react";
 import { Helmet } from "react-helmet";
-import { Clock, ExternalLink, Mail, MapPin, Phone } from "lucide-react";
+import { Clock, ExternalLink, Mail, MapPin } from "lucide-react";
 import sportsImage from "@/assets/caselo-banner-kontakt.jpg";
 
 const ADDRESS_LINE_1 = "Rinkebyvägen 4";
 const ADDRESS_LINE_2 = "182 36 Danderyd";
 const FULL_ADDRESS = `${ADDRESS_LINE_1}, ${ADDRESS_LINE_2}`;
-const PHONE_DISPLAY = "073 756 45 09";
-const PHONE_HREF = "tel:0737564509";
 const EMAIL = "henrik@caseloidrottsmedicin.se";
 const MAPS_SEARCH_URL = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(FULL_ADDRESS)}`;
 const MAPS_EMBED_URL = `https://maps.google.com/maps?q=${encodeURIComponent(FULL_ADDRESS)}&z=15&output=embed`;
@@ -23,7 +21,7 @@ const Kontakt = () => {
         <title>Kontakt – Caselo Idrottsmedicin</title>
         <meta
           name="description"
-          content="Kontakta Caselo Idrottsmedicin i Danderyd. Adress, telefon, e-post och öppettider."
+          content="Kontakta Caselo Idrottsmedicin i Danderyd. Adress, e-post och öppettider."
         />
       </Helmet>
 
@@ -62,18 +60,6 @@ const Kontakt = () => {
                             löparbana.
                           </p>
                         </div>
-                      </li>
-                      <li className="flex items-center gap-3">
-                        <Phone
-                          className="h-5 w-5 shrink-0 text-primary"
-                          aria-hidden="true"
-                        />
-                        <a
-                          href={PHONE_HREF}
-                          className="inline-flex min-h-11 items-center text-base text-foreground underline-offset-4 hover:underline md:min-h-0 md:text-lg"
-                        >
-                          {PHONE_DISPLAY}
-                        </a>
                       </li>
                       <li className="flex items-center gap-3">
                         <Mail
