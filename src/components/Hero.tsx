@@ -1,20 +1,48 @@
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "lucide-react";
 import heroImage from "@/assets/hero-football.jpg";
 import BookingLink from "@/components/BookingLink";
 
+const HERO_VIDEO_SRC = "/hero.mp4";
+
 const Hero = () => {
+  const [playVideo, setPlayVideo] = useState(false);
+
+  useEffect(() => {
+    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const sync = () => setPlayVideo(!motionQuery.matches);
+    sync();
+    motionQuery.addEventListener("change", sync);
+    return () => motionQuery.removeEventListener("change", sync);
+  }, []);
+
   return (
     <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
-      {/* Background Image with Overlay */}
-      <div 
-        className="absolute inset-0 z-0"
-        style={{
-          backgroundImage: `url(${heroImage})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }}
-      >
+      {/* Background image (poster/fallback) + optional video, overlay on top */}
+      <div className="pointer-events-none absolute inset-0 z-0" aria-hidden="true">
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `url(${heroImage})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        />
+        {playVideo ? (
+          <video
+            className="absolute inset-0 h-full w-full object-cover object-center"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            poster={heroImage}
+            onError={() => setPlayVideo(false)}
+          >
+            <source src={HERO_VIDEO_SRC} type="video/mp4" />
+          </video>
+        ) : null}
         <div className="absolute inset-0 bg-gradient-to-r from-primary/70 via-primary/50 to-primary/40" />
       </div>
 
