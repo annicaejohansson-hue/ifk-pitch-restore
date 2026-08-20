@@ -59,8 +59,11 @@ const Hero = () => {
     video.defaultMuted = true;
     video.playsInline = true;
     video.loop = true;
+    video.autoplay = true;
 
     const tryPlay = () => {
+      if (document.hidden) return;
+      video.muted = true;
       const playAttempt = video.play();
       if (playAttempt) playAttempt.catch(() => {});
     };
@@ -76,10 +79,13 @@ const Hero = () => {
 
     const onEnded = () => restart();
     const onPause = () => {
+      // Browsers pause background videos; keep playing whenever the page is visible.
       if (document.hidden) return;
       if (video.ended || (video.duration > 0 && video.currentTime >= video.duration - 0.25)) {
         restart();
+        return;
       }
+      tryPlay();
     };
     const onTimeUpdate = () => {
       // iOS Safari often never fires `ended` / ignores `loop`.
@@ -87,16 +93,24 @@ const Hero = () => {
         restart();
       }
     };
-    const onVisibility = () => {
-      if (!document.hidden) tryPlay();
+    const onVisible = () => {
+      if (document.hidden) return;
+      tryPlay();
+      window.setTimeout(tryPlay, 200);
     };
 
     video.addEventListener("ended", onEnded);
     video.addEventListener("pause", onPause);
     video.addEventListener("timeupdate", onTimeUpdate);
     video.addEventListener("canplay", tryPlay);
-    document.addEventListener("visibilitychange", onVisibility);
+    document.addEventListener("visibilitychange", onVisible);
+    window.addEventListener("focus", onVisible);
+    window.addEventListener("pageshow", onVisible);
     tryPlay();
+
+    const watchdog = window.setInterval(() => {
+      if (!document.hidden && video.paused) tryPlay();
+    }, 800);
 
     let frame = 0;
     const tick = () => {
@@ -107,11 +121,14 @@ const Hero = () => {
 
     return () => {
       cancelAnimationFrame(frame);
+      window.clearInterval(watchdog);
       video.removeEventListener("ended", onEnded);
       video.removeEventListener("pause", onPause);
       video.removeEventListener("timeupdate", onTimeUpdate);
       video.removeEventListener("canplay", tryPlay);
-      document.removeEventListener("visibilitychange", onVisibility);
+      document.removeEventListener("visibilitychange", onVisible);
+      window.removeEventListener("focus", onVisible);
+      window.removeEventListener("pageshow", onVisible);
     };
   }, [playVideo]);
 
