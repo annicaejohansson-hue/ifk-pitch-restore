@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "lucide-react";
-import heroImage from "@/assets/hero-football.jpg";
+import heroPoster from "@/assets/hero-poster.jpg";
 import BookingLink from "@/components/BookingLink";
 
 const HERO_VIDEO_SRC = "/hero.mp4";
@@ -39,8 +39,12 @@ const focusXAt = (time: number) => {
   return keys[keys.length - 1][1];
 };
 
+const prefersReducedMotion = () =>
+  typeof window !== "undefined" &&
+  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
 const Hero = () => {
-  const [playVideo, setPlayVideo] = useState(false);
+  const [playVideo, setPlayVideo] = useState(() => !prefersReducedMotion());
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -136,15 +140,16 @@ const Hero = () => {
     <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
       {/* Background image (poster/fallback) + optional video, overlay on top */}
       <div className="pointer-events-none absolute inset-0 z-0" aria-hidden="true">
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `url(${heroImage})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        />
-        {playVideo ? (
+        {!playVideo ? (
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage: `url(${heroPoster})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
+          />
+        ) : (
           <video
             ref={videoRef}
             className="absolute inset-0 h-full w-full object-cover object-center"
@@ -153,14 +158,14 @@ const Hero = () => {
             loop
             playsInline
             preload="auto"
-            poster={heroImage}
+            poster={heroPoster}
             disablePictureInPicture
             disableRemotePlayback
             onError={() => setPlayVideo(false)}
           >
             <source src={HERO_VIDEO_SRC} type="video/mp4" />
           </video>
-        ) : null}
+        )}
         <div className="absolute inset-0 bg-gradient-to-r from-primary/70 via-primary/50 to-primary/40" />
       </div>
 
