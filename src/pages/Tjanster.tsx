@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { Helmet } from "react-helmet";
+import { Calendar } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import BookingLink from "@/components/BookingLink";
@@ -49,8 +50,9 @@ const Tjanster = () => {
                   />
                 </div>
                 <div className="flex flex-1 flex-col p-5 text-left sm:p-6 md:p-7">
-                  <h2 className="mb-3 text-xl font-bold tracking-tight text-primary md:text-2xl">
-                    {service.title}
+                  <h2 className="mb-3 text-xl font-bold leading-snug tracking-tight text-primary md:text-[1.2rem] lg:text-xl">
+                    <span className="block md:whitespace-nowrap">{service.titleLines[0]}</span>
+                    <span className="block md:whitespace-nowrap">{service.titleLines[1]}</span>
                   </h2>
                   <p className="mb-4 flex-1 text-base leading-relaxed text-muted-foreground">
                     {service.overviewBlurb}
@@ -63,9 +65,9 @@ const Tjanster = () => {
             ))}
           </div>
 
-          <div className="mt-8 rounded-2xl border border-border/60 bg-card/90 px-5 py-7 text-left shadow-[var(--shadow-card)] backdrop-blur-sm sm:px-6 sm:py-8 md:mt-10 md:px-10 md:py-10">
+          <div className="mt-8 rounded-2xl border border-border/60 bg-card/90 px-5 py-7 text-center shadow-[var(--shadow-card)] backdrop-blur-sm sm:px-6 sm:py-8 md:mt-10 md:px-10 md:py-10">
             <h2 className="mb-3 text-xl font-bold text-foreground md:text-2xl">
-              Redo att boka?
+              Vill du boka tid?
             </h2>
             <p className="mb-6 text-base leading-relaxed text-muted-foreground md:text-lg">
               På bokningssidan ser du tider, priser och kan välja den tjänst
@@ -74,10 +76,13 @@ const Tjanster = () => {
             <Button
               asChild
               variant="secondary"
-              className="h-11 w-full max-w-xs px-6 text-base shadow-[var(--shadow-button)] transition-[var(--transition-smooth)] hover:shadow-[var(--shadow-hover)] sm:h-12 sm:w-auto sm:px-8 sm:text-lg"
+              className="mx-auto h-11 w-full max-w-xs px-6 text-base shadow-[var(--shadow-button)] transition-[var(--transition-smooth)] hover:shadow-[var(--shadow-hover)] sm:h-12 sm:w-auto sm:px-8 sm:text-lg"
               aria-label="Gå till bokningssidan"
             >
-              <BookingLink>Boka tid</BookingLink>
+              <BookingLink aria-label="Gå till bokningssidan">
+                <Calendar className="h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" />
+                Boka tid
+              </BookingLink>
             </Button>
           </div>
         </div>

@@ -21,6 +21,8 @@ export type ServiceContent = {
   path: string;
   /** Full title used on Tjänster overview + detail pages */
   title: string;
+  /** Two-line split used on the Tjänster overview cards */
+  titleLines: [string, string];
   /** Shorter title used on homepage service cards */
   cardTitle: string;
   cardDescription: string;
@@ -43,6 +45,7 @@ export const services: ServiceContent[] = [
     slug: "smarta-och-skador",
     path: "/tjanster/smarta-och-skador",
     title: "Bedömning och behandling av smärta och skador",
+    titleLines: ["Bedömning och behandling", "av smärta och skador"],
     cardTitle: "Bedömning och behandling vid skada",
     cardDescription:
       "När du har ont eller är skadad hjälper vi dig med tydlig bedömning, diagnos och individuellt anpassad behandling. Målet är att minska besvären och få dig tillbaka till idrott, arbetsliv eller rörelse i vardagen – tryggt och steg för steg.",
@@ -76,6 +79,7 @@ export const services: ServiceContent[] = [
     slug: "halkoppsinlagg",
     path: "/tjanster/halkoppsinlagg",
     title: "Tillverkning av skräddarsydda hälkoppsinlägg",
+    titleLines: ["Tillverkning av skräddarsydda", "hälkoppsinlägg"],
     cardTitle: "Skräddarsydda hälkoppsinlägg",
     cardDescription:
       "Personligt utformade hälkoppsinlägg som ger stöd och avlastning vid hälsmärta, hälsporre och Severs skada. Vi undersöker, formar och anpassar inlägget efter dig – för både vuxna och barn.",
@@ -111,6 +115,7 @@ export const services: ServiceContent[] = [
     slug: "fysisk-prestation",
     path: "/tjanster/fysisk-prestation",
     title: "Test och träning för ökad fysisk prestation",
+    titleLines: ["Test och träning för ökad", "fysisk prestation"],
     cardTitle: "Snabbare och starkare prestation",
     cardDescription:
       "Vill du bli snabbare och starkare? Vi hjälper dig hitta vad som håller dig tillbaka och bygger ett träningsupplägg som tar dig vidare – mer kraft, mer snabbhet och hållbar prestation.",
