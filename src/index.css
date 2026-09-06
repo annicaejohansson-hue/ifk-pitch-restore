@@ -17,40 +17,40 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 222 47% 11%;
 
-    /* IFK Stocksund dark blue - professional and trustworthy */
-    --primary: 210 60% 15%;
+    /* Contrast-safe puderblå for links, icons and default buttons */
+    --primary: 220 10% 48%;
     --primary-foreground: 0 0% 100%;
     --primary-glow: 210 50% 25%;
 
-    /* Gold CTA – #F5B800 */
-    --secondary: 45 100% 48%;
-    --secondary-foreground: 222 47% 11%;
-    --secondary-hover: 44 100% 42%;
+    /* Puderblå CTA – #B8C6E3, navy text for contrast */
+    --secondary: 220 43% 81%;
+    --secondary-foreground: 221 39% 11%;
+    --secondary-hover: 220 24% 69%;
 
     --muted: 214 20% 95%;
     --muted-foreground: 214 10% 45%;
 
-    --accent: 210 40% 90%;
-    --accent-foreground: 222 47% 11%;
+    --accent: 220 43% 98%;
+    --accent-foreground: 221 39% 11%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
     --border: 214 20% 90%;
     --input: 214 20% 90%;
-    --ring: 45 100% 48%;
+    --ring: 220 10% 48%;
 
     --radius: 0.75rem;
 
     /* Custom gradients for sports energy */
     --gradient-hero: linear-gradient(135deg, hsl(210 60% 15%), hsl(210 50% 25%));
     --gradient-section: linear-gradient(180deg, hsl(0 0% 100%), hsl(210 40% 96%));
-    --gradient-accent: linear-gradient(135deg, hsl(45 100% 48%), hsl(38 100% 44%));
+    --gradient-accent: linear-gradient(135deg, hsl(220 43% 81%), hsl(220 24% 69%));
     
     /* Shadows for depth */
     --shadow-card: 0 4px 20px -2px hsl(210 60% 15% / 0.15);
-    --shadow-button: 0 6px 24px -4px hsl(45 100% 48% / 0.28);
-    --shadow-hover: 0 8px 30px -4px hsl(44 100% 42% / 0.38);
+    --shadow-button: 0 6px 24px -4px hsl(220 43% 81% / 0.28);
+    --shadow-hover: 0 8px 30px -4px hsl(220 24% 69% / 0.38);
     
     /* Transitions */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -67,18 +67,18 @@ All colors MUST be HSL.
     --popover: 214 45% 12%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 210 60% 20%;
+    --primary: 220 10% 62%;
     --primary-foreground: 0 0% 100%;
     --primary-glow: 210 50% 30%;
 
-    --secondary: 45 100% 48%;
-    --secondary-foreground: 222 47% 11%;
-    --secondary-hover: 44 100% 42%;
+    --secondary: 220 43% 81%;
+    --secondary-foreground: 221 39% 11%;
+    --secondary-hover: 220 24% 69%;
 
     --muted: 214 30% 20%;
     --muted-foreground: 214 10% 65%;
 
-    --accent: 210 40% 30%;
+    --accent: 220 20% 22%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
@@ -86,7 +86,7 @@ All colors MUST be HSL.
 
     --border: 214 30% 20%;
     --input: 214 30% 20%;
-    --ring: 45 100% 48%;
+    --ring: 220 10% 62%;
   }
 }
 
@@ -96,6 +96,6 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground overflow-x-hidden;
+    @apply bg-background text-foreground overflow-x-clip;
   }
 }

@@ -1,6 +1,22 @@
 {
+  "redirects": [
+    {
+      "source": "/halkoppar-barn",
+      "destination": "/tjanster/halkoppar-barn",
+      "permanent": true
+    },
+    {
+      "source": "/tjanster/halkoppsinlagg",
+      "destination": "/tjanster/halkoppar-barn",
+      "permanent": true
+    },
+    {
+      "source": "/tjanster/halkoppsinlag",
+      "destination": "/tjanster/halkoppar-barn",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     { "source": "/(.*)", "destination": "/" }
   ]
 }
-

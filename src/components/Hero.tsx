@@ -166,7 +166,7 @@ const Hero = () => {
             <source src={HERO_VIDEO_SRC} type="video/mp4" />
           </video>
         )}
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/70 via-primary/50 to-primary/40" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#111827]/70 via-[#111827]/50 to-[#111827]/40" />
       </div>
 
       {/* Content */}
@@ -181,12 +181,12 @@ const Hero = () => {
             <br className="sm:hidden" /> Stockholm och Mariefred
           </p>
           
-          <div className="flex flex-col items-center sm:flex-row gap-4 justify-center animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-300">
+          <div className="flex flex-col items-center sm:flex-row gap-4 justify-center">
             <Button 
               asChild
               size="sm" 
               variant="secondary"
-              className="min-h-11 w-auto px-4 py-2 text-sm shadow-[var(--shadow-button)] transition-[var(--transition-smooth)] hover:shadow-[var(--shadow-hover)] sm:px-7 sm:py-5 sm:text-base"
+              className="min-h-11 w-auto border border-white px-4 py-2 text-sm shadow-[var(--shadow-button)] transition-shadow hover:shadow-[var(--shadow-hover)] sm:px-7 sm:py-5 sm:text-base"
             >
               <BookingLink aria-label="Gå till bokningssidan">
                 <Calendar className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />

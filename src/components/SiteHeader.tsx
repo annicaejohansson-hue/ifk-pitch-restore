@@ -13,6 +13,7 @@ import {
 
 const NAV_LINKS = [
   { to: "/tjanster", label: "Tjänster", match: "prefix" as const },
+  { to: "/forening", label: "För fotbollsföreningar", match: "prefix" as const },
   { to: "/om", label: "Om", match: "exact" as const },
   { to: "/kontakt", label: "Kontakt", match: "exact" as const },
 ];
@@ -26,20 +27,20 @@ const SiteHeader = () => {
 
   const desktopLinkClass = (active: boolean) =>
     [
-      "inline-flex min-h-10 items-center text-sm font-medium transition-colors hover:text-primary sm:min-h-0 sm:text-base md:text-lg",
+      "inline-flex min-h-10 shrink-0 items-center whitespace-nowrap text-sm font-light tracking-wider transition-colors hover:text-primary sm:min-h-0 sm:text-base md:text-base lg:text-lg",
       active ? "text-primary" : "text-foreground/80",
     ].join(" ");
 
   const mobileLinkClass = (active: boolean) =>
     [
-      "flex min-h-12 items-center px-4 text-base font-medium transition-colors hover:text-primary",
+      "flex min-h-12 items-center px-4 text-base font-light tracking-wider transition-colors hover:text-primary",
       active ? "text-primary" : "text-foreground",
     ].join(" ");
 
   const showHeaderBooking = location.pathname !== "/boka";
 
   return (
-    <header className="border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="border-b-2 border-primary bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div
         className={[
           "container px-4 py-2.5 sm:py-3 md:flex md:min-h-28 md:items-center md:gap-4 md:py-2 lg:gap-6",
@@ -72,7 +73,7 @@ const SiteHeader = () => {
             <DropdownMenuContent
               align="end"
               sideOffset={6}
-              className="w-52 p-1.5"
+              className="w-56 p-1.5"
             >
               {NAV_LINKS.map((link) => (
                 <DropdownMenuItem key={link.to} asChild>
@@ -102,7 +103,7 @@ const SiteHeader = () => {
         )}
 
         <nav
-          className="hidden shrink-0 items-center gap-x-6 md:flex lg:gap-x-8"
+          className="hidden shrink-0 items-center gap-x-4 md:flex lg:gap-x-10 xl:gap-x-14"
           aria-label="Huvudmeny"
         >
           {NAV_LINKS.map((link) => (

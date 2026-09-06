@@ -3,7 +3,7 @@ import henrikFoto from "@/assets/IMG_9111.jpg";
 
 const Therapists = () => {
   return (
-    <section className="border-t-4 border-primary bg-gradient-to-b from-background to-muted/30 py-12 md:py-20">
+    <section className="bg-gradient-to-b from-background to-muted/30 py-12 md:py-20">
       <div className="container px-4">
         <div className="mx-auto mb-8 max-w-5xl">
           <h2 className="mb-4 text-left text-balance text-3xl font-bold sm:text-4xl md:text-5xl">

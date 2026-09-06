@@ -3,8 +3,13 @@ import { Helmet } from "react-helmet";
 import { ChevronLeft } from "lucide-react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import Partner from "@/components/Partner";
+import PermanentRedirect from "@/components/PermanentRedirect";
 import ServiceDetail from "@/components/ServiceDetail";
-import { getServiceBySlug } from "@/data/tjanster";
+import {
+  getServiceBySlug,
+  HEEL_CUP_SERVICE_PATH,
+  isLegacyHeelCupSlug,
+} from "@/data/tjanster";
 
 const TjansterDetail = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -13,6 +18,10 @@ const TjansterDetail = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [slug]);
+
+  if (isLegacyHeelCupSlug(slug)) {
+    return <PermanentRedirect to={HEEL_CUP_SERVICE_PATH} />;
+  }
 
   if (!service) {
     return <Navigate to="/tjanster" replace />;

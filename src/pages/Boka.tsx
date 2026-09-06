@@ -517,6 +517,7 @@ const Boka = () => {
   const [iframeEpoch, setIframeEpoch] = useState(0);
   const [searchParams] = useSearchParams();
   const { isIfkStocksund, setVisitorType } = useVisitor();
+  const appliedTjanstRef = useRef<string | null>(null);
   const ignoreIframeLoadRef = useRef(false);
   const iframePhaseRef = useRef<"pick" | "form">("pick");
   const iframeReadyAtRef = useRef(0);
@@ -530,6 +531,17 @@ const Boka = () => {
       setVisitorType("ifk-stocksund");
     }
   }, [searchParams, setVisitorType]);
+
+  useEffect(() => {
+    const tjanst = searchParams.get("tjanst");
+    if (!tjanst || appliedTjanstRef.current === tjanst) return;
+    const exists = allBookingEntries(isIfkStocksund).some(
+      ({ service }) => service.id === tjanst,
+    );
+    if (!exists) return;
+    appliedTjanstRef.current = tjanst;
+    setSelectedServiceId(tjanst);
+  }, [searchParams, isIfkStocksund]);
 
   const categories = useMemo(
     () => categoriesForVisitor(isIfkStocksund),

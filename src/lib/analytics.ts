@@ -102,9 +102,36 @@ export const trackPageView = (
   } satisfies EventParams);
 };
 
+/**
+ * GA4 events used on the site (consent-gated):
+ * - page_view: page view
+ * - boka_tid: click on a booking CTA (BookingLink, including landing-page primary buttons)
+ * - kontakt_epost: click on a mailto: link
+ * - kontakt_lank: click on an internal contact-page link
+ *
+ * FAQ expand is not measured elsewhere, so landing-page FAQ opens are not tracked.
+ */
 export const trackBokaTid = (visitorType?: string) => {
   if (!canSend()) return;
   window.gtag("event", "boka_tid", {
+    page_path: `${window.location.pathname}${window.location.search}`,
+    page_title: document.title,
+    visitor_type: visitorType,
+  } satisfies EventParams);
+};
+
+export const trackKontaktEpost = (visitorType?: string) => {
+  if (!canSend()) return;
+  window.gtag("event", "kontakt_epost", {
+    page_path: `${window.location.pathname}${window.location.search}`,
+    page_title: document.title,
+    visitor_type: visitorType,
+  } satisfies EventParams);
+};
+
+export const trackKontaktLank = (visitorType?: string) => {
+  if (!canSend()) return;
+  window.gtag("event", "kontakt_lank", {
     page_path: `${window.location.pathname}${window.location.search}`,
     page_title: document.title,
     visitor_type: visitorType,

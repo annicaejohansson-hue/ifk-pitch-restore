@@ -25,8 +25,7 @@ const Kontakt = () => {
         />
       </Helmet>
 
-      {/* Same chrome as Om (Therapists): full-width primary rule under header, then container */}
-      <section className="border-t-2 border-primary bg-gradient-to-b from-muted/40 to-background py-10 md:py-14">
+      <section className="bg-gradient-to-b from-muted/40 to-background py-10 md:py-14">
         <div className="container px-4">
           <div className="mx-auto max-w-6xl">
             <h1 className="mb-6 text-3xl font-bold tracking-tight text-foreground sm:text-4xl md:mb-10 md:text-5xl">

@@ -1,4 +1,5 @@
 import performanceImage from "@/assets/IMG_9118.jpg";
+import heelCupCardImage from "@/assets/forening-spelare.jpg";
 
 export const injuryImageUrl =
   "https://simplifaster.com/wp-content/uploads/2025/06/Female-Soccer-Striker.jpg";
@@ -6,9 +7,18 @@ export const heelCupImageUrl =
   "https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?auto=format&fit=crop&w=800&q=80";
 export const performanceImageUrl = performanceImage;
 
+export const HEEL_CUP_SERVICE_PATH = "/tjanster/halkoppar-barn";
+
+/** Former public URLs for the heel-cup service – redirect to HEEL_CUP_SERVICE_PATH. */
+export const HEEL_CUP_LEGACY_PATHS = [
+  "/halkoppar-barn",
+  "/tjanster/halkoppsinlagg",
+  "/tjanster/halkoppsinlag",
+] as const;
+
 export type ServiceSlug =
   | "smarta-och-skador"
-  | "halkoppsinlagg"
+  | "halkoppar-barn"
   | "fysisk-prestation";
 
 export type ServiceSection = {
@@ -76,40 +86,26 @@ export const services: ServiceContent[] = [
     ],
   },
   {
-    slug: "halkoppsinlagg",
-    path: "/tjanster/halkoppsinlagg",
-    title: "Tillverkning av skräddarsydda hälkoppsinlägg",
-    titleLines: ["Tillverkning av skräddarsydda", "hälkoppsinlägg"],
-    cardTitle: "Skräddarsydda hälkoppsinlägg",
+    slug: "halkoppar-barn",
+    path: HEEL_CUP_SERVICE_PATH,
+    title: "Hälkoppsinlägg för barn med ont i hälen",
+    titleLines: ["Hälkoppsinlägg för barn", "med ont i hälen"],
+    cardTitle: "Hälkoppsinlägg för barn med ont i hälen",
     cardDescription:
-      "Personligt utformade hälkoppsinlägg som ger stöd och avlastning vid hälsmärta, hälsporre och Severs skada. Vi undersöker, formar och anpassar inlägget efter dig – för både vuxna och barn.",
+      "Har ditt barn ont i hälen vid fotboll eller annan idrott? Efter fysioterapeutisk bedömning kan individuellt anpassade hälkoppsinlägg användas för att avlasta hälen när det är lämpligt.",
     overviewBlurb:
-      "Personligt utformade hälkoppsinlägg för vuxna och barn – stöd, avlastning och bättre komfort i aktivitet.",
+      "Fysioterapeutisk bedömning och, när det är lämpligt, individuellt anpassade hälkoppsinlägg för barn och unga med hälsmärta.",
     metaDescription:
-      "Skräddarsydda hälkoppsinlägg för vuxna och barn hos Caselo Idrottsmedicin – undersökning och tillverkning efter dina behov.",
-    image: heelCupImageUrl,
-    imageAlt: "Skräddarsydda hälkoppsinlägg",
+      "Har ditt barn ont i hälen vid fotboll eller annan idrott? Hos Caselo i Danderyd får barnet en fysioterapeutisk bedömning och individuellt anpassade hälkoppsinlägg när det är lämpligt.",
+    image: heelCupCardImage,
+    imageAlt:
+      "Fotboll på gräsplan. Bilden är illustrativ och föreställer inte en patient hos Caselo.",
     accentClass: "bg-[hsl(210_48%_34%)]",
     imagePosition: "left",
     intro: [
-      "Ett personligt utformat hälkoppsinlägg ger stöd där du behöver det – för att minska belastningen på hälen, dämpa smärta och göra det lättare att gå, springa och vara aktiv. Vi tillverkar inlägg för både vuxna och barn efter undersökning av din fot och dina behov.",
+      "Hälsmärta är vanligt hos växande barn som spelar fotboll eller ägnar sig åt annan idrott med mycket löpning och hopp. Hos Caselo får barnet en fysioterapeutisk bedömning och, när det är lämpligt, individuellt anpassade hälkoppsinlägg som kan avlasta hälen.",
     ],
-    sections: [
-      {
-        title: "Vuxen",
-        paragraphs: [
-          "Vid ett nybesök gör du hälkoppsinlägg för första gången. Besöket omfattar undersökning och tillverkning av personligt utformade inlägg, formade efter din häl för stöd, avlastning och bättre komfort i aktivitet.",
-          "Behöver du fler inlägg senare bokar du ett återbesök – till exempel till ett andra par skor – efter att du redan genomfört ett nybesök.",
-        ],
-      },
-      {
-        title: "Barn",
-        paragraphs: [
-          "Barn får samma omsorgsfulla undersökning och tillverkning av skräddarsydda hälkoppsinlägg. Vid nybesök formas inlägget efter barnets häl för att ge stöd, minska belastning och underlätta lek, idrott och vardagsrörelse.",
-          "Ett återbesök används när ni tidigare gjort nybesök och behöver ytterligare personligt utformade inlägg, till exempel när barnet växer eller behöver inlägg till fler skor.",
-        ],
-      },
-    ],
+    sections: [],
   },
   {
     slug: "fysisk-prestation",
@@ -156,4 +152,8 @@ export const services: ServiceContent[] = [
 
 export function getServiceBySlug(slug: string): ServiceContent | undefined {
   return services.find((service) => service.slug === slug);
+}
+
+export function isLegacyHeelCupSlug(slug: string | undefined): boolean {
+  return slug === "halkoppsinlagg" || slug === "halkoppsinlag";
 }

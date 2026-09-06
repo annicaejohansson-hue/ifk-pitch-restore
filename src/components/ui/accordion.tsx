@@ -10,14 +10,29 @@ const AccordionItem = React.forwardRef<
   React.ElementRef<typeof AccordionPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Item>
 >(({ className, ...props }, ref) => (
-  <AccordionPrimitive.Item ref={ref} className={cn("border-b", className)} {...props} />
+  <AccordionPrimitive.Item
+    ref={ref}
+    className={cn("[overflow-anchor:none] border-b", className)}
+    {...props}
+  />
 ));
 AccordionItem.displayName = "AccordionItem";
+
+const preserveWindowScroll = () => {
+  const y = window.scrollY;
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      if (window.scrollY !== y) {
+        window.scrollTo(0, y);
+      }
+    });
+  });
+};
 
 const AccordionTrigger = React.forwardRef<
   React.ElementRef<typeof AccordionPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Trigger>
->(({ className, children, ...props }, ref) => (
+>(({ className, children, onPointerDown, onKeyDown, ...props }, ref) => (
   <AccordionPrimitive.Header className="flex">
     <AccordionPrimitive.Trigger
       ref={ref}
@@ -26,6 +41,16 @@ const AccordionTrigger = React.forwardRef<
         className,
       )}
       {...props}
+      onPointerDown={(event) => {
+        preserveWindowScroll();
+        onPointerDown?.(event);
+      }}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          preserveWindowScroll();
+        }
+        onKeyDown?.(event);
+      }}
     >
       {children}
       <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />

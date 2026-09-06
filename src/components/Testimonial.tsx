@@ -1,7 +1,7 @@
 const quotes = [
+  "Hos Henrik har vi fått tid fort, professionellt bemötande, prisvärd produkt och hälkoppsinläggen får min son med sig direkt som är helt anpassade efter hans fötter. Andra gången vi går hit! Och inget mer ont i hälarna.",
   "Jag hade en stukning i fotleden och ville få hjälp tillbaka till träningen. Jag träffade Henrik som var extremt professionell, tålmodig och tog sig tid att förklara allt. Riktigt bra erfarenhet - han undersökte min fot noggrant, var engagerad och intresserad. Jag skulle definitivt återvända.",
-  "Fantastiskt grundlig undersökning och bra vägledning - tack Henrik!",
-  "Min son har haft hälkoppar för Severs skada i tio månader nu och det har funkat utmärkt. Han märkte direkt skillnad när vi lämnade mottagningen.",
+  "Min son har haft hälkoppsinlägg för Severs skada i tio månader nu och det har funkat utmärkt. Han märkte direkt skillnad när vi lämnade mottagningen.",
 ];
 
 const Testimonial = () => {

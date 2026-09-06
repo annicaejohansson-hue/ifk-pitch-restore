@@ -10,6 +10,11 @@ export const IFK_STOCKSUND_BOOKING_URL = "/boka?partner=ifk-stocksund";
 export const IFK_STOCKSUND_KADDIO_URL =
   "https://caseloidrottsmedicin.kaddio.com/booking/ifk-stocksund";
 
+/** First visit for custom heel cups, children under 18. Matches `/boka` service id. */
+export const CHILD_HEEL_CUP_BOOKING_ID = "halkopp-barn-nybesok";
+
+export const SITE_ORIGIN = "https://www.caseloidrottsmedicin.se";
+
 export function getBookingUrl(visitorType: VisitorType = getVisitorType()): string {
   return visitorType === "ifk-stocksund"
     ? IFK_STOCKSUND_BOOKING_URL
@@ -18,4 +23,12 @@ export function getBookingUrl(visitorType: VisitorType = getVisitorType()): stri
 
 export function isExternalBookingUrl(url: string): boolean {
   return /^https?:\/\//i.test(url);
+}
+
+/** Append `?tjanst=` to an internal booking path. External URLs are left unchanged. */
+export function withBookingService(url: string, serviceId?: string): string {
+  if (!serviceId || isExternalBookingUrl(url)) return url;
+  const parsed = new URL(url, SITE_ORIGIN);
+  parsed.searchParams.set("tjanst", serviceId);
+  return `${parsed.pathname}${parsed.search}`;
 }
