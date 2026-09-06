@@ -154,15 +154,21 @@ const ForeningTranare = () => {
                 ))}
               </ul>
             </div>
-            <div className="overflow-hidden rounded-2xl shadow-[var(--shadow-card)]">
-              <img
-                src={trainingFoto}
-                alt="Tränare och spelare på fotbollsplanen under träning"
-                className="h-auto w-full object-cover"
-                loading="lazy"
-                decoding="async"
-              />
-            </div>
+            <figure className="min-w-0">
+              <div className="overflow-hidden rounded-2xl shadow-[var(--shadow-card)]">
+                <img
+                  src={trainingFoto}
+                  alt="Tränare och barn på fotbollsplanen under träning. Bilden är illustrativ och föreställer inte patienter hos Caselo."
+                  className="h-auto w-full object-cover"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+              <figcaption className="mt-2 text-xs leading-relaxed text-foreground/20">
+                Foto: W.carter / Wikimedia Commons. Illustrativ bild, inte
+                patienter hos Caselo.
+              </figcaption>
+            </figure>
           </div>
         </div>
       </section>

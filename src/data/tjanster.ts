@@ -103,7 +103,7 @@ export const services: ServiceContent[] = [
     accentClass: "bg-[hsl(210_48%_34%)]",
     imagePosition: "left",
     intro: [
-      "Hälsmärta är vanligt hos växande barn som spelar fotboll eller ägnar sig åt annan idrott med mycket löpning och hopp. Hos Caselo får barnet en fysioterapeutisk bedömning och, när det är lämpligt, individuellt anpassade hälkoppsinlägg som kan avlasta hälen.",
+      "Hälsmärta är vanligt hos växande barn som spelar fotboll eller ägnar sig åt annan idrott med mycket löpning och hopp. Hos Caselo får barnet en fysioterapeutisk bedömning och individuellt anpassade hälkoppsinlägg som kan avlasta hälen.",
     ],
     sections: [],
   },

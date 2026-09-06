@@ -53,9 +53,6 @@ const Forening = () => {
               <h1 className="text-2xl font-light tracking-wide text-primary-foreground sm:text-3xl md:text-4xl">
                 Rätt stöd från skada till spel
               </h1>
-              <p className="mt-2 text-sm font-light leading-relaxed text-primary-foreground/80 sm:text-base md:mt-3">
-                Välj vilken roll du har, så visar vi hur Caselo kan hjälpa dig och laget.
-              </p>
             </div>
 
             <div className="grid grid-cols-1 items-stretch gap-8 md:grid-cols-2 md:gap-12">
