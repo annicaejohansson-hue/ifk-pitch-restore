@@ -61,10 +61,10 @@ const symptoms = [
 ];
 
 const reasons = [
-  "Legitimerad fysioterapeut med erfarenhet av fotboll och idrottsskador",
+  "Legitimerad fysioterapeut med tio års erfarenhet av idrottsskador",
   "Bedömning, hjälpmedel och rehabilitering i ett sammanhållet upplägg",
   "Förståelse för vägen tillbaka till träning och match",
-  "Mottagning på Danderyd Arena, i anslutning till fotbollsplan",
+  "Mottagning på Danderyd Arena, i direkt anslutning till fotbollsplan",
   "Möjlighet till dialog med tränare när spelaren och vårdnadshavaren samtycker",
 ];
 
@@ -319,6 +319,10 @@ const HalkopparBarn = () => {
               Känner du igen det här?
             </h2>
             <div className="rounded-2xl border border-border/60 bg-card p-5 shadow-[var(--shadow-card)] sm:p-6 md:p-8">
+              <p className="mb-5 text-base leading-relaxed text-muted-foreground md:mb-6 md:text-lg">
+                Många barn i åldern 9 till 15 år drabbas av hälsmärta som kan gå
+                ut över både idrott och vardag.
+              </p>
               <ul className="space-y-3.5 sm:space-y-4">
                 {symptoms.map((item) => (
                   <li key={item} className="flex items-start gap-3 sm:gap-3.5">
@@ -332,11 +336,6 @@ const HalkopparBarn = () => {
                   </li>
                 ))}
               </ul>
-              <p className="mt-6 text-base leading-relaxed text-muted-foreground md:text-lg">
-                Många barn i åldern 9 till 15 år drabbas av hälsmärta som kan gå
-                ut över både idrott och vardag. En vanlig orsak är Severs skada,
-                där hälkoppsinlägg visat sig vara en mycket effektiv behandling.
-              </p>
             </div>
           </div>
         </div>
@@ -353,20 +352,13 @@ const HalkopparBarn = () => {
                 Hälsmärta hos idrottande barn beror ofta på hög belastning under
                 tillväxten, och en vanlig orsak är Severs skada.
               </p>
-              <div className="space-y-4 text-base leading-relaxed text-muted-foreground md:text-lg">
-                <p>
-                  Kroppen förändras under tillväxten. Upprepad belastning från
-                  löpning och hopp – till exempel efter fotboll – kan göra hälen
-                  känslig. Severs skada, även kallad Severs sjukdom eller
-                  calcaneal apofysit, är då en vanlig orsak till hälsmärta hos
-                  aktiva barn.
-                </p>
-                <p>
-                  Hos Caselo i Danderyd gör en fysioterapeut en individuell
-                  bedömning innan ni tillsammans tar ställning till hjälp vid
-                  hälsmärta hos barn, till exempel hälkoppsinlägg.
-                </p>
-              </div>
+              <p className="text-base leading-relaxed text-muted-foreground md:text-lg">
+                Kroppen förändras under tillväxten. Upprepad belastning från
+                löpning och hopp – till exempel efter fotboll – kan göra hälen
+                känslig. Severs skada, även kallad Severs sjukdom eller
+                calcaneal apofysit, är då en vanlig orsak till hälsmärta hos
+                aktiva barn.
+              </p>
             </div>
             <figure className="min-w-0">
               <div className="overflow-hidden rounded-2xl shadow-[var(--shadow-card)]">
@@ -396,9 +388,10 @@ const HalkopparBarn = () => {
             <div className="rounded-2xl border border-border/60 bg-card p-5 shadow-[var(--shadow-card)] sm:p-6 md:p-8">
               <div className="space-y-4 text-base leading-relaxed text-muted-foreground md:text-lg">
                 <p className="text-foreground">
-                  Hälkoppsinlägg är personligt utformade
-                  inlägg som formas efter barnets häl. De används i skon för att
-                  ge stöd och avlastning vid hälsmärta.
+                  Hälkoppsinlägg är personligt utformade inlägg som formas efter
+                  barnets häl, som visat sig vara en mycket effektiv behandling
+                  vid Severs skada. De används i skon för att ge stöd och
+                  avlastning vid hälsmärta.
                 </p>
                 <p>
                   Inlägget formas efter hälen för att kunna dämpa belastningen
@@ -423,11 +416,11 @@ const HalkopparBarn = () => {
         <div className="container px-4">
           <div className="mx-auto max-w-5xl">
             <h2 className="mb-6 text-balance text-2xl font-bold tracking-tight text-foreground sm:text-3xl md:mb-8 md:text-4xl">
-              Därför väljer familjer Caselo
+              Därför Caselo Idrottsmedicin
             </h2>
             <p className="mb-6 text-base leading-relaxed text-muted-foreground md:text-lg">
-              Caselo erbjuder en specialiserad tjänst för barn och unga med
-              hälbesvär.
+              Henrik Nilsson på Caselo Idrottsmedicin erbjuder en specialiserad
+              tjänst för barn och unga med hälbesvär.
             </p>
             <ul className="space-y-3 rounded-2xl border border-border/60 bg-card p-5 shadow-[var(--shadow-card)] sm:p-6 md:p-8">
               {reasons.map((item) => (
