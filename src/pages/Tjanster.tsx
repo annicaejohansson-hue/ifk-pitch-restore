@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import BookingLink from "@/components/BookingLink";
 import Partner from "@/components/Partner";
+import PageIntro from "@/components/PageIntro";
 import { services } from "@/data/tjanster";
 
 const Tjanster = () => {
@@ -22,18 +23,17 @@ const Tjanster = () => {
         />
       </Helmet>
 
-      <section className="container px-4 py-10 md:py-14">
-        <div className="mx-auto max-w-6xl">
-          <header className="mb-8 max-w-3xl md:mb-14">
-            <h1 className="mb-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl md:mb-5 md:text-5xl">
-              Tjänster
-            </h1>
-            <p className="text-base leading-relaxed text-muted-foreground sm:text-lg md:text-xl">
-              Hos Caselo Idrottsmedicin får du evidensbaserad bedömning, behandling
-              och träning anpassad efter dig – oavsett om målet är att bli av med
-              smärta, återgå till idrott eller utveckla din fysiska kapacitet.
-            </p>
-          </header>
+      <section className="container px-4 py-8 md:py-14">
+        <div className="mx-auto max-w-5xl">
+          <PageIntro
+            className="mb-8 md:mb-10"
+            eyebrow="Tjänster"
+            title="Bedömning, behandling och träning efter dina mål"
+          >
+            Hos Caselo Idrottsmedicin får du evidensbaserad vård anpassad efter
+            dig – oavsett om målet är att bli av med smärta, återgå till idrott
+            eller utveckla din fysiska kapacitet.
+          </PageIntro>
 
           <div className="grid grid-cols-1 items-stretch gap-6 sm:gap-8 md:grid-cols-3">
             {services.map((service) => (

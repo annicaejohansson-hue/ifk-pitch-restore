@@ -5,6 +5,7 @@ import { Calendar, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import BookingLink from "@/components/BookingLink";
 import Partner from "@/components/Partner";
+import PageIntro from "@/components/PageIntro";
 import { useVisitor } from "@/context/VisitorContext";
 import { trackKontaktLank } from "@/lib/analytics";
 import { SITE_ORIGIN } from "@/lib/booking";
@@ -46,7 +47,7 @@ const clinicStrengths = [
 const education = [
   "Legitimerad fysioterapeut, kandidatexamen vid Linköpings universitet 2015",
   "UEFA A-tränarlicens",
-  "Vidareutbildning inom OMT, MDT och ultraljudsdiagnostik",
+  "Vidareutbildning inom ortopedisk manuell terapi (OMT), McKenzie-metoden (MDT) och ultraljudsdiagnostik",
 ];
 
 const structuredData = {
@@ -87,18 +88,16 @@ const Om = () => {
         <div className="container px-4">
           <div className="mx-auto grid max-w-5xl items-start gap-8 md:grid-cols-2 md:gap-10">
             <div className="min-w-0">
-              <p className="mb-3 text-sm font-medium text-primary sm:text-base">
-                Om Caselo Idrottsmedicin
-              </p>
-              <h1 className="mb-4 text-balance text-3xl font-bold tracking-tight text-foreground sm:text-4xl md:mb-5 md:text-[2.75rem] md:leading-tight lg:text-5xl">
-                Idrottsskador – med planen utanför dörren
-              </h1>
-              <p className="mb-5 text-base leading-relaxed text-muted-foreground sm:text-lg md:mb-6 md:text-xl">
+              <PageIntro
+                className="mb-5 md:mb-6"
+                eyebrow="Om Caselo Idrottsmedicin"
+                title="Idrottsskador – med planen utanför dörren"
+              >
                 Caselo drivs av Henrik Nilsson, legitimerad fysioterapeut med
                 tio års erfarenhet av idrottsskador. Mottagningen ligger på
                 Danderyd Arena, 25 meter från fullstor fotbollsplan. Inriktningen
                 är fotbollsspelare – men vi tar emot alla med besvär.
-              </p>
+              </PageIntro>
               <ul className="mb-6 space-y-2.5 md:mb-8">
                 {heroFacts.map((item) => (
                   <li key={item} className="flex items-start gap-2.5">

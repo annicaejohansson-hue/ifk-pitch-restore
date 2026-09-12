@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Helmet } from "react-helmet";
 import { Clock, ExternalLink, Mail, MapPin } from "lucide-react";
+import PageIntro from "@/components/PageIntro";
 import sportsImage from "@/assets/caselo-banner-kontakt.jpg";
 
 const ADDRESS_LINE_1 = "Rinkebyvägen 4";
@@ -25,12 +26,17 @@ const Kontakt = () => {
         />
       </Helmet>
 
-      <section className="bg-gradient-to-b from-muted/40 to-background py-10 md:py-14">
+      <section className="bg-gradient-to-b from-muted/40 to-background py-8 md:py-14">
         <div className="container px-4">
-          <div className="mx-auto max-w-6xl">
-            <h1 className="mb-6 text-3xl font-bold tracking-tight text-foreground sm:text-4xl md:mb-10 md:text-5xl">
-              Kontakt
-            </h1>
+          <div className="mx-auto max-w-5xl">
+            <PageIntro
+              className="mb-8 md:mb-10"
+              eyebrow="Kontakt"
+              title="Mottagning på Danderyd Arena"
+            >
+              Här hittar du adress, e-post och öppettider. Mottagningen ligger
+              i direkt anslutning till fotbollsplan och löparbana.
+            </PageIntro>
 
             <div className="rounded-2xl border border-border/60 bg-card/90 p-5 shadow-[var(--shadow-card)] backdrop-blur-sm sm:p-6 md:p-8 lg:p-10">
               <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start lg:gap-10">
