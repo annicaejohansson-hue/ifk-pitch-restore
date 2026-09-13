@@ -4,15 +4,22 @@ import { Calendar } from "lucide-react";
 import heroPoster from "@/assets/hero-poster.jpg";
 import BookingLink from "@/components/BookingLink";
 
-const HERO_VIDEO_SRC = "/hero.mp4";
+const HERO_VIDEO_DESKTOP_SRC = "/hero.mp4";
+const HERO_VIDEO_MOBILE_SRC = "/hero-mobile.mp4";
+const DESKTOP_HERO_QUERY = "(min-width: 768px)";
 
 const prefersReducedMotion = () =>
   typeof window !== "undefined" &&
   window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+const prefersDesktopHero = () =>
+  typeof window !== "undefined" && window.matchMedia(DESKTOP_HERO_QUERY).matches;
+
 const Hero = () => {
   const [playVideo, setPlayVideo] = useState(() => !prefersReducedMotion());
+  const [desktopHero, setDesktopHero] = useState(prefersDesktopHero);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const heroVideoSrc = desktopHero ? HERO_VIDEO_DESKTOP_SRC : HERO_VIDEO_MOBILE_SRC;
 
   useEffect(() => {
     const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -20,6 +27,14 @@ const Hero = () => {
     sync();
     motionQuery.addEventListener("change", sync);
     return () => motionQuery.removeEventListener("change", sync);
+  }, []);
+
+  useEffect(() => {
+    const desktopQuery = window.matchMedia(DESKTOP_HERO_QUERY);
+    const sync = () => setDesktopHero(desktopQuery.matches);
+    sync();
+    desktopQuery.addEventListener("change", sync);
+    return () => desktopQuery.removeEventListener("change", sync);
   }, []);
 
   useEffect(() => {
@@ -93,7 +108,7 @@ const Hero = () => {
       window.removeEventListener("focus", onVisible);
       window.removeEventListener("pageshow", onVisible);
     };
-  }, [playVideo]);
+  }, [playVideo, heroVideoSrc]);
 
   return (
     <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
@@ -110,6 +125,7 @@ const Hero = () => {
           />
         ) : (
           <video
+            key={heroVideoSrc}
             ref={videoRef}
             className="absolute inset-0 h-full w-full object-cover object-center"
             autoPlay
@@ -122,7 +138,7 @@ const Hero = () => {
             disableRemotePlayback
             onError={() => setPlayVideo(false)}
           >
-            <source src={HERO_VIDEO_SRC} type="video/mp4" />
+            <source src={heroVideoSrc} type="video/mp4" />
           </video>
         )}
         <div className="absolute inset-0 bg-gradient-to-r from-[#111827]/70 via-[#111827]/50 to-[#111827]/40" />
