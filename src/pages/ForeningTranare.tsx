@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import BookingLink from "@/components/BookingLink";
 import Partner from "@/components/Partner";
+import PageIntro from "@/components/PageIntro";
 import AudienceSwitch from "@/components/forening/AudienceSwitch";
 import ProcessSteps from "@/components/forening/ProcessSteps";
 import CoachInterestButton from "@/components/forening/CoachInterestButton";
@@ -68,28 +69,20 @@ const ForeningTranare = () => {
         />
       </Helmet>
 
-      <section className="container px-4 py-10 md:py-14">
+      <section className="container px-4 py-8 md:py-14">
         <div className="mx-auto max-w-5xl">
-          <div className="mb-6 flex flex-col gap-3 sm:mb-8 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
-            <p className="min-w-0 text-sm font-medium text-primary sm:pt-1.5 sm:text-base">
-              För tränare och ledare
-            </p>
-            <AudienceSwitch
-              to="/forening/spelare"
-              label="Är du spelare eller förälder? →"
-            />
-          </div>
-          <div className="grid items-center gap-8 md:grid-cols-2 md:gap-10">
+          <div className="grid items-start gap-8 md:grid-cols-2 md:gap-10">
             <div className="min-w-0">
-              <h1 className="mb-4 text-balance text-3xl font-bold tracking-tight text-foreground sm:text-4xl md:mb-5 md:text-5xl">
-                En kontaktväg när en spelare får ont eller skadar sig
-              </h1>
-              <p className="mb-8 text-base leading-relaxed text-muted-foreground sm:text-lg md:text-xl">
+              <PageIntro
+                className="mb-5 md:mb-6"
+                eyebrow="För tränare och ledare"
+                title="En kontaktväg när en spelare får ont eller skadar sig"
+              >
                 När en spelare får ont uppstår snabbt praktiska frågor: Vad kan
                 spelaren vara med på? Vad bör undvikas? Och när är det dags att ta
                 nästa steg? Caselo Idrottsmedicin kan vara ett stöd från första
                 bedömning till återgång i träning och match.
-              </p>
+              </PageIntro>
               <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center">
                 <CoachInterestButton />
                 <Button asChild variant="outline" className={outlineCtaClass}>
@@ -97,17 +90,25 @@ const ForeningTranare = () => {
                 </Button>
               </div>
             </div>
-            <div className="overflow-hidden rounded-2xl shadow-[var(--shadow-card)]">
-              <div className="aspect-[4/3] w-full bg-muted sm:aspect-[717/557]">
-                <img
-                  src={heroFoto}
-                  alt="Tränare med taktikbräda på fotbollsplanen"
-                  className="h-full w-full object-cover object-[8%_42%]"
-                  width={717}
-                  height={557}
-                  fetchPriority="high"
-                  decoding="async"
+            <div className="min-w-0">
+              <div className="mb-3 hidden justify-end md:flex">
+                <AudienceSwitch
+                  to="/forening/spelare"
+                  label="Är du spelare eller förälder? →"
                 />
+              </div>
+              <div className="overflow-hidden rounded-2xl shadow-[var(--shadow-card)]">
+                <div className="aspect-[4/3] w-full bg-muted sm:aspect-[717/557]">
+                  <img
+                    src={heroFoto}
+                    alt="Tränare med taktikbräda på fotbollsplanen"
+                    className="h-full w-full object-cover object-[8%_42%]"
+                    width={717}
+                    height={557}
+                    fetchPriority="high"
+                    decoding="async"
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -281,6 +282,15 @@ const ForeningTranare = () => {
           </div>
         </div>
       </section>
+
+      <div className="container px-4 pb-10 pt-2 md:hidden">
+        <div className="mx-auto max-w-5xl">
+          <AudienceSwitch
+            to="/forening/spelare"
+            label="Är du spelare eller förälder? →"
+          />
+        </div>
+      </div>
 
       <Partner />
     </main>

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import BookingLink from "@/components/BookingLink";
 import Partner from "@/components/Partner";
+import PageIntro from "@/components/PageIntro";
 import AudienceSwitch from "@/components/forening/AudienceSwitch";
 import ProcessSteps from "@/components/forening/ProcessSteps";
 import henrikFoto from "@/assets/IMG_9111.jpg";
@@ -59,27 +60,19 @@ const ForeningSpelare = () => {
         />
       </Helmet>
 
-      <section className="container px-4 py-10 md:py-14">
+      <section className="container px-4 py-8 md:py-14">
         <div className="mx-auto max-w-5xl">
-          <div className="mb-6 flex flex-col gap-3 sm:mb-8 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
-            <p className="min-w-0 text-sm font-medium text-primary sm:pt-1.5 sm:text-base">
-              För spelare och föräldrar
-            </p>
-            <AudienceSwitch
-              to="/forening/tranare"
-              label="Är du tränare eller ledare? →"
-            />
-          </div>
-          <div className="grid items-center gap-8 md:grid-cols-2 md:gap-10">
+          <div className="grid items-start gap-8 md:grid-cols-2 md:gap-10">
             <div className="min-w-0">
-              <h1 className="mb-4 text-balance text-3xl font-bold tracking-tight text-foreground sm:text-4xl md:mb-5 md:text-5xl">
-                Ont eller skadad och vill tillbaka till fotbollen?
-              </h1>
-              <p className="mb-8 text-base leading-relaxed text-muted-foreground sm:text-lg md:text-xl">
+              <PageIntro
+                className="mb-5 md:mb-6"
+                eyebrow="För spelare och föräldrar"
+                title="Ont eller skadad och vill tillbaka till fotbollen?"
+              >
                 På Caselo Idrottsmedicin får du hjälp med bedömning, behandling och
                 rehabilitering anpassad efter fotbollens krav – från första
                 undersökning till återgång i träning och match.
-              </p>
+              </PageIntro>
               <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center">
                 <Button asChild variant="secondary" className={goldCtaClass}>
                   <BookingLink aria-label="Gå till bokningssidan">
@@ -92,17 +85,25 @@ const ForeningSpelare = () => {
                 </Button>
               </div>
             </div>
-            <div className="overflow-hidden rounded-2xl shadow-[var(--shadow-card)]">
-              <div className="aspect-[4/3] w-full bg-muted sm:aspect-[717/557]">
-                <img
-                  src={heroFoto}
-                  alt="Fotbollsspelare med bollen på planen"
-                  className="h-full w-full object-cover object-[58%_72%]"
-                  width={717}
-                  height={557}
-                  fetchPriority="high"
-                  decoding="async"
+            <div className="min-w-0">
+              <div className="mb-3 hidden justify-end md:flex">
+                <AudienceSwitch
+                  to="/forening/tranare"
+                  label="Är du tränare eller ledare? →"
                 />
+              </div>
+              <div className="overflow-hidden rounded-2xl shadow-[var(--shadow-card)]">
+                <div className="aspect-[4/3] w-full bg-muted sm:aspect-[717/557]">
+                  <img
+                    src={heroFoto}
+                    alt="Fotbollsspelare med bollen på planen"
+                    className="h-full w-full object-cover object-[58%_72%]"
+                    width={717}
+                    height={557}
+                    fetchPriority="high"
+                    decoding="async"
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -258,6 +259,15 @@ const ForeningSpelare = () => {
           </div>
         </div>
       </section>
+
+      <div className="container px-4 pb-10 pt-2 md:hidden">
+        <div className="mx-auto max-w-5xl">
+          <AudienceSwitch
+            to="/forening/tranare"
+            label="Är du tränare eller ledare? →"
+          />
+        </div>
+      </div>
 
       <Partner />
     </main>

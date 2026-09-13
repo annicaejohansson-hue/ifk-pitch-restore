@@ -1,58 +1,28 @@
 import { Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import BookingLink from "@/components/BookingLink";
+import PageIntro from "@/components/PageIntro";
 import type { ServiceContent } from "@/data/tjanster";
 
 type ServiceDetailProps = {
   service: ServiceContent;
-  /** Use h1 on dedicated pages; h2 when embedded */
-  headingLevel?: "h1" | "h2";
   showBookingCta?: boolean;
 };
 
+const goldCtaClass =
+  "h-auto min-h-11 w-full max-w-sm whitespace-normal px-5 py-2.5 text-base shadow-[var(--shadow-button)] transition-[var(--transition-smooth)] hover:shadow-[var(--shadow-hover)] sm:w-auto sm:max-w-none sm:px-7 sm:text-lg";
+
 const ServiceDetail = ({
   service,
-  headingLevel = "h1",
   showBookingCta = true,
 }: ServiceDetailProps) => {
-  const Heading = headingLevel;
-  const imageBlock = (
-    <div className="overflow-hidden rounded-xl sm:rounded-2xl">
-      <img
-        src={service.image}
-        alt={service.imageAlt}
-        className="aspect-[16/10] h-auto w-full object-cover md:aspect-auto md:h-48"
-      />
-    </div>
-  );
-
-  const introBlock =
-    service.intro.length === 1 ? (
-      <p className="text-base leading-relaxed text-foreground/90 md:text-lg">
-        {service.intro[0]}
-      </p>
-    ) : (
-      <div className="space-y-4">
-        {service.intro.map((paragraph, index) => (
-          <p
-            key={index}
-            className={
-              index === 0
-                ? "text-base leading-relaxed text-foreground/90 md:text-lg"
-                : "text-base leading-relaxed text-muted-foreground md:text-lg"
-            }
-          >
-            {paragraph}
-          </p>
-        ))}
-      </div>
-    );
+  const intro = service.intro[0];
 
   const renderSectionBody = (section: ServiceContent["sections"][number]) => (
     <>
-      <h3 className="mb-2 text-lg font-semibold text-foreground md:text-xl">
+      <h2 className="mb-2 text-lg font-semibold text-foreground md:text-xl">
         {section.title}
-      </h3>
+      </h2>
       {section.paragraphs.map((paragraph, index) => (
         <p
           key={index}
@@ -69,35 +39,60 @@ const ServiceDetail = ({
 
   return (
     <article>
-      <Heading className="mb-4 text-balance text-2xl font-bold tracking-tight text-primary md:mb-6 md:text-3xl">
-        {service.title}
-      </Heading>
-
-      <div
-        className={[
-          "mb-6 flex flex-col items-stretch gap-3 sm:gap-4 md:mb-6 md:flex-row md:items-start md:gap-5",
-          service.imagePosition === "right" ? "md:flex-row-reverse" : "",
-        ].join(" ")}
-      >
-        <div className="w-full min-w-0 shrink-0 md:w-56 lg:w-72">
-          {imageBlock}
+      <div className="grid items-start gap-8 md:grid-cols-2 md:gap-10">
+        <div className="min-w-0">
+          <PageIntro
+            className="mb-5 md:mb-6"
+            eyebrow="Tjänster"
+            eyebrowHref="/tjanster"
+            title={service.title}
+          >
+            {intro}
+          </PageIntro>
+          {showBookingCta ? (
+            <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+              <Button asChild variant="secondary" className={goldCtaClass}>
+                <BookingLink aria-label="Boka tid">
+                  <Calendar
+                    className="h-4 w-4 sm:h-5 sm:w-5"
+                    aria-hidden="true"
+                  />
+                  Boka tid
+                </BookingLink>
+              </Button>
+            </div>
+          ) : null}
         </div>
-        <div className="min-w-0 flex-1">{introBlock}</div>
+        <div className="overflow-hidden rounded-2xl shadow-[var(--shadow-card)]">
+          <div className="aspect-[4/3] w-full bg-muted sm:aspect-[717/557]">
+            <img
+              src={service.image}
+              alt={service.imageAlt}
+              className="h-full w-full object-cover"
+              width={717}
+              height={557}
+              fetchPriority="high"
+              decoding="async"
+            />
+          </div>
+        </div>
       </div>
 
-      {service.numberedSections ? (
-        <ol className="space-y-8">
-          {service.sections.map((section) => (
-            <li key={section.title}>{renderSectionBody(section)}</li>
-          ))}
-        </ol>
-      ) : (
-        <div className="space-y-8">
-          {service.sections.map((section) => (
-            <div key={section.title}>{renderSectionBody(section)}</div>
-          ))}
-        </div>
-      )}
+      {service.sections.length > 0 ? (
+        service.numberedSections ? (
+          <ol className="mt-10 space-y-8 md:mt-16">
+            {service.sections.map((section) => (
+              <li key={section.title}>{renderSectionBody(section)}</li>
+            ))}
+          </ol>
+        ) : (
+          <div className="mt-10 space-y-8 md:mt-16">
+            {service.sections.map((section) => (
+              <div key={section.title}>{renderSectionBody(section)}</div>
+            ))}
+          </div>
+        )
+      ) : null}
 
       {showBookingCta ? (
         <div className="mt-10 rounded-2xl border border-border/60 bg-card/90 px-5 py-7 text-center shadow-[var(--shadow-card)] backdrop-blur-sm sm:px-6 sm:py-8 md:mt-16 md:px-10 md:py-10">

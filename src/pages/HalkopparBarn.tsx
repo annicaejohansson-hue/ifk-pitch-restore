@@ -1,6 +1,6 @@
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
-import { Calendar, CheckCircle2, ChevronLeft } from "lucide-react";
+import { Calendar, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Accordion,
@@ -8,15 +8,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
 import BookingLink from "@/components/BookingLink";
+import PageIntro from "@/components/PageIntro";
 import Partner from "@/components/Partner";
 import { useVisitor } from "@/context/VisitorContext";
 import { trackKontaktLank } from "@/lib/analytics";
@@ -245,50 +238,19 @@ const HalkopparBarn = () => {
       <section className="bg-background py-8 md:py-14">
         <div className="container px-4">
         <div className="mx-auto max-w-5xl">
-          <div className="mb-4 md:mb-8">
-            <Link
-              to="/tjanster"
-              aria-label="Tillbaka till Tjänster"
-              className="inline-flex min-h-11 items-center gap-1 -ml-1 pr-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground md:hidden"
-            >
-              <ChevronLeft className="h-4 w-4 shrink-0" aria-hidden="true" />
-              Tjänster
-            </Link>
-            <Breadcrumb className="hidden md:block">
-              <BreadcrumbList>
-                <BreadcrumbItem>
-                  <BreadcrumbLink asChild>
-                    <Link to="/">Startsida</Link>
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <BreadcrumbLink asChild>
-                    <Link to="/tjanster">Tjänster</Link>
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>Hälkoppsinlägg för barn</BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
-          </div>
-
-          <div className="grid items-center gap-6 md:grid-cols-2 md:gap-10">
+          <div className="grid items-start gap-8 md:grid-cols-2 md:gap-10">
             <div className="min-w-0">
-              <p className="mb-3 hidden text-sm font-medium text-primary md:block md:text-base">
-                Specialiserad tjänst för barn och unga med hälbesvär
-              </p>
-              <h1 className="mb-3 text-balance text-2xl font-bold tracking-tight text-foreground sm:text-4xl md:mb-5 md:text-5xl">
-                Hälkoppsinlägg för barn med ont i hälen
-              </h1>
-              <p className="mb-6 text-base leading-relaxed text-muted-foreground sm:mb-8 sm:text-lg md:text-xl">
+              <PageIntro
+                className="mb-5 md:mb-6"
+                eyebrow="Tjänster"
+                eyebrowHref="/tjanster"
+                title="Hälkoppsinlägg för barn med ont i hälen"
+              >
                 Hälsmärta är vanligt hos växande barn som spelar fotboll eller
                 ägnar sig åt annan idrott med mycket löpning och hopp. Hos
                 Caselo får barnet en fysioterapeutisk bedömning och individuellt
                 anpassade hälkoppsinlägg som kan avlasta hälen.
-              </p>
+              </PageIntro>
               <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center">
                 <Button asChild variant="secondary" className={goldCtaClass}>
                   <BookingLink

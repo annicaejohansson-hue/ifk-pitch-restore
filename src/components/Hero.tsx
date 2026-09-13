@@ -6,39 +6,6 @@ import BookingLink from "@/components/BookingLink";
 
 const HERO_VIDEO_SRC = "/hero.mp4";
 
-/** Horizontal focus in the 16:9 frame (0–100). Used when mobile crops the sides. */
-const MOBILE_FOCUS_X: ReadonlyArray<readonly [number, number]> = [
-  [0, 63],
-  [1, 68],
-  [2.5, 74],
-  [4, 80],
-  [5.5, 52],
-  [6.5, 42],
-  [7.1, 50],
-  [7.5, 70],
-  [8, 55],
-  [9, 85],
-  [11, 84],
-  [13, 20],
-  [15, 42],
-  [17, 78],
-  [20, 62],
-];
-
-const focusXAt = (time: number) => {
-  const keys = MOBILE_FOCUS_X;
-  if (time <= keys[0][0]) return keys[0][1];
-  for (let i = 1; i < keys.length; i++) {
-    if (time <= keys[i][0]) {
-      const [t0, x0] = keys[i - 1];
-      const [t1, x1] = keys[i];
-      const u = (time - t0) / (t1 - t0);
-      return x0 + (x1 - x0) * u;
-    }
-  }
-  return keys[keys.length - 1][1];
-};
-
 const prefersReducedMotion = () =>
   typeof window !== "undefined" &&
   window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -116,15 +83,7 @@ const Hero = () => {
       if (!document.hidden && video.paused) tryPlay();
     }, 800);
 
-    let frame = 0;
-    const tick = () => {
-      video.style.objectPosition = `${focusXAt(video.currentTime)}% 50%`;
-      frame = requestAnimationFrame(tick);
-    };
-    frame = requestAnimationFrame(tick);
-
     return () => {
-      cancelAnimationFrame(frame);
       window.clearInterval(watchdog);
       video.removeEventListener("ended", onEnded);
       video.removeEventListener("pause", onPause);

@@ -1,8 +1,10 @@
 import type { ReactNode } from "react";
+import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
 type PageIntroProps = {
   eyebrow: string;
+  eyebrowHref?: string;
   title: string;
   children?: ReactNode;
   className?: string;
@@ -10,15 +12,27 @@ type PageIntroProps = {
 
 const PageIntro = ({
   eyebrow,
+  eyebrowHref,
   title,
   children,
   className,
 }: PageIntroProps) => {
+  const eyebrowClass = "mb-3 text-sm font-medium text-primary sm:text-base";
+
   return (
     <header className={className}>
-      <p className="mb-3 text-sm font-medium text-primary sm:text-base">
-        {eyebrow}
-      </p>
+      {eyebrowHref ? (
+        <p className={eyebrowClass}>
+          <Link
+            to={eyebrowHref}
+            className="transition-colors hover:text-primary/80"
+          >
+            {eyebrow}
+          </Link>
+        </p>
+      ) : (
+        <p className={eyebrowClass}>{eyebrow}</p>
+      )}
       <h1
         className={cn(
           "text-balance text-3xl font-bold tracking-tight text-foreground sm:text-4xl md:text-[2.75rem] md:leading-tight lg:text-5xl",
