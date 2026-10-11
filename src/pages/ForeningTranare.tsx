@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
-import { Calendar, CheckCircle2 } from "lucide-react";
+import { ArrowDown, Calendar, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import BookingLink from "@/components/BookingLink";
@@ -9,7 +9,6 @@ import Partner from "@/components/Partner";
 import PageIntro from "@/components/PageIntro";
 import AudienceSwitch from "@/components/forening/AudienceSwitch";
 import ProcessSteps from "@/components/forening/ProcessSteps";
-import CoachInterestButton from "@/components/forening/CoachInterestButton";
 import henrikFoto from "@/assets/IMG_9111.jpg";
 import heroFoto from "@/assets/forening-tranare.jpg";
 import trainingFoto from "@/assets/comeback-training.jpg";
@@ -78,17 +77,18 @@ const ForeningTranare = () => {
                 eyebrow="För tränare och ledare"
                 title="En kontaktväg när en spelare får ont eller skadar sig"
               >
-                När en spelare får ont uppstår snabbt praktiska frågor: Vad kan
-                spelaren vara med på? Vad bör undvikas? Och när är det dags att ta
-                nästa steg? Caselo Idrottsmedicin kan vara ett stöd från första
+                När en spelare får ont uppstår snabbt praktiska frågor: Kan
+                spelaren träna? Hur bör träningen anpassas? När är det okej att
+                spela match igen? Caselo Idrottsmedicin kan vara ett stöd från första
                 bedömning till återgång i träning och match.
               </PageIntro>
-              <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-                <CoachInterestButton />
-                <Button asChild variant="outline" className={outlineCtaClass}>
-                  <a href="#sa-fungerar-det">Så fungerar det</a>
-                </Button>
-              </div>
+              <a
+                href="#sa-fungerar-det"
+                className="inline-flex min-h-11 items-center gap-2 text-base font-medium text-foreground transition-colors hover:text-primary sm:text-lg"
+              >
+                Så fungerar det
+                <ArrowDown className="h-5 w-5 shrink-0" aria-hidden="true" />
+              </a>
             </div>
             <div className="min-w-0">
               <div className="mb-3 hidden justify-end md:flex">
