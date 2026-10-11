@@ -145,15 +145,15 @@ const Hero = () => {
       </div>
 
       {/* Content */}
-      <div className="container relative z-10 max-w-full px-4 py-14 sm:py-20">
-        <div className="mx-auto max-w-4xl text-center">
-          <h1 className="mb-5 max-w-full px-1 text-balance text-4xl font-bold leading-tight tracking-tight text-primary-foreground animate-in fade-in slide-in-from-bottom-4 duration-1000 break-words sm:mb-6 sm:px-0 sm:text-5xl md:text-7xl">
+      <div className="container relative z-10 w-full min-w-0 max-w-full px-4 py-14 sm:py-20">
+        <div className="mx-auto w-full min-w-0 max-w-4xl text-center">
+          <h1 className="mb-5 w-full max-w-full px-1 text-2xl font-bold leading-snug tracking-tight text-primary-foreground animate-in fade-in slide-in-from-bottom-4 duration-1000 break-words sm:mb-6 sm:px-0 sm:text-5xl sm:leading-tight md:text-7xl">
             Tillbaka till tävling
-            <br />- mer redo än någonsin
+            <br className="hidden sm:block" />
+            <span className="sm:inline"> – mer redo än någonsin</span>
           </h1>
-          <p className="mb-8 max-w-full px-1 text-base leading-snug text-primary-foreground/90 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-150 break-words sm:mb-10 sm:px-0 sm:text-xl md:text-2xl">
-            Idrottsfysioterapi i
-            <br className="sm:hidden" /> Stockholm
+          <p className="mb-8 w-full max-w-full px-1 text-base leading-snug text-primary-foreground/90 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-150 break-words sm:mb-10 sm:px-0 sm:text-xl md:text-2xl">
+            Idrottsfysioterapi i Stockholm
           </p>
           
           <div className="flex flex-col items-center sm:flex-row gap-4 justify-center">

@@ -656,7 +656,7 @@ const Boka = () => {
 
       <section className="bg-gradient-to-b from-primary/10 to-background pt-5 pb-3 md:pt-6 md:pb-3">
         <div className="container mx-auto max-w-7xl px-4">
-          <h1 className="mb-2 text-3xl font-bold tracking-tight text-foreground sm:text-4xl md:mb-3 md:text-5xl">
+          <h1 className="mb-2 break-words text-3xl font-bold tracking-tight text-foreground sm:text-4xl md:mb-3 md:text-5xl">
             Boka tid
           </h1>
           <p className="mb-3 text-base text-muted-foreground md:mb-4 md:text-lg">
@@ -702,7 +702,7 @@ const Boka = () => {
                     <h2 id={`category-${category.id}`} className="m-0">
                       {selected ? (
                         <span
-                          className={`flex min-h-12 w-full items-center px-2.5 py-2.5 text-left text-[13px] font-semibold leading-snug tracking-tight text-balance break-words sm:min-h-[3.5rem] sm:px-3 sm:text-sm lg:text-[13px] xl:text-[15px] ${tone.heading}`}
+                          className={`flex min-h-12 w-full items-start px-2.5 py-2.5 text-left text-[13px] font-semibold leading-snug tracking-tight break-words whitespace-normal sm:min-h-[3.5rem] sm:items-center sm:px-3 sm:text-sm lg:text-[13px] xl:text-[15px] ${tone.heading}`}
                         >
                           {category.name}
                         </span>
@@ -712,12 +712,14 @@ const Boka = () => {
                           aria-expanded={expanded}
                           aria-controls={`category-panel-${category.id}`}
                           onClick={() => toggleCategory(category.id)}
-                          className={`flex min-h-12 w-full items-center justify-between gap-2 px-2.5 py-2.5 text-left text-[13px] font-semibold leading-snug tracking-tight text-balance break-words focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:min-h-[3.5rem] sm:px-3 sm:text-sm lg:text-[13px] xl:text-[15px] ${tone.heading}`}
+                          className={`flex min-h-12 w-full items-start justify-between gap-2 px-2.5 py-2.5 text-left text-[13px] font-semibold leading-snug tracking-tight break-words whitespace-normal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:min-h-[3.5rem] sm:items-center sm:px-3 sm:text-sm lg:text-[13px] xl:text-[15px] ${tone.heading}`}
                         >
-                          <span className="min-w-0 flex-1">{category.name}</span>
+                          <span className="min-w-0 flex-1 whitespace-normal break-words">
+                            {category.name}
+                          </span>
                           <ChevronDown
                             className={[
-                              "h-5 w-5 shrink-0 transition-transform duration-200",
+                              "mt-0.5 h-5 w-5 shrink-0 transition-transform duration-200 sm:mt-0",
                               expanded ? "rotate-180" : "",
                             ].join(" ")}
                             aria-hidden="true"

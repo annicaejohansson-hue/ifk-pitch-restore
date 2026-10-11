@@ -24,11 +24,11 @@ const IfkStocksundBanner = () => {
         decoding="async"
       />
       <div className="min-w-0 flex-1 overflow-hidden [container-type:inline-size]">
-        <p className="whitespace-nowrap text-[length:clamp(5.5px,2.38cqw,0.875rem)] font-semibold leading-none tracking-tight text-primary md:whitespace-normal md:text-xs lg:text-sm lg:leading-snug">
+        <p className="break-words text-xs font-semibold leading-snug tracking-tight text-primary sm:text-[13px] lg:text-sm">
           Som spelare i IFK Stocksund har du rabatterade priser hos Caselo
           Idrottsmedicin.
         </p>
-        <p className="mt-px text-[length:clamp(5.5px,2.38cqw,0.875rem)] font-normal leading-snug text-muted-foreground/70 sm:mt-0.5 sm:text-[11px] md:text-[11px]">
+        <p className="mt-0.5 text-xs font-normal leading-snug text-muted-foreground/70 sm:text-[11px]">
           Är du inte spelare i IFK Stocksund?{" "}
           <Link
             to="/"

@@ -17,10 +17,11 @@ const PageIntro = ({
   children,
   className,
 }: PageIntroProps) => {
-  const eyebrowClass = "mb-3 text-sm font-medium text-primary sm:text-base";
+  const eyebrowClass =
+    "mb-3 text-sm font-medium leading-none text-primary sm:text-base";
 
   return (
-    <header className={className}>
+    <header className={cn("min-w-0 w-full max-w-full", className)}>
       {eyebrowHref ? (
         <p className={eyebrowClass}>
           <Link
@@ -35,16 +36,16 @@ const PageIntro = ({
       )}
       <h1
         className={cn(
-          "text-balance text-3xl font-bold tracking-tight text-foreground sm:text-4xl md:text-[2.75rem] md:leading-tight lg:text-5xl",
+          "w-full max-w-full break-words text-2xl font-bold leading-snug tracking-tight text-foreground sm:text-3xl md:text-[2.75rem] md:leading-tight lg:text-5xl",
           children ? "mb-4 md:mb-5" : "",
         )}
       >
         {title}
       </h1>
       {children ? (
-        <p className="max-w-3xl text-base leading-relaxed text-muted-foreground sm:text-lg md:text-xl">
+        <div className="max-w-3xl space-y-4 break-words text-base leading-relaxed text-muted-foreground sm:text-lg md:text-xl">
           {children}
-        </p>
+        </div>
       ) : null}
     </header>
   );

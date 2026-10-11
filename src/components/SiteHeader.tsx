@@ -40,10 +40,10 @@ const SiteHeader = () => {
   const showHeaderBooking = location.pathname !== "/boka";
 
   return (
-    <header className="border-b-2 border-primary bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="overflow-x-hidden border-b-2 border-primary bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div
         className={[
-          "container px-4 py-2.5 sm:py-3 md:flex md:min-h-28 md:items-center md:gap-4 md:py-2 lg:gap-6",
+          "container min-w-0 px-4 py-2.5 sm:py-3 md:flex md:min-h-28 md:items-center md:gap-4 md:py-2 lg:gap-6",
           isIfkStocksund ? "md:flex-wrap lg:flex-nowrap" : "",
         ].join(" ")}
       >
@@ -56,7 +56,9 @@ const SiteHeader = () => {
             <img
               src="/caselo-logo-blue.png"
               alt="Caselo Idrottsmedicin"
-              className="h-14 w-auto object-contain md:h-20"
+              width={1200}
+              height={479}
+              className="h-14 w-auto max-w-[11.5rem] object-contain md:h-20 md:max-w-[16rem]"
             />
           </Link>
 
@@ -64,7 +66,7 @@ const SiteHeader = () => {
             <DropdownMenuTrigger asChild>
               <button
                 type="button"
-                className="inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-md text-foreground hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 md:hidden"
+                className="inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-md border border-border/80 text-foreground hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 md:hidden"
                 aria-label="Öppna meny"
               >
                 <Menu className="h-6 w-6" aria-hidden="true" />

@@ -19,7 +19,7 @@ const choices = [
   {
     to: "/forening/spelare",
     title: "Jag är spelare eller förälder",
-    text: "Få hjälp med bedömning, behandling och fotbollsanpassad rehabilitering tillbaka till träning och match.",
+    text: "Få hjälp med bedömning, behandling och fotbollsanpassad rehabilitering tillbaka till träning och match – från första undersökning till nästa steg på planen.",
     cta: "För spelare och föräldrar",
     image: playerFoto,
     imageAlt: "Fotbollsspelare med bollen på planen",
@@ -69,13 +69,13 @@ const Forening = () => {
                   />
                 </div>
                 <div className="flex min-w-0 flex-1 flex-col justify-center p-4 sm:p-4 md:p-5">
-                  <h2 className="mb-2 text-lg font-semibold leading-snug tracking-tight text-primary sm:text-xl">
+                  <h2 className="mb-2 break-words text-lg font-semibold leading-snug tracking-tight text-primary sm:text-xl">
                     {choice.title}
                   </h2>
-                  <p className="mb-4 text-sm leading-relaxed text-muted-foreground">
+                  <p className="mb-4 break-words text-sm leading-relaxed text-muted-foreground">
                     {choice.text}
                   </p>
-                  <span className="inline-flex min-h-11 w-[min(100%,14.25rem)] items-center justify-center gap-1 self-start rounded-md bg-secondary px-3.5 py-2.5 text-center text-sm font-medium leading-snug text-secondary-foreground shadow-[var(--shadow-button)] transition-[var(--transition-smooth)] group-hover:bg-[hsl(var(--secondary-hover))] group-hover:shadow-[var(--shadow-hover)]">
+                  <span className="inline-flex min-h-11 w-[min(100%,14.25rem)] max-w-full items-center justify-center gap-1 self-start whitespace-normal rounded-md bg-secondary px-3.5 py-2.5 text-center text-sm font-medium leading-snug text-secondary-foreground shadow-[var(--shadow-button)] transition-[var(--transition-smooth)] group-hover:bg-[hsl(var(--secondary-hover))] group-hover:shadow-[var(--shadow-hover)]">
                     {choice.cta}
                     <ChevronRight
                       className="h-4 w-4 shrink-0"

@@ -46,7 +46,12 @@ const Tjanster = () => {
                   <img
                     src={service.image}
                     alt={service.imageAlt}
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                    className={[
+                      "h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]",
+                      service.slug === "halkoppar-barn"
+                        ? "object-[center_28%]"
+                        : "",
+                    ].join(" ")}
                   />
                 </div>
                 <div className="flex flex-1 flex-col p-5 text-left sm:p-6 md:p-7">

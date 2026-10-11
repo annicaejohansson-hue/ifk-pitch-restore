@@ -60,22 +60,22 @@ const Kontakt = () => {
                             <br />
                             {ADDRESS_LINE_2}
                           </address>
-                          <p className="mt-2 text-sm leading-snug text-muted-foreground sm:whitespace-nowrap md:text-base md:leading-relaxed">
+                          <p className="mt-2 text-sm leading-snug text-muted-foreground md:text-base md:leading-relaxed">
                             Mottagningen ligger i direkt anslutning till fotbollsplan och
                             löparbana.
                           </p>
                         </div>
                       </li>
-                      <li className="flex items-center gap-3">
+                      <li className="flex items-start gap-3">
                         <Mail
-                          className="h-5 w-5 shrink-0 text-primary"
+                          className="mt-0.5 h-5 w-5 shrink-0 text-primary"
                           aria-hidden="true"
                         />
                         <a
                           href={`mailto:${EMAIL}`}
-                          className="break-all text-base text-foreground underline-offset-4 hover:underline md:text-lg"
+                          className="break-words text-base text-foreground underline-offset-4 hover:underline md:text-lg"
                         >
-                          {EMAIL}
+                          henrik@<wbr />caseloidrottsmedicin.se
                         </a>
                       </li>
                     </ul>

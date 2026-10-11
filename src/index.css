@@ -95,7 +95,44 @@ All colors MUST be HSL.
     @apply border-border;
   }
 
+  html,
+  body,
+  #root {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
   body {
-    @apply bg-background text-foreground overflow-x-clip;
+    @apply bg-background text-foreground;
+  }
+
+  img,
+  video,
+  iframe {
+    max-width: 100%;
+  }
+
+  main,
+  header,
+  section,
+  footer,
+  article {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  /* text-wrap: pretty/balance can overflow on narrow phones instead of wrapping. */
+  @media (max-width: 767px) {
+    h1,
+    h2,
+    h3,
+    h4,
+    p,
+    li,
+    button,
+    a {
+      text-wrap: wrap;
+      overflow-wrap: break-word;
+    }
   }
 }

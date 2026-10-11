@@ -1,5 +1,4 @@
 import performanceImage from "@/assets/IMG_9118.jpg";
-import heelCupCardImage from "@/assets/forening-spelare.jpg";
 
 export const injuryImageUrl =
   "https://simplifaster.com/wp-content/uploads/2025/06/Female-Soccer-Striker.jpg";
@@ -97,9 +96,9 @@ export const services: ServiceContent[] = [
       "Fysioterapeutisk bedömning och, när det är lämpligt, individuellt anpassade hälkoppsinlägg för barn och unga med hälsmärta.",
     metaDescription:
       "Har ditt barn ont i hälen vid fotboll eller annan idrott? Hos Caselo i Danderyd får barnet en fysioterapeutisk bedömning och individuellt anpassade hälkoppsinlägg när det är lämpligt.",
-    image: heelCupCardImage,
+    image: "/halkoppar/20260929_141824.jpg",
     imageAlt:
-      "Fotboll på gräsplan. Bilden är illustrativ och föreställer inte en patient hos Caselo.",
+      "Fotbollsskor på planen med ett hälkoppsinlägg bredvid skorna, vid Danderyd Arena",
     accentClass: "bg-[hsl(210_48%_34%)]",
     imagePosition: "left",
     intro: [

@@ -18,8 +18,6 @@ import {
   SITE_ORIGIN,
 } from "@/lib/booking";
 import { HEEL_CUP_SERVICE_PATH } from "@/data/tjanster";
-import heroImage from "@/assets/forening-spelare.jpg";
-import activityFoto from "@/assets/prevention-training.jpg";
 
 const PAGE_PATH = HEEL_CUP_SERVICE_PATH;
 const PAGE_URL = `${SITE_ORIGIN}${PAGE_PATH}`;
@@ -246,10 +244,14 @@ const HalkopparBarn = () => {
                 eyebrowHref="/tjanster"
                 title="Hälkoppsinlägg för barn med ont i hälen"
               >
-                Hälsmärta är vanligt hos växande barn som spelar fotboll eller
-                ägnar sig åt annan idrott med mycket löpning och hopp. Hos
-                Caselo får barnet en fysioterapeutisk bedömning och individuellt
-                anpassade hälkoppsinlägg som kan avlasta hälen.
+                <p>
+                  Hälsmärta är vanligt hos växande barn som spelar fotboll eller
+                  ägnar sig åt annan idrott med mycket löpning och hopp.
+                </p>
+                <p>
+                  Hos Caselo får barnet en fysioterapeutisk bedömning och
+                  individuellt anpassade hälkoppsinlägg som kan avlasta hälen.
+                </p>
               </PageIntro>
               <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center">
                 <Button asChild variant="secondary" className={goldCtaClass}>
@@ -266,19 +268,19 @@ const HalkopparBarn = () => {
                 </Button>
               </div>
             </div>
-            <div className="overflow-hidden rounded-2xl shadow-[var(--shadow-card)]">
-              <div className="aspect-[717/557] w-full bg-muted">
-                <img
-                  src={heroImage}
-                  alt="Fotboll på gräsplan. Bilden är illustrativ och föreställer inte en patient hos Caselo."
-                  className="h-full w-full object-cover object-[58%_72%]"
-                  width={717}
-                  height={557}
-                  fetchPriority="high"
-                  decoding="async"
-                />
+            <figure className="min-w-0">
+              <div className="overflow-hidden rounded-2xl shadow-[var(--shadow-card)]">
+                <div className="aspect-square w-full overflow-hidden bg-muted">
+                  <img
+                    src="/halkoppar/20260929_141727.jpg"
+                    alt="Fotbollsskor på planen med ett hälkoppsinlägg i skon, vid Danderyd Arena"
+                    className="h-full w-full object-cover object-[center_50%]"
+                    fetchPriority="high"
+                    decoding="async"
+                  />
+                </div>
               </div>
-            </div>
+            </figure>
           </div>
         </div>
         </div>
@@ -315,7 +317,7 @@ const HalkopparBarn = () => {
 
       <section className="bg-background py-12 md:py-20">
         <div className="container px-4">
-          <div className="mx-auto grid max-w-5xl items-center gap-8 md:grid-cols-2 md:gap-12">
+          <div className="mx-auto grid max-w-5xl items-start gap-8 md:grid-cols-2 md:items-center md:gap-12">
             <div className="min-w-0">
               <h2 className="mb-4 text-balance text-2xl font-bold tracking-tight text-foreground sm:text-3xl md:mb-6 md:text-4xl">
                 Varför får barn ont i hälen?
@@ -333,19 +335,15 @@ const HalkopparBarn = () => {
               </p>
             </div>
             <figure className="min-w-0">
-              <div className="overflow-hidden rounded-2xl shadow-[var(--shadow-card)]">
+              <div className="aspect-[4/3] overflow-hidden rounded-2xl shadow-[var(--shadow-card)]">
                 <img
-                  src={activityFoto}
-                  alt="Barn som tar en hörna på fotbollsplan. Bilden är illustrativ och föreställer inte en patient hos Caselo."
-                  className="h-auto w-full object-cover"
+                  src="/halkoppar/20260929_141824.jpg"
+                  alt="Fotbollsskor på planen med ett hälkoppsinlägg bredvid skorna, vid Danderyd Arena"
+                  className="h-full w-full origin-[32%_30%] scale-[1.22] object-cover object-[32%_30%]"
                   loading="lazy"
                   decoding="async"
                 />
               </div>
-              <figcaption className="mt-2 text-xs leading-relaxed text-foreground/20">
-                Foto: W.carter / Wikimedia Commons. Illustrativ bild, inte
-                patienter hos Caselo.
-              </figcaption>
             </figure>
           </div>
         </div>
@@ -353,11 +351,20 @@ const HalkopparBarn = () => {
 
       <section className="bg-muted py-12 md:py-20">
         <div className="container px-4">
-          <div className="mx-auto max-w-5xl">
-            <h2 className="mb-4 text-balance text-2xl font-bold tracking-tight text-foreground sm:text-3xl md:mb-6 md:text-4xl">
+          <div className="mx-auto grid max-w-5xl gap-6 md:grid-cols-2 md:items-stretch md:gap-10">
+            <h2 className="text-balance text-2xl font-bold tracking-tight text-foreground sm:text-3xl md:col-start-2 md:text-4xl">
               Vad är hälkoppsinlägg?
             </h2>
-            <div className="rounded-2xl border border-border/60 bg-card p-5 shadow-[var(--shadow-card)] sm:p-6 md:p-8">
+            <figure className="relative min-w-0 aspect-[4/3] overflow-hidden rounded-2xl shadow-[var(--shadow-card)] md:col-start-1 md:row-start-1 md:row-span-2 md:aspect-auto md:min-h-0">
+              <img
+                src="/halkoppar/20260929_141723.jpg"
+                alt="Fotbollsskor på planen med ett hälkoppsinlägg i skon, vid Danderyd Arena"
+                className="h-full w-full object-cover object-[center_42%] md:absolute md:inset-0"
+                loading="lazy"
+                decoding="async"
+              />
+            </figure>
+            <div className="rounded-2xl border border-border/60 bg-card p-5 shadow-[var(--shadow-card)] sm:p-6 md:col-start-2 md:p-8">
               <div className="space-y-4 text-base leading-relaxed text-muted-foreground md:text-lg">
                 <p className="text-foreground">
                   Hälkoppsinlägg är personligt utformade inlägg som formas efter

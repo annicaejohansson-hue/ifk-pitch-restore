@@ -238,9 +238,9 @@ const ForeningSpelare = () => {
                 />
                 <a
                   href="https://www.caseloidrottsmedicin.se/"
-                  className="break-all text-base text-foreground underline-offset-4 hover:underline md:text-lg"
+                  className="break-words text-base text-foreground underline-offset-4 hover:underline md:text-lg"
                 >
-                  www.caseloidrottsmedicin.se
+                  www.<wbr />caseloidrottsmedicin.se
                 </a>
               </li>
             </ul>

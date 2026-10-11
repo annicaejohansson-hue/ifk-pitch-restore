@@ -38,10 +38,10 @@ const heroFacts = [
 const clinicStrengths = [
   "Fullstor fotbollsplan 25 meter från kliniken – bedömning och rehab i den miljö du ska tillbaka till",
   "Realistisk testning inför återgång till träning och match, med maxlöpningar, inlägg och skott",
-  "Löparbana och laserportar för objektiv mätning av acceleration och snabbhet",
+  "Löparbana och laserportar för mätning av acceleration och snabbhet",
   "Diagnostik med ultraljud och stötvågsbehandling",
   "Individuellt tillverkade hälkoppsinlägg, till exempel vid hälsporre, hälkuddesyndrom och Severs skada",
-  "Objektiv styrkemätning med handhållen dynamometer",
+  "Styrkemätning med handhållen dynamometer",
 ];
 
 const education = [

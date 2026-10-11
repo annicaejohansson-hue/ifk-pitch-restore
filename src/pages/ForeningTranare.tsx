@@ -1,48 +1,51 @@
 import { useEffect } from "react";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
-import { ArrowDown, Calendar, CheckCircle2 } from "lucide-react";
+import {
+  ArrowDown,
+  CheckCircle2,
+  ExternalLink,
+  Mail,
+  MapPin,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import BookingLink from "@/components/BookingLink";
 import Partner from "@/components/Partner";
 import PageIntro from "@/components/PageIntro";
-import AudienceSwitch from "@/components/forening/AudienceSwitch";
 import ProcessSteps from "@/components/forening/ProcessSteps";
-import henrikFoto from "@/assets/IMG_9111.jpg";
-import heroFoto from "@/assets/forening-tranare.jpg";
-import trainingFoto from "@/assets/comeback-training.jpg";
-import { HEEL_CUP_SERVICE_PATH } from "@/data/tjanster";
+import SharePlayerLink from "@/components/forening/SharePlayerLink";
+import henrikFoto from "@/assets/IMG_9111-guidance.jpg";
+import rehabFoto from "@/assets/IMG_9118.jpg";
+import { useVisitor } from "@/context/VisitorContext";
+import { trackKontaktEpost } from "@/lib/analytics";
+
+const ADDRESS_LINE_1 = "Rinkebyvägen 4";
+const ADDRESS_LINE_2 = "182 36 Danderyd";
+const FULL_ADDRESS = `${ADDRESS_LINE_1}, ${ADDRESS_LINE_2}`;
+const EMAIL = "henrik@caseloidrottsmedicin.se";
+const MAPS_SEARCH_URL = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(FULL_ADDRESS)}`;
+const MAPS_EMBED_URL = `https://maps.google.com/maps?q=${encodeURIComponent(FULL_ADDRESS)}&z=15&output=embed`;
 
 const goldCtaClass =
   "h-auto min-h-11 w-full max-w-sm whitespace-normal px-5 py-2.5 text-base shadow-[var(--shadow-button)] transition-[var(--transition-smooth)] hover:shadow-[var(--shadow-hover)] sm:w-auto sm:max-w-none sm:px-7 sm:text-lg";
 
-const outlineCtaClass =
-  "h-auto min-h-11 w-full max-w-sm whitespace-normal px-5 py-2.5 text-base sm:w-auto sm:max-w-none sm:px-7 sm:text-lg";
+const contactLinkClass =
+  "break-words text-base text-foreground underline-offset-4 hover:underline md:text-lg";
+
+const sectionY = "py-8 md:py-12";
 
 const coachSteps = [
   {
-    title: "Kontakt",
-    text: "När en spelare får ont eller skadar sig kan du som tränare hänvisa spelaren eller vårdnadshavaren till Caselo.",
+    title: "Hänvisa spelaren",
+    text: "Tipsa spelaren eller vårdnadshavaren om Caselo. De bokar och betalar själva – ingen kostnad för laget eller föreningen, och inget avtal krävs. Mottagning på Danderyd Arena.",
   },
   {
-    title: "Bokning",
-    text: "Spelaren eller vårdnadshavaren bokar själv en tid.",
+    title: "Bedömning och rehab",
+    text: "Henrik bedömer besvären och tar fram en plan för rehabilitering och återgång till fotbollen.",
   },
   {
-    title: "Bedömning och rehabilitering",
-    text: "Henrik bedömer besvären, behandlar och planerar vägen tillbaka till fotbollen.",
+    title: "Återkoppling till tränare",
+    text: "Med spelarens eller vårdnadshavarens samtycke ger Henrik dig som tränare tydliga råd om hur spelaren kan delta i och stegra sin träning, och tryggt återgå till match.",
   },
-  {
-    title: "Återkoppling",
-    text: "Med spelarens eller vårdnadshavarens samtycke kan tränaren få tydlig återkoppling kring vad spelaren kan delta i, vad som bör anpassas och vad nästa steg är.",
-  },
-];
-
-const henrikFacts = [
-  "Mottagning i direkt anslutning till fotbollsplan",
-  "Ultraljud och stötvågsbehandling",
-  "Skräddarsydda hälkoppsinlägg till barn och unga med hälsmärta",
 ];
 
 const trainingHelp = [
@@ -54,6 +57,8 @@ const trainingHelp = [
 ];
 
 const ForeningTranare = () => {
+  const { visitorType } = useVisitor();
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -64,84 +69,132 @@ const ForeningTranare = () => {
         <title>För tränare och ledare – Caselo Idrottsmedicin</title>
         <meta
           name="description"
-          content="En enkel kontaktväg när en spelare får ont eller skadar sig. Caselo Idrottsmedicin ger bedömning, rehabilitering och återkoppling till tränaren."
+          content="När en spelare skadas: kan hen träna, hur anpassas träningen, när är match okej? Hänvisa till leg. fysioterapeut Henrik Nilsson på Caselo Idrottsmedicin."
         />
       </Helmet>
 
-      <section className="container px-4 py-8 md:py-14">
-        <div className="mx-auto max-w-5xl">
-          <div className="grid items-start gap-8 md:grid-cols-2 md:gap-10">
-            <div className="min-w-0">
+      <section className="container px-4 pt-6 pb-8 md:pt-8 md:pb-10">
+        <div className="mx-auto w-full min-w-0 max-w-5xl">
+          <div className="grid min-w-0 items-start gap-5 md:grid-cols-2 md:gap-10">
+            <div className="contents min-w-0 md:flex md:flex-col">
               <PageIntro
-                className="mb-5 md:mb-6"
+                className="min-w-0 max-md:order-1"
                 eyebrow="För tränare och ledare"
                 title="En kontaktväg när en spelare får ont eller skadar sig"
               >
-                När en spelare får ont uppstår snabbt praktiska frågor: Kan
-                spelaren träna? Hur bör träningen anpassas? När är det okej att
-                spela match igen? Caselo Idrottsmedicin kan vara ett stöd från första
-                bedömning till återgång i träning och match.
+                <p>
+                  När en spelare skadar sig kan det vara svårt för tränaren att
+                  veta: Kan spelaren träna? Hur bör träningen anpassas? När är
+                  det okej att spela match igen?
+                </p>
+                <p>
+                  Hänvisa spelaren till leg. fysioterapeut Henrik Nilsson för
+                  bedömning och rehabilitering – och få som tränare vägledning
+                  kring återgången till träning och match.
+                </p>
               </PageIntro>
+
               <a
                 href="#sa-fungerar-det"
-                className="inline-flex min-h-11 items-center gap-2 text-base font-medium text-foreground transition-colors hover:text-primary sm:text-lg"
+                className="mt-5 inline-flex min-h-11 items-center gap-2 text-base font-medium text-foreground transition-colors hover:text-primary sm:text-lg md:mt-6 max-md:order-3"
               >
                 Så fungerar det
                 <ArrowDown className="h-5 w-5 shrink-0" aria-hidden="true" />
               </a>
             </div>
-            <div className="min-w-0">
-              <div className="mb-3 hidden justify-end md:flex">
-                <AudienceSwitch
-                  to="/forening/spelare"
-                  label="Är du spelare eller förälder? →"
-                />
-              </div>
-              <div className="overflow-hidden rounded-2xl shadow-[var(--shadow-card)]">
-                <div className="aspect-[4/3] w-full bg-muted sm:aspect-[717/557]">
+
+            <figure className="min-w-0 max-md:order-2">
+              <div className="overflow-hidden rounded-2xl bg-muted shadow-[var(--shadow-card)]">
+                <div className="aspect-[4/5] w-full md:aspect-[5/4]">
                   <img
-                    src={heroFoto}
-                    alt="Tränare med taktikbräda på fotbollsplanen"
-                    className="h-full w-full object-cover object-[8%_42%]"
-                    width={717}
-                    height={557}
+                    src={rehabFoto}
+                    alt="Henrik Nilsson undersöker en fotbollsspelare på planen vid Danderyd Arena"
+                    className="h-full w-full object-cover object-[42%_38%] md:object-[40%_42%]"
+                    width={1200}
+                    height={900}
                     fetchPriority="high"
                     decoding="async"
                   />
                 </div>
               </div>
-            </div>
+              <figcaption className="mt-2.5 text-sm leading-relaxed text-muted-foreground md:text-base">
+                Henrik Nilsson – legitimerad fysioterapeut och UEFA A-utbildad
+                fotbollstränare.
+              </figcaption>
+            </figure>
           </div>
         </div>
       </section>
 
-      <section
-        id="sa-fungerar-det"
-        className="scroll-mt-28 bg-muted py-12 md:py-20"
-      >
+      <section id="sa-fungerar-det" className={`scroll-mt-28 bg-muted ${sectionY}`}>
         <div className="container px-4">
           <div className="mx-auto max-w-5xl">
-            <h2 className="mb-8 text-balance text-2xl font-bold tracking-tight text-foreground sm:text-3xl md:mb-10 md:text-4xl">
+            <h2 className="mb-5 text-balance text-2xl font-bold tracking-tight text-foreground sm:text-3xl md:mb-6 md:text-4xl">
               Så fungerar det
             </h2>
-            <ProcessSteps steps={coachSteps} />
+            <ProcessSteps steps={coachSteps} compact />
           </div>
         </div>
       </section>
 
-      <section className="py-12 md:py-20">
+      <section className={sectionY}>
         <div className="container px-4">
-          <div className="mx-auto grid max-w-5xl items-center gap-8 md:grid-cols-2 md:gap-12">
-            <div className="min-w-0">
-              <h2 className="mb-4 text-balance text-2xl font-bold tracking-tight text-foreground sm:text-3xl md:text-4xl">
-                Tydligare beslut kring spelarens träning
+          <div className="mx-auto max-w-5xl">
+            <h2 className="mb-3 text-balance text-2xl font-bold tracking-tight text-foreground sm:text-3xl md:text-4xl">
+              Fysioterapi med fotbollen som utgångspunkt
+            </h2>
+            <p className="mb-3 max-w-3xl text-base leading-relaxed text-muted-foreground md:text-lg">
+              Henrik Nilsson är legitimerad fysioterapeut med 10 års erfarenhet
+              av idrottsskador, UEFA A-utbildad fotbollstränare och assisterande
+              tränare i IFK Stocksunds herrlag i Division 1.
+            </p>
+            <p className="mb-3 max-w-3xl text-base leading-relaxed text-muted-foreground md:text-lg">
+              Mottagningen ligger 25 meter från en fullstor fotbollsplan, vilket
+              gör att bedömning och rehab kan ske i den miljö spelaren ska tillbaka
+              till. Rehabiliteringen utgår från vad spelaren behöver kunna på
+              planen, med realistisk testning inför återgång till träning och
+              match – maxlöpningar, inlägg och skott.
+            </p>
+            <p className="mb-4 max-w-3xl text-base leading-relaxed text-muted-foreground md:text-lg">
+              Acceleration och snabbhet mäts på löparbanan med laserportar, och
+              styrkan följs upp med dynamometer. Vid behov används ultraljud i
+              diagnostiken och stötvågsbehandling. För hälsmärta som drabbar
+              många unga fotbollsspelare som växer tillverkas hälkoppsinlägg
+              individuellt.
+            </p>
+            <div className="mt-5">
+              <Button asChild variant="secondary" className={goldCtaClass}>
+                <Link to="/tjanster">Läs mer om tjänsterna</Link>
+              </Button>
+            </div>
+            <Partner variant="inline" />
+          </div>
+        </div>
+      </section>
+
+      <section className={`bg-muted ${sectionY}`}>
+        <div className="container px-4">
+          <div className="mx-auto flex max-w-5xl flex-col items-start gap-6 md:flex-row md:items-stretch md:gap-8">
+            <figure className="mx-auto w-full max-w-[16.5rem] shrink-0 overflow-hidden md:mx-0 md:w-[15.5rem] md:min-h-0 lg:w-[16.5rem]">
+              <div className="h-full overflow-hidden rounded-2xl shadow-[var(--shadow-card)]">
+                <img
+                  src={henrikFoto}
+                  alt="Henrik Nilsson, legitimerad fysioterapeut och fotbollstränare, på planen vid Danderyd Arena"
+                  className="h-auto w-full object-cover object-top md:h-full md:w-full"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+            </figure>
+            <div className="min-w-0 w-full max-w-xl">
+              <h2 className="mb-3 text-2xl font-bold tracking-tight text-foreground sm:text-3xl md:text-4xl">
+                Tydlig vägledning kring spelarens återgång till spel
               </h2>
-              <p className="mb-8 text-base leading-relaxed text-muted-foreground md:mb-8 md:text-lg">
-                Du behöver inte själv göra en medicinsk bedömning av skadan. Efter
-                undersökningen kan Caselo hjälpa till att omsätta rehabiliteringen
-                till konkreta råd för fotbollsträningen.
+              <p className="mb-5 text-pretty text-base leading-relaxed text-muted-foreground md:text-lg">
+                Efter bedömning, och med spelarens eller vårdnadshavarens
+                samtycke, får du som tränare konkret vägledning:
               </p>
-              <ul className="space-y-3">
+              <ul className="space-y-2.5">
                 {trainingHelp.map((item) => (
                   <li key={item} className="flex items-start gap-3">
                     <CheckCircle2
@@ -155,144 +208,94 @@ const ForeningTranare = () => {
                 ))}
               </ul>
             </div>
-            <figure className="min-w-0">
-              <div className="overflow-hidden rounded-2xl shadow-[var(--shadow-card)]">
-                <img
-                  src={trainingFoto}
-                  alt="Tränare och barn på fotbollsplanen under träning. Bilden är illustrativ och föreställer inte patienter hos Caselo."
-                  className="h-auto w-full object-cover"
-                  loading="lazy"
-                  decoding="async"
-                />
-              </div>
-              <figcaption className="mt-2 text-xs leading-relaxed text-foreground/20">
-                Foto: W.carter / Wikimedia Commons. Illustrativ bild, inte
-                patienter hos Caselo.
-              </figcaption>
-            </figure>
           </div>
         </div>
       </section>
 
-      <section className="bg-muted py-12 md:py-20">
-        <div className="container px-4">
-          <Card className="mx-auto max-w-5xl border-border/50 bg-card p-5 shadow-[var(--shadow-card)] sm:p-6 md:p-10">
-            <div className="flex flex-col items-start gap-6 sm:flex-row md:gap-8">
-              <figure className="mx-auto w-full max-w-[200px] shrink-0 sm:mx-0 sm:max-w-[220px] md:max-w-[260px]">
-                <div className="overflow-hidden rounded-xl shadow-[var(--shadow-card)]">
-                  <img
-                    src={henrikFoto}
-                    alt="Henrik Nilsson, legitimerad fysioterapeut och fotbollstränare"
-                    className="h-auto w-full object-cover"
-                    loading="lazy"
-                    decoding="async"
+      <section id="kontakt-henrik" className={`scroll-mt-28 ${sectionY}`}>
+        <div className="container min-w-0 px-4">
+          <div className="mx-auto grid w-full min-w-0 max-w-5xl gap-6 md:gap-8">
+            <div className="min-w-0 overflow-x-hidden rounded-2xl border border-border/60 bg-card px-5 py-6 shadow-[var(--shadow-card)] sm:px-6 sm:py-7 md:px-8 md:py-8">
+              <h2 className="mb-6 text-balance text-2xl font-bold tracking-tight text-foreground sm:text-3xl md:text-4xl">
+                Har du frågor? Hör gärna av dig till Henrik!
+              </h2>
+
+              <ul className="space-y-4 sm:space-y-5">
+                <li className="flex items-start gap-3">
+                  <Mail
+                    className="mt-0.5 h-5 w-5 shrink-0 text-primary"
+                    aria-hidden="true"
                   />
-                </div>
-                <figcaption className="mt-2 text-center text-sm text-muted-foreground sm:text-left">
-                  Henrik Nilsson, leg. fysioterapeut
-                </figcaption>
-              </figure>
-              <div className="min-w-0 flex-1">
-                <h2 className="mb-4 text-balance text-2xl font-bold tracking-tight text-foreground sm:text-3xl md:text-4xl">
-                  Fysioterapi med fotbollen som utgångspunkt
-                </h2>
-                <p className="mb-4 text-base leading-relaxed text-muted-foreground md:text-lg">
-                  Henrik Nilsson är legitimerad fysioterapeut med 10 års
-                  erfarenhet av idrottsskador, UEFA A-utbildad fotbollstränare
-                  och assisterande tränare i IFK Stocksunds herrlag i Division
-                  1.
-                </p>
-                <p className="mb-6 text-base leading-relaxed text-muted-foreground md:text-lg">
-                  Tränarperspektivet finns med i allt han gör. Rehabiliteringen
-                  utgår därför inte bara från skadan, utan också från vad
-                  spelaren faktiskt behöver kunna göra på planen – springa,
-                  accelerera, bromsa, byta riktning, passa, skjuta och
-                  successivt återgå till lagträning och match.
-                </p>
-                <ul className="space-y-3">
-                  {henrikFacts.map((item) => (
-                    <li key={item} className="flex items-start gap-3">
-                      <CheckCircle2
-                        className="mt-0.5 h-5 w-5 shrink-0 text-primary"
+                  <a
+                    href={`mailto:${EMAIL}`}
+                    className={contactLinkClass}
+                    onClick={() => trackKontaktEpost(visitorType)}
+                  >
+                    henrik@<wbr />caseloidrottsmedicin.se
+                  </a>
+                </li>
+                <li className="flex items-start gap-3">
+                  <MapPin
+                    className="mt-0.5 h-5 w-5 shrink-0 text-primary"
+                    aria-hidden="true"
+                  />
+                  <div className="min-w-0">
+                    <address className="not-italic text-base leading-relaxed text-foreground md:text-lg">
+                      Caselo Idrottsmedicin
+                      <br />
+                      {ADDRESS_LINE_1} (Danderyd Arena)
+                      <br />
+                      {ADDRESS_LINE_2}
+                    </address>
+                    <a
+                      href={MAPS_SEARCH_URL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-2 inline-flex min-h-11 items-center gap-1.5 text-base font-medium text-primary underline-offset-4 hover:underline"
+                    >
+                      <ExternalLink
+                        className="h-4 w-4 shrink-0"
                         aria-hidden="true"
                       />
-                      <span className="text-base leading-relaxed text-foreground md:text-lg">
-                        {item}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-                <p className="mt-6 text-base leading-relaxed text-muted-foreground md:text-lg">
-                  Läs mer om{" "}
-                  <Link
-                    to={HEEL_CUP_SERVICE_PATH}
-                    className="font-medium text-primary underline underline-offset-4 hover:text-primary/80"
-                  >
-                    hälkoppsinlägg för barn med hälsmärta
-                  </Link>.
-                </p>
+                      Öppna i Maps
+                    </a>
+                  </div>
+                </li>
+              </ul>
+
+              <div className="relative mt-6 w-full min-w-0 max-w-full overflow-hidden rounded-xl border border-border/50">
+                <a
+                  href={MAPS_SEARCH_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="absolute left-3 top-3 z-10 inline-flex min-h-9 items-center gap-1.5 rounded-md border border-border/80 bg-background/95 px-2.5 py-1.5 text-sm font-medium text-primary shadow-sm backdrop-blur-sm transition-colors hover:bg-background"
+                >
+                  <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+                  Öppna i Maps
+                </a>
+                <iframe
+                  title={`Karta över ${FULL_ADDRESS}`}
+                  src={MAPS_EMBED_URL}
+                  className="block h-[200px] w-full max-w-full border-0 sm:h-[240px] md:h-[280px]"
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                />
               </div>
             </div>
-          </Card>
-        </div>
-      </section>
 
-      <section className="py-12 md:py-20">
-        <div className="container px-4">
-          <div className="mx-auto max-w-5xl rounded-2xl border border-secondary/50 bg-secondary/30 px-5 py-7 sm:px-6 sm:py-8 md:px-10 md:py-10">
-            <h2 className="mb-4 text-balance text-2xl font-bold tracking-tight text-foreground sm:text-3xl md:text-4xl">
-              Ingen kostnad eller något åtagande för föreningen
-            </h2>
-            <p className="mb-4 max-w-3xl text-base leading-relaxed text-muted-foreground md:text-lg">
-              Föreningen behöver inte teckna något avtal eller stå för någon
-              kostnad. Spelaren eller vårdnadshavaren bokar och betalar sitt
-              besök direkt hos Caselo Idrottsmedicin.
-            </p>
-            <p className="max-w-3xl text-base leading-relaxed text-foreground md:text-lg">
-              Tränaren får samtidigt en enkel kontaktväg att använda när behov
-              uppstår.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-muted py-12 md:py-20">
-        <div className="container px-4">
-          <div className="mx-auto max-w-5xl rounded-2xl border border-border/60 bg-card px-5 py-7 text-center shadow-[var(--shadow-card)] sm:px-6 sm:py-8 md:px-10 md:py-10">
-            <h2 className="mb-3 text-xl font-bold text-foreground md:text-2xl">
-              Ha länken nära till hands när någon i laget får ont
-            </h2>
-            <p className="mb-6 text-base leading-relaxed text-muted-foreground md:text-lg">
-              Spara sidan eller skicka den direkt till spelaren eller
-              vårdnadshavaren.
-            </p>
-            <div className="flex flex-col items-center justify-center gap-3 sm:flex-row sm:flex-wrap">
-              <Button asChild variant="secondary" className={goldCtaClass}>
-                <Link to="/forening/spelare">
-                  Till sidan för spelare och föräldrar
-                </Link>
-              </Button>
-              <Button asChild variant="outline" className={outlineCtaClass}>
-                <BookingLink aria-label="Gå till bokningssidan">
-                  <Calendar className="h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" />
-                  Boka tid
-                </BookingLink>
-              </Button>
+            <div className="rounded-2xl border border-border/60 bg-card px-5 py-6 shadow-[var(--shadow-card)] sm:px-6 sm:py-7 md:px-8 md:py-8">
+              <h2 className="mb-3 text-balance text-xl font-bold tracking-tight text-foreground md:text-2xl">
+                Länk för spelare och föräldrar
+              </h2>
+              <p className="mb-5 max-w-3xl text-base leading-relaxed text-muted-foreground md:text-lg">
+                Kopiera länken till sidan för spelare och föräldrar. Där bokar de
+                själva tiden för besöket.
+              </p>
+              <SharePlayerLink />
             </div>
           </div>
         </div>
       </section>
-
-      <div className="container px-4 pb-10 pt-2 md:hidden">
-        <div className="mx-auto max-w-5xl">
-          <AudienceSwitch
-            to="/forening/spelare"
-            label="Är du spelare eller förälder? →"
-          />
-        </div>
-      </div>
-
-      <Partner />
     </main>
   );
 };

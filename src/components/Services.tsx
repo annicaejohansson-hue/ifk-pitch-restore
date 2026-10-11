@@ -7,7 +7,7 @@ const Services = () => {
     <section className="bg-gradient-to-b from-background via-muted/30 to-background pb-0 pt-12 sm:pt-16 md:pt-20">
       <div className="container px-4">
         <div className="mx-auto mb-10 max-w-3xl text-center md:mb-16">
-          <h2 className="mb-4 text-balance text-3xl font-bold tracking-tight sm:mb-6 md:text-5xl">
+          <h2 className="mb-4 break-words text-2xl font-bold tracking-tight sm:mb-6 sm:text-3xl md:text-5xl">
             Trygg återgång och starkare prestation
           </h2>
           <p className="text-base text-muted-foreground sm:text-lg">
@@ -30,7 +30,12 @@ const Services = () => {
                   <img
                     src={service.image}
                     alt={service.cardTitle}
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                    className={[
+                      "h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]",
+                      service.slug === "halkoppar-barn"
+                        ? "object-[center_28%]"
+                        : "",
+                    ].join(" ")}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
                 </div>
