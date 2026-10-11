@@ -65,7 +65,7 @@ const ForeningTranare = () => {
         <title>För tränare och ledare – Caselo Idrottsmedicin</title>
         <meta
           name="description"
-          content="En enkel kontaktväg när en spelare får ont eller skadar sig. Caselo Idrottsmedicin ger bedömning, rehabilitering och återkoppling till träningen."
+          content="En enkel kontaktväg när en spelare får ont eller skadar sig. Caselo Idrottsmedicin ger bedömning, rehabilitering och återkoppling till tränaren."
         />
       </Helmet>
 

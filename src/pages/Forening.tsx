@@ -38,7 +38,7 @@ const Forening = () => {
         <title>För fotbollsföreningar – Caselo Idrottsmedicin</title>
         <meta
           name="description"
-          content="När en spelare i laget får ont kan Caselo hjälpa till med bedömning, rehabilitering och återkoppling till träningen. För tränare, spelare och föräldrar."
+          content="När en spelare i laget får ont kan Caselo hjälpa till med bedömning, rehabilitering och återkoppling till tränaren. För tränare, spelare och föräldrar."
         />
       </Helmet>
 
@@ -50,7 +50,7 @@ const Forening = () => {
             title="När en spelare i laget får ont"
           >
             Caselo kan hjälpa till med bedömning, rehabilitering och
-            återkoppling till träningen. Välj om du är tränare/ledare, eller
+            återkoppling till tränaren. Välj om du är tränare/ledare, eller
             spelare/förälder.
           </PageIntro>
 
