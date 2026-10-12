@@ -6,6 +6,7 @@ type PageIntroProps = {
   eyebrow: string;
   eyebrowHref?: string;
   title: string;
+  mobileTitle?: string;
   children?: ReactNode;
   className?: string;
 };
@@ -14,6 +15,7 @@ const PageIntro = ({
   eyebrow,
   eyebrowHref,
   title,
+  mobileTitle,
   children,
   className,
 }: PageIntroProps) => {
@@ -36,11 +38,18 @@ const PageIntro = ({
       )}
       <h1
         className={cn(
-          "w-full max-w-full break-words text-2xl font-bold leading-snug tracking-tight text-foreground sm:text-3xl md:text-[2.75rem] md:leading-tight lg:text-5xl",
+          "w-full max-w-full break-words text-3xl font-bold leading-snug tracking-tight text-foreground sm:text-4xl md:text-[2.75rem] md:leading-tight lg:text-5xl",
           children ? "mb-4 md:mb-5" : "",
         )}
       >
-        {title}
+        {mobileTitle ? (
+          <>
+            <span className="md:hidden">{mobileTitle}</span>
+            <span className="hidden md:inline">{title}</span>
+          </>
+        ) : (
+          title
+        )}
       </h1>
       {children ? (
         <div className="max-w-3xl space-y-4 break-words text-base leading-relaxed text-muted-foreground sm:text-lg md:text-xl">

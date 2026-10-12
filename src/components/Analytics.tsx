@@ -33,7 +33,7 @@ const CookieConsent = () => {
   };
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-[60] border-t border-border bg-background/95 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] shadow-[0_-8px_24px_rgba(0,0,0,0.08)] backdrop-blur supports-[backdrop-filter]:bg-background/90">
+    <div className="fixed inset-x-0 bottom-0 z-[60] border-t border-border bg-background/95 px-8 md:px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] shadow-[0_-8px_24px_rgba(0,0,0,0.08)] backdrop-blur supports-[backdrop-filter]:bg-background/90">
       <div className="container mx-auto flex max-w-7xl min-w-0 flex-col gap-2.5 px-0 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
         <p className="min-w-0 break-words text-sm leading-snug text-foreground">
           Vi använder cookies för att förstå hur webbplatsen används.

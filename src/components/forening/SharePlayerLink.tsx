@@ -25,6 +25,7 @@ const SharePlayerLink = () => {
         type="button"
         variant="secondary"
         className="h-auto min-h-11 w-full max-w-full whitespace-normal px-4 py-2.5 text-center text-base leading-snug shadow-[var(--shadow-button)] sm:w-auto sm:max-w-none sm:px-7 sm:text-lg"
+        aria-label="Kopiera länk till spelare och föräldrar"
         onClick={copyLink}
       >
         {status === "copied" ? (
@@ -32,7 +33,10 @@ const SharePlayerLink = () => {
         ) : (
           <Copy className="h-4 w-4 shrink-0 sm:h-5 sm:w-5" aria-hidden="true" />
         )}
-        Kopiera länk till spelare och föräldrar
+        <span className="sm:hidden">Kopiera länk</span>
+        <span className="hidden sm:inline">
+          Kopiera länk till spelare och föräldrar
+        </span>
       </Button>
 
       <p className="mt-3 text-sm leading-relaxed text-muted-foreground" aria-live="polite">

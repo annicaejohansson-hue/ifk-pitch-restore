@@ -655,8 +655,8 @@ const Boka = () => {
       </Helmet>
 
       <section className="bg-gradient-to-b from-primary/10 to-background pt-5 pb-3 md:pt-6 md:pb-3">
-        <div className="container mx-auto max-w-7xl px-4">
-          <h1 className="mb-2 break-words text-3xl font-bold tracking-tight text-foreground sm:text-4xl md:mb-3 md:text-5xl">
+        <div className="container mx-auto max-w-7xl px-8 md:px-4">
+          <h1 className="mb-2 break-words text-4xl font-bold tracking-tight text-foreground sm:text-4xl md:mb-3 md:text-5xl">
             Boka tid
           </h1>
           <p className="mb-3 text-base text-muted-foreground md:mb-4 md:text-lg">
@@ -670,7 +670,7 @@ const Boka = () => {
       </section>
 
       <section className="pt-3 pb-6 md:pt-4 md:pb-8">
-        <div className="container mx-auto max-w-7xl px-4">
+        <div className="container mx-auto max-w-7xl px-8 md:px-4">
           <div className="w-full min-w-0">
             <div className="mb-6 grid grid-cols-1 items-start gap-4 lg:mb-8 lg:grid-cols-3 lg:gap-4">
               {(selected && selectedCategory

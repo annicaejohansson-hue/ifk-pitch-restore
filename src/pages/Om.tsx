@@ -85,7 +85,7 @@ const Om = () => {
       </Helmet>
 
       <section className="bg-background py-8 md:py-14">
-        <div className="container px-4">
+        <div className="container px-8 md:px-4">
           <div className="mx-auto grid max-w-5xl items-start gap-8 md:grid-cols-2 md:gap-10">
             <div className="min-w-0">
               <PageIntro
@@ -146,7 +146,7 @@ const Om = () => {
       </section>
 
       <section className="bg-muted py-12 md:py-20">
-        <div className="container px-4">
+        <div className="container px-8 md:px-4">
           <div className="mx-auto max-w-5xl">
             <h2 className="mb-4 text-balance text-2xl font-bold tracking-tight text-foreground sm:text-3xl md:mb-6 md:text-4xl">
               En behandlare som förstår idrottens krav
@@ -184,7 +184,7 @@ const Om = () => {
       </section>
 
       <section className="bg-background py-12 md:py-20">
-        <div className="container px-4">
+        <div className="container px-8 md:px-4">
           <div className="mx-auto grid max-w-5xl items-start gap-8 md:grid-cols-2 md:gap-12">
             <div className="min-w-0">
               <h2 className="mb-4 text-balance text-2xl font-bold tracking-tight text-foreground sm:text-3xl md:mb-6 md:text-4xl">
@@ -236,7 +236,7 @@ const Om = () => {
       </section>
 
       <section className="bg-muted py-12 md:py-20">
-        <div className="container px-4">
+        <div className="container px-8 md:px-4">
           <div className="mx-auto max-w-5xl">
             <h2 className="mb-6 text-balance text-2xl font-bold tracking-tight text-foreground sm:text-3xl md:mb-8 md:text-4xl">
               Utbildning
@@ -259,7 +259,7 @@ const Om = () => {
       </section>
 
       <section className="bg-background py-12 md:py-20">
-        <div className="container px-4">
+        <div className="container px-8 md:px-4">
           <div className="mx-auto max-w-5xl rounded-2xl border border-border/60 bg-card px-5 py-7 text-center shadow-[var(--shadow-card)] sm:px-6 sm:py-8 md:px-10 md:py-10">
             <h2 className="mb-3 text-xl font-bold text-foreground md:text-2xl">
               Vill du boka en bedömning?

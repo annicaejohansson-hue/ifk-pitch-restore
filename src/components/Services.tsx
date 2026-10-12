@@ -5,10 +5,12 @@ import { services } from "@/data/tjanster";
 const Services = () => {
   return (
     <section className="bg-gradient-to-b from-background via-muted/30 to-background pb-0 pt-12 sm:pt-16 md:pt-20">
-      <div className="container px-4">
+      <div className="container px-8 md:px-4">
         <div className="mx-auto mb-10 max-w-3xl text-center md:mb-16">
-          <h2 className="mb-4 break-words text-2xl font-bold tracking-tight sm:mb-6 sm:text-3xl md:text-5xl">
-            Trygg återgång och starkare prestation
+          <h2 className="mb-4 break-words text-[1.75rem] font-bold leading-tight tracking-tight sm:mb-6 sm:text-3xl sm:leading-none md:text-5xl">
+            Trygg återgång och
+            <br />
+            starkare prestation
           </h2>
           <p className="text-base text-muted-foreground sm:text-lg">
             Caselo Idrottsmedicin erbjuder professionell idrottsfysioterapi för satsande idrottare.{" "}
@@ -40,8 +42,15 @@ const Services = () => {
                   <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
                 </div>
                 <div className="p-5 sm:p-6">
-                  <h3 className="mb-2 text-lg font-semibold transition-colors group-hover:text-primary sm:mb-3 sm:text-xl">
-                    {service.cardTitle}
+                  <h3 className="mb-2 text-xl font-semibold leading-snug transition-colors group-hover:text-primary sm:mb-3 sm:text-xl">
+                    {service.cardTitleMobile ? (
+                      <>
+                        <span className="sm:hidden">{service.cardTitleMobile}</span>
+                        <span className="hidden sm:inline">{service.cardTitle}</span>
+                      </>
+                    ) : (
+                      service.cardTitle
+                    )}
                   </h3>
                   <p className="text-sm leading-relaxed text-muted-foreground">
                     {service.cardDescription}

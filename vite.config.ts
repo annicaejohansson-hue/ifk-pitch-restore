@@ -13,8 +13,10 @@ const lucideUtilsFilter =
 export default defineConfig(({ mode }) => ({
   cacheDir: path.join(os.tmpdir(), "ifk-pitch-vite-cache"),
   server: {
-    host: "::",
+    host: "0.0.0.0",
     port: 8080,
+    strictPort: true,
+    allowedHosts: true,
   },
   plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
   resolve: {

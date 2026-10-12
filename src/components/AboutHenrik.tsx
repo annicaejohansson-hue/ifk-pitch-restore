@@ -15,7 +15,7 @@ const certifications = [
 const AboutHenrik = () => {
   return (
     <section className="py-20 bg-gradient-to-b from-background to-muted/30">
-      <div className="container px-4">
+      <div className="container px-8 md:px-4">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-4">
             Möt våra fysioterapeuter

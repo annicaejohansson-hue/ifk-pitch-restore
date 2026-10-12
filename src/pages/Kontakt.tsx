@@ -27,7 +27,7 @@ const Kontakt = () => {
       </Helmet>
 
       <section className="bg-gradient-to-b from-muted/40 to-background py-8 md:py-14">
-        <div className="container px-4">
+        <div className="container px-8 md:px-4">
           <div className="mx-auto max-w-5xl">
             <PageIntro
               className="mb-8 md:mb-10"

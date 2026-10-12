@@ -33,7 +33,7 @@ const TjansterDetail = () => {
         <meta name="description" content={service.metaDescription} />
       </Helmet>
 
-      <section className="container px-4 py-8 md:py-14">
+      <section className="container px-8 md:px-4 py-8 md:py-14">
         <div className="mx-auto max-w-5xl">
           <ServiceDetail service={service} />
         </div>

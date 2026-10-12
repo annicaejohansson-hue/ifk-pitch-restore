@@ -32,6 +32,7 @@ const contactLinkClass =
   "break-words text-base text-foreground underline-offset-4 hover:underline md:text-lg";
 
 const sectionY = "py-8 md:py-12";
+const sectionX = "container px-8 md:px-4";
 
 const coachSteps = [
   {
@@ -40,7 +41,7 @@ const coachSteps = [
   },
   {
     title: "Bedömning och rehab",
-    text: "Henrik bedömer besvären och tar fram en plan för rehabilitering och återgång till fotbollen.",
+    text: "Henrik bedömer besvären och tar fram en plan för rehab och återgång till fotbollen – anpassad efter vad spelaren behöver kunna på planen.",
   },
   {
     title: "Återkoppling till tränare",
@@ -73,7 +74,7 @@ const ForeningTranare = () => {
         />
       </Helmet>
 
-      <section className="container px-4 pt-6 pb-8 md:pt-8 md:pb-10">
+      <section className={`${sectionX} pt-6 pb-8 md:pt-8 md:pb-10`}>
         <div className="mx-auto w-full min-w-0 max-w-5xl">
           <div className="grid min-w-0 items-start gap-5 md:grid-cols-2 md:gap-10">
             <div className="contents min-w-0 md:flex md:flex-col">
@@ -81,6 +82,7 @@ const ForeningTranare = () => {
                 className="min-w-0 max-md:order-1"
                 eyebrow="För tränare och ledare"
                 title="En kontaktväg när en spelare får ont eller skadar sig"
+                mobileTitle={"En kontaktväg när en spelare skadar\u00a0sig"}
               >
                 <p>
                   När en spelare skadar sig kan det vara svårt för tränaren att
@@ -96,14 +98,14 @@ const ForeningTranare = () => {
 
               <a
                 href="#sa-fungerar-det"
-                className="mt-5 inline-flex min-h-11 items-center gap-2 text-base font-medium text-foreground transition-colors hover:text-primary sm:text-lg md:mt-6 max-md:order-3"
+                className="inline-flex min-h-11 items-center gap-2 text-base font-medium text-foreground transition-colors hover:text-primary sm:text-lg max-md:order-2 md:mt-6"
               >
                 Så fungerar det
                 <ArrowDown className="h-5 w-5 shrink-0" aria-hidden="true" />
               </a>
             </div>
 
-            <figure className="min-w-0 max-md:order-2">
+            <figure className="min-w-0 max-md:order-3">
               <div className="overflow-hidden rounded-2xl bg-muted shadow-[var(--shadow-card)]">
                 <div className="aspect-[4/5] w-full md:aspect-[5/4]">
                   <img
@@ -127,7 +129,7 @@ const ForeningTranare = () => {
       </section>
 
       <section id="sa-fungerar-det" className={`scroll-mt-28 bg-muted ${sectionY}`}>
-        <div className="container px-4">
+        <div className={sectionX}>
           <div className="mx-auto max-w-5xl">
             <h2 className="mb-5 text-balance text-2xl font-bold tracking-tight text-foreground sm:text-3xl md:mb-6 md:text-4xl">
               Så fungerar det
@@ -138,7 +140,7 @@ const ForeningTranare = () => {
       </section>
 
       <section className={sectionY}>
-        <div className="container px-4">
+        <div className={sectionX}>
           <div className="mx-auto max-w-5xl">
             <h2 className="mb-3 text-balance text-2xl font-bold tracking-tight text-foreground sm:text-3xl md:text-4xl">
               Fysioterapi med fotbollen som utgångspunkt
@@ -173,7 +175,7 @@ const ForeningTranare = () => {
       </section>
 
       <section className={`bg-muted ${sectionY}`}>
-        <div className="container px-4">
+        <div className={sectionX}>
           <div className="mx-auto flex max-w-5xl flex-col items-start gap-6 md:flex-row md:items-stretch md:gap-8">
             <figure className="mx-auto w-full max-w-[16.5rem] shrink-0 overflow-hidden md:mx-0 md:w-[15.5rem] md:min-h-0 lg:w-[16.5rem]">
               <div className="h-full overflow-hidden rounded-2xl shadow-[var(--shadow-card)]">
@@ -213,7 +215,7 @@ const ForeningTranare = () => {
       </section>
 
       <section id="kontakt-henrik" className={`scroll-mt-28 ${sectionY}`}>
-        <div className="container min-w-0 px-4">
+        <div className={`${sectionX} min-w-0`}>
           <div className="mx-auto grid w-full min-w-0 max-w-5xl gap-6 md:gap-8">
             <div className="min-w-0 overflow-x-hidden rounded-2xl border border-border/60 bg-card px-5 py-6 shadow-[var(--shadow-card)] sm:px-6 sm:py-7 md:px-8 md:py-8">
               <h2 className="mb-6 text-balance text-2xl font-bold tracking-tight text-foreground sm:text-3xl md:text-4xl">

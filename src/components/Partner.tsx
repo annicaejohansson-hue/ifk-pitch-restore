@@ -27,10 +27,10 @@ const Partner = ({ variant = "footer" }: PartnerProps) => {
   if (variant === "inline") {
     return (
       <div className="mt-6 border-t border-border/60 pt-5">
-        <p className="mb-3 text-base text-muted-foreground md:text-lg">
+        <p className="mb-3 text-center text-base text-muted-foreground sm:text-left md:text-lg">
           Samarbetspartner till
         </p>
-        <div className="flex flex-wrap items-center gap-5 md:gap-6">
+        <div className="flex flex-wrap items-center justify-center gap-5 sm:justify-start md:gap-6">
           <img
             src="https://irp.cdn-website.com/e6471f24/dms3rep/multi/g10.png"
             alt="IFK Stocksund"
@@ -54,7 +54,7 @@ const Partner = ({ variant = "footer" }: PartnerProps) => {
 
   return (
     <footer className="bg-[#0e1627] py-6 md:py-8">
-      <div className="container px-4">
+      <div className="container px-8 md:px-4">
         <div className="mx-auto flex max-w-4xl flex-col items-center justify-center gap-3 text-center text-primary-foreground sm:flex-row sm:flex-wrap sm:gap-4 sm:text-left md:gap-6">
           <p className="text-base md:text-lg">Samarbetspartner till</p>
           <div className="flex flex-wrap items-center justify-center gap-3 p-0 md:gap-4">

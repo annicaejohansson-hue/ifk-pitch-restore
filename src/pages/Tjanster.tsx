@@ -23,7 +23,7 @@ const Tjanster = () => {
         />
       </Helmet>
 
-      <section className="container px-4 py-8 md:py-14">
+      <section className="container px-8 md:px-4 py-8 md:py-14">
         <div className="mx-auto max-w-5xl">
           <PageIntro
             className="mb-8 md:mb-10"

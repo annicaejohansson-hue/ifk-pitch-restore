@@ -60,7 +60,7 @@ const ForeningSpelare = () => {
         />
       </Helmet>
 
-      <section className="container px-4 py-8 md:py-14">
+      <section className="container px-8 md:px-4 py-8 md:py-14">
         <div className="mx-auto max-w-5xl">
           <div className="grid items-start gap-8 md:grid-cols-2 md:gap-10">
             <div className="min-w-0">
@@ -114,7 +114,7 @@ const ForeningSpelare = () => {
         id="sa-fungerar-det"
         className="scroll-mt-28 bg-muted py-12 md:py-20"
       >
-        <div className="container px-4">
+        <div className="container px-8 md:px-4">
           <div className="mx-auto max-w-5xl">
             <h2 className="mb-8 text-balance text-2xl font-bold tracking-tight text-foreground sm:text-3xl md:mb-10 md:text-4xl">
               Från första bedömning till tillbaka på planen
@@ -125,7 +125,7 @@ const ForeningSpelare = () => {
       </section>
 
       <section className="py-12 md:py-20">
-        <div className="container px-4">
+        <div className="container px-8 md:px-4">
           <div className="mx-auto grid max-w-5xl items-center gap-8 md:grid-cols-2 md:gap-12">
             <div className="min-w-0">
               <h2 className="mb-4 text-balance text-2xl font-bold tracking-tight text-foreground sm:text-3xl md:text-4xl">
@@ -153,7 +153,7 @@ const ForeningSpelare = () => {
       </section>
 
       <section className="bg-muted py-12 md:py-20">
-        <div className="container px-4">
+        <div className="container px-8 md:px-4">
           <Card className="mx-auto max-w-5xl border-border/50 bg-card p-5 shadow-[var(--shadow-card)] sm:p-6 md:p-10">
             <div className="flex flex-col items-start gap-6 sm:flex-row md:gap-8">
               <figure className="mx-auto w-full max-w-[200px] shrink-0 sm:mx-0 sm:max-w-[220px] md:max-w-[240px]">
@@ -214,7 +214,7 @@ const ForeningSpelare = () => {
       </section>
 
       <section id="boka" className="scroll-mt-28 py-12 md:py-20">
-        <div className="container px-4">
+        <div className="container px-8 md:px-4">
           <div className="mx-auto max-w-5xl rounded-2xl border border-border/60 bg-card px-5 py-7 shadow-[var(--shadow-card)] sm:px-6 sm:py-8 md:px-10 md:py-10">
             <h2 className="mb-6 text-balance text-2xl font-bold tracking-tight text-foreground sm:text-3xl md:mb-8 md:text-4xl">
               Boka tid
@@ -260,7 +260,7 @@ const ForeningSpelare = () => {
         </div>
       </section>
 
-      <div className="container px-4 pb-10 pt-2 md:hidden">
+      <div className="container px-8 md:px-4 pb-10 pt-2 md:hidden">
         <div className="mx-auto max-w-5xl">
           <AudienceSwitch
             to="/forening/tranare"

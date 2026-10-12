@@ -34,6 +34,8 @@ export type ServiceContent = {
   titleLines: [string, string];
   /** Shorter title used on homepage service cards */
   cardTitle: string;
+  /** Optional homepage card title for small screens */
+  cardTitleMobile?: string;
   cardDescription: string;
   /** Short blurb for overview cards */
   overviewBlurb: string;
@@ -56,6 +58,7 @@ export const services: ServiceContent[] = [
     title: "Bedömning och behandling av smärta och skador",
     titleLines: ["Bedömning och behandling", "av smärta och skador"],
     cardTitle: "Bedömning och behandling vid skada",
+    cardTitleMobile: "Bedömning och behandling",
     cardDescription:
       "När du har ont eller är skadad hjälper vi dig med tydlig bedömning, diagnos och individuellt anpassad behandling. Målet är att minska besvären och få dig tillbaka till idrott, arbetsliv eller rörelse i vardagen – tryggt och steg för steg.",
     overviewBlurb:
@@ -88,8 +91,11 @@ export const services: ServiceContent[] = [
     slug: "halkoppar-barn",
     path: HEEL_CUP_SERVICE_PATH,
     title: "Hälkoppsinlägg för barn med ont i hälen",
-    titleLines: ["Hälkoppsinlägg för barn", "med ont i hälen"],
-    cardTitle: "Hälkoppsinlägg för barn med ont i hälen",
+    titleLines: [
+      "Hälkoppsinlägg för barn",
+      "och vuxna med ont i\u00a0hälen",
+    ],
+    cardTitle: "Hälkoppsinlägg vid ont i hälen",
     cardDescription:
       "Har ditt barn ont i hälen vid fotboll eller annan idrott? Efter fysioterapeutisk bedömning kan individuellt anpassade hälkoppsinlägg användas för att avlasta hälen när det är lämpligt.",
     overviewBlurb:
@@ -112,6 +118,7 @@ export const services: ServiceContent[] = [
     title: "Test och träning för ökad fysisk prestation",
     titleLines: ["Test och träning för ökad", "fysisk prestation"],
     cardTitle: "Snabbare och starkare prestation",
+    cardTitleMobile: "Starkare prestation",
     cardDescription:
       "Vill du bli snabbare och starkare? Vi hjälper dig hitta vad som håller dig tillbaka och bygger ett träningsupplägg som tar dig vidare – mer kraft, mer snabbhet och hållbar prestation.",
     overviewBlurb:

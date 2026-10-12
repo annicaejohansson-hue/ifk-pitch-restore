@@ -18,7 +18,9 @@ const prefersDesktopHero = () =>
 const Hero = () => {
   const [playVideo, setPlayVideo] = useState(() => !prefersReducedMotion());
   const [desktopHero, setDesktopHero] = useState(prefersDesktopHero);
+  const [videoReady, setVideoReady] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const startedRef = useRef(false);
   const heroVideoSrc = desktopHero ? HERO_VIDEO_DESKTOP_SRC : HERO_VIDEO_MOBILE_SRC;
 
   useEffect(() => {
@@ -38,6 +40,9 @@ const Hero = () => {
   }, []);
 
   useEffect(() => {
+    startedRef.current = false;
+    setVideoReady(false);
+
     const video = videoRef.current;
     if (!playVideo || !video) return;
 
@@ -64,9 +69,12 @@ const Hero = () => {
     };
 
     const onEnded = () => restart();
+    const onPlaying = () => {
+      startedRef.current = true;
+      setVideoReady(true);
+    };
     const onPause = () => {
-      // Browsers pause background videos; keep playing whenever the page is visible.
-      if (document.hidden) return;
+      if (document.hidden || !startedRef.current) return;
       if (video.ended || (video.duration > 0 && video.currentTime >= video.duration - 0.25)) {
         restart();
         return;
@@ -74,6 +82,7 @@ const Hero = () => {
       tryPlay();
     };
     const onTimeUpdate = () => {
+      if (!startedRef.current) return;
       // iOS Safari often never fires `ended` / ignores `loop`.
       if (video.duration > 0 && video.currentTime >= video.duration - 0.12) {
         restart();
@@ -82,30 +91,33 @@ const Hero = () => {
     const onVisible = () => {
       if (document.hidden) return;
       tryPlay();
-      window.setTimeout(tryPlay, 200);
     };
 
+    video.addEventListener("playing", onPlaying);
     video.addEventListener("ended", onEnded);
     video.addEventListener("pause", onPause);
     video.addEventListener("timeupdate", onTimeUpdate);
+    video.addEventListener("loadeddata", tryPlay);
     video.addEventListener("canplay", tryPlay);
     document.addEventListener("visibilitychange", onVisible);
-    window.addEventListener("focus", onVisible);
     window.addEventListener("pageshow", onVisible);
     tryPlay();
 
     const watchdog = window.setInterval(() => {
-      if (!document.hidden && video.paused) tryPlay();
-    }, 800);
+      if (document.hidden || !video.paused) return;
+      if (!startedRef.current && video.readyState < 2) return;
+      tryPlay();
+    }, 1500);
 
     return () => {
       window.clearInterval(watchdog);
+      video.removeEventListener("playing", onPlaying);
       video.removeEventListener("ended", onEnded);
       video.removeEventListener("pause", onPause);
       video.removeEventListener("timeupdate", onTimeUpdate);
+      video.removeEventListener("loadeddata", tryPlay);
       video.removeEventListener("canplay", tryPlay);
       document.removeEventListener("visibilitychange", onVisible);
-      window.removeEventListener("focus", onVisible);
       window.removeEventListener("pageshow", onVisible);
     };
   }, [playVideo, heroVideoSrc]);
@@ -114,20 +126,23 @@ const Hero = () => {
     <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
       {/* Background image (poster/fallback) + optional video, overlay on top */}
       <div className="pointer-events-none absolute inset-0 z-0" aria-hidden="true">
-        {!playVideo ? (
-          <div
-            className="absolute inset-0"
-            style={{
-              backgroundImage: `url(${heroPoster})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-            }}
-          />
-        ) : (
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `url(${heroPoster})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        />
+        {playVideo ? (
           <video
             key={heroVideoSrc}
             ref={videoRef}
-            className="absolute inset-0 h-full w-full object-cover object-center"
+            className={[
+              "absolute inset-0 h-full w-full object-cover object-center transition-opacity duration-300",
+              videoReady ? "opacity-100" : "opacity-0",
+            ].join(" ")}
+            src={heroVideoSrc}
             autoPlay
             muted
             loop
@@ -137,34 +152,31 @@ const Hero = () => {
             disablePictureInPicture
             disableRemotePlayback
             onError={() => setPlayVideo(false)}
-          >
-            <source src={heroVideoSrc} type="video/mp4" />
-          </video>
-        )}
+          />
+        ) : null}
         <div className="absolute inset-0 bg-gradient-to-r from-[#111827]/70 via-[#111827]/50 to-[#111827]/40" />
       </div>
 
       {/* Content */}
-      <div className="container relative z-10 w-full min-w-0 max-w-full px-4 py-14 sm:py-20">
+      <div className="container relative z-10 w-full min-w-0 max-w-full px-5 md:px-4 py-14 sm:py-20">
         <div className="mx-auto w-full min-w-0 max-w-4xl text-center">
-          <h1 className="mb-5 w-full max-w-full px-1 text-2xl font-bold leading-snug tracking-tight text-primary-foreground animate-in fade-in slide-in-from-bottom-4 duration-1000 break-words sm:mb-6 sm:px-0 sm:text-5xl sm:leading-tight md:text-7xl">
-            Tillbaka till tävling
-            <br className="hidden sm:block" />
-            <span className="sm:inline"> – mer redo än någonsin</span>
+          <h1 className="mb-5 w-full max-w-full text-[clamp(1.75rem,9vw,3rem)] font-bold leading-[1.15] tracking-tighter text-primary-foreground animate-in fade-in slide-in-from-bottom-4 duration-1000 sm:mb-6 sm:text-5xl sm:leading-tight sm:tracking-tight md:text-7xl">
+            <span className="block max-sm:whitespace-nowrap">Tillbaka till tävling</span>
+            <span className="block max-sm:whitespace-nowrap">– mer redo än någonsin</span>
           </h1>
-          <p className="mb-8 w-full max-w-full px-1 text-base leading-snug text-primary-foreground/90 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-150 break-words sm:mb-10 sm:px-0 sm:text-xl md:text-2xl">
+          <p className="mb-8 w-full max-w-full px-1 text-xl leading-snug text-primary-foreground/90 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-150 break-words sm:mb-10 sm:px-0 sm:text-xl md:text-2xl">
             Idrottsfysioterapi i Stockholm
           </p>
           
           <div className="flex flex-col items-center sm:flex-row gap-4 justify-center">
             <Button 
               asChild
-              size="sm" 
+              size="lg" 
               variant="secondary"
-              className="min-h-11 w-auto border border-white px-4 py-2 text-sm shadow-[var(--shadow-button)] transition-shadow hover:shadow-[var(--shadow-hover)] sm:px-7 sm:py-5 sm:text-base"
+              className="min-h-14 w-auto border border-white px-7 py-3.5 text-lg shadow-[var(--shadow-button)] transition-shadow hover:shadow-[var(--shadow-hover)] sm:min-h-11 sm:px-7 sm:py-5 sm:text-base"
             >
               <BookingLink aria-label="Gå till bokningssidan">
-                <Calendar className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
+                <Calendar className="mr-2 h-5 w-5" />
                 Boka tid
               </BookingLink>
             </Button>

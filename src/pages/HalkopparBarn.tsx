@@ -234,7 +234,7 @@ const HalkopparBarn = () => {
       </Helmet>
 
       <section className="bg-background py-8 md:py-14">
-        <div className="container px-4">
+        <div className="container px-8 md:px-4">
         <div className="mx-auto max-w-5xl">
           <div className="grid items-start gap-8 md:grid-cols-2 md:gap-10">
             <div className="min-w-0">
@@ -287,7 +287,7 @@ const HalkopparBarn = () => {
       </section>
 
       <section className="bg-muted py-12 md:py-20">
-        <div className="container px-4">
+        <div className="container px-8 md:px-4">
           <div className="mx-auto max-w-5xl">
             <h2 className="mb-6 text-balance text-2xl font-bold tracking-tight text-foreground sm:text-3xl md:mb-8 md:text-4xl">
               Känner du igen det här?
@@ -316,7 +316,7 @@ const HalkopparBarn = () => {
       </section>
 
       <section className="bg-background py-12 md:py-20">
-        <div className="container px-4">
+        <div className="container px-8 md:px-4">
           <div className="mx-auto grid max-w-5xl items-start gap-8 md:grid-cols-2 md:items-center md:gap-12">
             <div className="min-w-0">
               <h2 className="mb-4 text-balance text-2xl font-bold tracking-tight text-foreground sm:text-3xl md:mb-6 md:text-4xl">
@@ -339,7 +339,7 @@ const HalkopparBarn = () => {
                 <img
                   src="/halkoppar/20260929_141824.jpg"
                   alt="Fotbollsskor på planen med ett hälkoppsinlägg bredvid skorna, vid Danderyd Arena"
-                  className="h-full w-full origin-[32%_30%] scale-[1.22] object-cover object-[32%_30%]"
+                  className="h-full w-full object-cover object-[center_28%]"
                   loading="lazy"
                   decoding="async"
                 />
@@ -350,7 +350,7 @@ const HalkopparBarn = () => {
       </section>
 
       <section className="bg-muted py-12 md:py-20">
-        <div className="container px-4">
+        <div className="container px-8 md:px-4">
           <div className="mx-auto grid max-w-5xl gap-6 md:grid-cols-2 md:items-stretch md:gap-10">
             <h2 className="text-balance text-2xl font-bold tracking-tight text-foreground sm:text-3xl md:col-start-2 md:text-4xl">
               Vad är hälkoppsinlägg?
@@ -392,7 +392,7 @@ const HalkopparBarn = () => {
       </section>
 
       <section className="bg-background py-12 md:py-20">
-        <div className="container px-4">
+        <div className="container px-8 md:px-4">
           <div className="mx-auto max-w-5xl">
             <h2 className="mb-6 text-balance text-2xl font-bold tracking-tight text-foreground sm:text-3xl md:mb-8 md:text-4xl">
               Därför Caselo Idrottsmedicin
@@ -429,7 +429,7 @@ const HalkopparBarn = () => {
       </section>
 
       <section className="bg-muted py-12 md:py-20">
-        <div className="container px-4">
+        <div className="container px-8 md:px-4">
           <div className="mx-auto max-w-5xl">
             <h2 className="mb-6 text-balance text-2xl font-bold tracking-tight text-foreground sm:text-3xl md:mb-8 md:text-4xl">
               Vanliga frågor
@@ -453,7 +453,7 @@ const HalkopparBarn = () => {
       </section>
 
       <section className="bg-background py-12 md:py-20">
-        <div className="container px-4">
+        <div className="container px-8 md:px-4">
           <div className="mx-auto max-w-5xl rounded-2xl border border-border/60 bg-card px-5 py-7 text-center shadow-[var(--shadow-card)] sm:px-6 sm:py-8 md:px-10 md:py-10">
             <h2 className="mb-6 text-xl font-bold text-foreground md:text-2xl">
               Vill ni boka en bedömning?
@@ -485,7 +485,7 @@ const HalkopparBarn = () => {
       </section>
 
       <section className="py-12 md:py-16">
-        <div className="container px-4">
+        <div className="container px-8 md:px-4">
           <div className="mx-auto max-w-5xl text-sm leading-relaxed text-muted-foreground md:text-base">
             <h2 className="mb-3 text-lg font-semibold text-foreground md:text-xl">
               Sakkunnighet och källor
