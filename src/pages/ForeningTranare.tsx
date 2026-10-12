@@ -160,7 +160,8 @@ const ForeningTranare = () => {
             <p className="mb-4 max-w-3xl text-base leading-relaxed text-muted-foreground md:text-lg">
               Acceleration och snabbhet mäts på löparbanan med laserportar, och
               styrkan följs upp med dynamometer. Vid behov används ultraljud i
-              diagnostiken och stötvågsbehandling. För hälsmärta som drabbar
+              diagnostiken och stötvågsbehandling som del av rehabiliteringen.
+              För hälsmärta som drabbar
               många unga fotbollsspelare som växer tillverkas hälkoppsinlägg
               individuellt.
             </p>
