@@ -33,10 +33,7 @@ const SharePlayerLink = () => {
         ) : (
           <Copy className="h-4 w-4 shrink-0 sm:h-5 sm:w-5" aria-hidden="true" />
         )}
-        <span className="sm:hidden">Kopiera länk</span>
-        <span className="hidden sm:inline">
-          Kopiera länk till spelare och föräldrar
-        </span>
+        Kopiera länk
       </Button>
 
       <p className="mt-3 text-sm leading-relaxed text-muted-foreground" aria-live="polite">

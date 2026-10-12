@@ -219,7 +219,7 @@ const ForeningTranare = () => {
           <div className="mx-auto grid w-full min-w-0 max-w-5xl gap-6 md:gap-8">
             <div className="min-w-0 overflow-x-hidden rounded-2xl border border-border/60 bg-card px-5 py-6 shadow-[var(--shadow-card)] sm:px-6 sm:py-7 md:px-8 md:py-8">
               <h2 className="mb-6 text-balance text-2xl font-bold tracking-tight text-foreground sm:text-3xl md:text-4xl">
-                Har du frågor? Hör gärna av dig till Henrik!
+                Har du frågor? Hör gärna av dig!
               </h2>
 
               <ul className="space-y-4 sm:space-y-5">
