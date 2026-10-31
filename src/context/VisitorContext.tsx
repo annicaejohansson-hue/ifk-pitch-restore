@@ -8,6 +8,7 @@ import {
   type ReactNode,
 } from "react";
 import { getBookingUrl } from "@/lib/booking";
+import { getPartner, type PartnerConfig } from "@/lib/partners";
 import {
   getVisitorType,
   setVisitorType as persistVisitorType,
@@ -18,6 +19,8 @@ import {
 type VisitorContextValue = {
   visitorType: VisitorType;
   isIfkStocksund: boolean;
+  isPartner: boolean;
+  partner: PartnerConfig | null;
   bookingUrl: string;
   setVisitorType: (type: VisitorType) => void;
 };
@@ -44,15 +47,17 @@ export function VisitorProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  const value = useMemo<VisitorContextValue>(
-    () => ({
+  const value = useMemo<VisitorContextValue>(() => {
+    const partner = getPartner(visitorType);
+    return {
       visitorType,
       isIfkStocksund: visitorType === "ifk-stocksund",
+      isPartner: Boolean(partner),
+      partner,
       bookingUrl: getBookingUrl(visitorType),
       setVisitorType,
-    }),
-    [visitorType, setVisitorType],
-  );
+    };
+  }, [visitorType, setVisitorType]);
 
   return (
     <VisitorContext.Provider value={value}>{children}</VisitorContext.Provider>

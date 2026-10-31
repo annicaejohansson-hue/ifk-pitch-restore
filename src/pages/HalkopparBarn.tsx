@@ -11,6 +11,7 @@ import {
 import BookingLink from "@/components/BookingLink";
 import PageIntro from "@/components/PageIntro";
 import Partner from "@/components/Partner";
+import { quotes as testimonialQuotes } from "@/components/Testimonial";
 import { useVisitor } from "@/context/VisitorContext";
 import { trackKontaktLank } from "@/lib/analytics";
 import {
@@ -401,19 +402,32 @@ const HalkopparBarn = () => {
               Henrik Nilsson på Caselo Idrottsmedicin erbjuder en specialiserad
               tjänst för barn och unga med hälbesvär.
             </p>
-            <ul className="space-y-3 rounded-2xl border border-border/60 bg-card p-5 shadow-[var(--shadow-card)] sm:p-6 md:p-8">
-              {reasons.map((item) => (
-                <li key={item} className="flex items-start gap-3">
-                  <CheckCircle2
-                    className="mt-0.5 h-5 w-5 shrink-0 text-primary"
-                    aria-hidden="true"
-                  />
-                  <span className="text-base leading-relaxed text-foreground md:text-lg">
-                    {item}
-                  </span>
-                </li>
-              ))}
-            </ul>
+            <div className="grid items-stretch gap-6 md:grid-cols-2 md:gap-8">
+              <ul className="space-y-3 rounded-2xl border border-border/60 bg-card p-5 shadow-[var(--shadow-card)] sm:p-6 md:p-8">
+                {reasons.map((item) => (
+                  <li key={item} className="flex items-start gap-3">
+                    <CheckCircle2
+                      className="mt-0.5 h-5 w-5 shrink-0 text-primary"
+                      aria-hidden="true"
+                    />
+                    <span className="text-base leading-relaxed text-foreground md:text-lg">
+                      {item}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+              <blockquote className="flex min-w-0 flex-col justify-center rounded-2xl border border-border/60 bg-card p-5 shadow-[var(--shadow-card)] sm:p-6 md:p-8">
+                <span
+                  aria-hidden="true"
+                  className="block h-9 overflow-hidden select-none font-serif text-8xl leading-none text-primary/25 sm:h-8 sm:text-7xl"
+                >
+                  “
+                </span>
+                <p className="mt-1 break-words text-sm leading-relaxed text-muted-foreground md:text-base">
+                  {testimonialQuotes[0]}
+                </p>
+              </blockquote>
+            </div>
             <p className="mt-6 text-base leading-relaxed text-muted-foreground md:text-lg">
               För idrottande barn som spelar fotboll finns också{" "}
               <Link to="/forening/spelare" className={inlineLinkClass}>

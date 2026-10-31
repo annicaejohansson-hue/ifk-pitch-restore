@@ -23,7 +23,7 @@ const isActive = (pathname: string, to: string, match: "prefix" | "exact") =>
 
 const SiteHeader = () => {
   const location = useLocation();
-  const { isIfkStocksund } = useVisitor();
+  const { isPartner } = useVisitor();
 
   const desktopLinkClass = (active: boolean) =>
     [
@@ -44,7 +44,7 @@ const SiteHeader = () => {
       <div
         className={[
           "container min-w-0 px-8 md:px-4 py-2.5 sm:py-3 md:flex md:min-h-28 md:items-center md:gap-4 md:py-2 lg:gap-6",
-          isIfkStocksund ? "md:flex-wrap lg:flex-nowrap" : "",
+          isPartner ? "md:flex-wrap lg:flex-nowrap" : "",
         ].join(" ")}
       >
         <div className="flex items-center justify-between gap-3 md:contents">
@@ -93,7 +93,7 @@ const SiteHeader = () => {
           </DropdownMenu>
         </div>
 
-        {isIfkStocksund ? (
+        {isPartner ? (
           <>
             <div className="hidden flex-1 md:block lg:hidden" aria-hidden="true" />
             <div className="mt-2 w-full min-w-0 md:order-last md:mt-2 lg:order-none lg:mt-0 lg:w-0 lg:min-w-[12rem] lg:flex-1 lg:px-2">
@@ -119,19 +119,29 @@ const SiteHeader = () => {
               {link.label}
             </Link>
           ))}
-          {showHeaderBooking ? (
-            <Button
-              asChild
-              size="sm"
-              variant="secondary"
-              className="min-h-11 shrink-0 px-4 text-sm shadow-[var(--shadow-button)] transition-[var(--transition-smooth)] hover:shadow-[var(--shadow-hover)]"
-            >
+          <Button
+            asChild={showHeaderBooking}
+            size="sm"
+            variant="secondary"
+            tabIndex={showHeaderBooking ? undefined : -1}
+            aria-hidden={showHeaderBooking ? undefined : true}
+            className={[
+              "min-h-11 shrink-0 px-4 text-sm shadow-[var(--shadow-button)] transition-[var(--transition-smooth)] hover:shadow-[var(--shadow-hover)]",
+              showHeaderBooking ? "" : "invisible pointer-events-none",
+            ].join(" ")}
+          >
+            {showHeaderBooking ? (
               <BookingLink aria-label="Gå till bokningssidan">
                 <Calendar className="h-4 w-4" aria-hidden="true" />
                 Boka tid
               </BookingLink>
-            </Button>
-          ) : null}
+            ) : (
+              <>
+                <Calendar className="h-4 w-4" aria-hidden="true" />
+                Boka tid
+              </>
+            )}
+          </Button>
         </nav>
       </div>
     </header>

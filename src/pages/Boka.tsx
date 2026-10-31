@@ -4,12 +4,10 @@ import { useSearchParams } from "react-router-dom";
 import { ChevronDown } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useVisitor } from "@/context/VisitorContext";
-import { IFK_STOCKSUND_KADDIO_URL } from "@/lib/booking";
+import { getPartner, isPartnerId, type PartnerConfig } from "@/lib/partners";
 
 const KADDIO_BOOKING_URL = "https://caseloidrottsmedicin.kaddio.com";
 const KADDIO_IFRAME_BASE = `${KADDIO_BOOKING_URL}/iframe/booking`;
-/** Customer-booking filter slug for IFK Stocksund (required for IFK free times). */
-const KADDIO_IFK_CAL_FILTER = "ifk-stocksund";
 /** Ignore Kaddio's immediate post-mount redirects (e.g. ?step=pickTime). */
 const KADDIO_IFRAME_REDIRECT_GRACE_MS = 2000;
 
@@ -258,59 +256,69 @@ const BOOKING_CATEGORIES: BookingCategory[] = [
   },
 ];
 
+const partnerServiceName = (
+  service: BookingService,
+  partner: PartnerConfig,
+): string => {
+  if (partner.id === "ifk-stocksund" && service.ifk?.name) {
+    return service.ifk.name;
+  }
+  return `${service.name}${partner.kaddioNameSuffix}`;
+};
+
 const resolveServiceForVisitor = (
   service: BookingService,
-  isIfk: boolean,
+  partner: PartnerConfig | null,
 ): BookingService => {
-  if (!isIfk || !service.ifk) return service;
+  if (!partner || !service.ifk) return service;
   return {
     ...service,
-    name: service.ifk.name,
+    name: partnerServiceName(service, partner),
     priceSek: service.ifk.priceSek,
-    // Show the ordinary Caselo price beside the IFK partner price
+    // Show the ordinary Caselo price beside the partner price
     ordinaryPriceSek: service.priceSek,
   };
 };
 
-const allBookingEntries = (isIfk: boolean) =>
+const allBookingEntries = (partner: PartnerConfig | null) =>
   BOOKING_CATEGORIES.flatMap((category) => {
     const grouped = category.subgroups
       ? category.subgroups.flatMap((subgroup) =>
           subgroup.services.map((service) => ({
             categoryName: category.name,
             subgroupName: subgroup.name,
-            service: resolveServiceForVisitor(service, isIfk),
+            service: resolveServiceForVisitor(service, partner),
           })),
         )
       : (category.services ?? []).map((service) => ({
           categoryName: category.name,
           subgroupName: undefined as string | undefined,
-          service: resolveServiceForVisitor(service, isIfk),
+          service: resolveServiceForVisitor(service, partner),
         }));
 
     const packages = (category.packages ?? []).map((service) => ({
       categoryName: category.name,
       subgroupName: undefined as string | undefined,
-      service: resolveServiceForVisitor(service, isIfk),
+      service: resolveServiceForVisitor(service, partner),
     }));
 
     return [...grouped, ...packages];
   });
 
-const categoriesForVisitor = (isIfk: boolean): BookingCategory[] =>
+const categoriesForVisitor = (partner: PartnerConfig | null): BookingCategory[] =>
   BOOKING_CATEGORIES.map((category) => ({
     ...category,
     services: category.services?.map((service) =>
-      resolveServiceForVisitor(service, isIfk),
+      resolveServiceForVisitor(service, partner),
     ),
     subgroups: category.subgroups?.map((subgroup) => ({
       ...subgroup,
       services: subgroup.services.map((service) =>
-        resolveServiceForVisitor(service, isIfk),
+        resolveServiceForVisitor(service, partner),
       ),
     })),
     packages: category.packages?.map((service) =>
-      resolveServiceForVisitor(service, isIfk),
+      resolveServiceForVisitor(service, partner),
     ),
   }));
 
@@ -370,18 +378,24 @@ const slugifyForKaddio = (value: string) => {
     .replace(/-+/g, "-");
 };
 
-/** IFK types use showOnlyInCustomerBooking — slots only appear under /cal/ifk-stocksund/... */
-const iframeUrlForService = (serviceName: string, isIfk: boolean) => {
+/** Partner types use showOnlyInCustomerBooking — slots only appear under /cal/{filter}/... */
+const iframeUrlForService = (
+  serviceName: string,
+  partner: PartnerConfig | null,
+) => {
   const slug = slugifyForKaddio(serviceName);
-  return isIfk
-    ? `${KADDIO_IFRAME_BASE}/cal/${KADDIO_IFK_CAL_FILTER}/${slug}`
+  return partner
+    ? `${KADDIO_IFRAME_BASE}/cal/${partner.kaddioCalFilter}/${slug}`
     : `${KADDIO_IFRAME_BASE}/cal/${slug}`;
 };
 
-const externalUrlForService = (serviceName: string, isIfk: boolean) => {
+const externalUrlForService = (
+  serviceName: string,
+  partner: PartnerConfig | null,
+) => {
   const slug = slugifyForKaddio(serviceName);
-  return isIfk
-    ? `${KADDIO_BOOKING_URL}/booking/cal/${KADDIO_IFK_CAL_FILTER}/${slug}`
+  return partner
+    ? `${KADDIO_BOOKING_URL}/booking/cal/${partner.kaddioCalFilter}/${slug}`
     : `${KADDIO_BOOKING_URL}/booking/cal/${slug}`;
 };
 
@@ -516,7 +530,7 @@ const Boka = () => {
   const [openCategoryId, setOpenCategoryId] = useState<string | undefined>();
   const [iframeEpoch, setIframeEpoch] = useState(0);
   const [searchParams] = useSearchParams();
-  const { isIfkStocksund, setVisitorType } = useVisitor();
+  const { partner, setVisitorType } = useVisitor();
   const appliedTjanstRef = useRef<string | null>(null);
   const ignoreIframeLoadRef = useRef(false);
   const iframePhaseRef = useRef<"pick" | "form">("pick");
@@ -527,28 +541,31 @@ const Boka = () => {
   }, []);
 
   useEffect(() => {
-    if (searchParams.get("partner") === "ifk-stocksund") {
-      setVisitorType("ifk-stocksund");
+    const partnerParam = searchParams.get("partner");
+    if (isPartnerId(partnerParam)) {
+      setVisitorType(partnerParam);
     }
   }, [searchParams, setVisitorType]);
+
+  const activePartner = partner ?? getPartner(searchParams.get("partner"));
 
   useEffect(() => {
     const tjanst = searchParams.get("tjanst");
     if (!tjanst || appliedTjanstRef.current === tjanst) return;
-    const exists = allBookingEntries(isIfkStocksund).some(
+    const exists = allBookingEntries(activePartner).some(
       ({ service }) => service.id === tjanst,
     );
     if (!exists) return;
     appliedTjanstRef.current = tjanst;
     setSelectedServiceId(tjanst);
-  }, [searchParams, isIfkStocksund]);
+  }, [searchParams, activePartner]);
 
   const categories = useMemo(
-    () => categoriesForVisitor(isIfkStocksund),
-    [isIfkStocksund],
+    () => categoriesForVisitor(activePartner),
+    [activePartner],
   );
 
-  const selected = allBookingEntries(isIfkStocksund).find(
+  const selected = allBookingEntries(activePartner).find(
     ({ service }) => service.id === selectedServiceId,
   );
 
@@ -562,12 +579,12 @@ const Boka = () => {
     : undefined;
 
   const iframeSrc = selectedServiceName
-    ? iframeUrlForService(selectedServiceName, isIfkStocksund)
+    ? iframeUrlForService(selectedServiceName, activePartner)
     : undefined;
   const fallbackHref = selectedServiceName
-    ? externalUrlForService(selectedServiceName, isIfkStocksund)
-    : isIfkStocksund
-      ? IFK_STOCKSUND_KADDIO_URL
+    ? externalUrlForService(selectedServiceName, activePartner)
+    : activePartner
+      ? activePartner.kaddioBookingUrl
       : KADDIO_BOOKING_URL;
 
   // When the locked calendar URL changes, reset iframe navigation tracking.
@@ -644,8 +661,8 @@ const Boka = () => {
     <main className="overflow-x-hidden">
       <Helmet>
         <title>
-          {isIfkStocksund
-            ? "Boka tid (IFK Stocksund) – Caselo Idrottsmedicin"
+          {activePartner
+            ? `Boka tid (${activePartner.name}) – Caselo Idrottsmedicin`
             : "Boka tid – Caselo Idrottsmedicin"}
         </title>
         <meta

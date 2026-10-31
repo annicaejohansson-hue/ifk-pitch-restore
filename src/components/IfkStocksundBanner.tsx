@@ -1,12 +1,11 @@
 import { Link } from "react-router-dom";
 import { useVisitor } from "@/context/VisitorContext";
 
-const IFK_LOGO_SRC =
-  "https://irp.cdn-website.com/e6471f24/dms3rep/multi/g10.png";
-
-/** Compact partner notice for the site header (IFK Stocksund visitors). */
+/** Compact partner notice for the site header. */
 const IfkStocksundBanner = () => {
-  const { setVisitorType } = useVisitor();
+  const { partner, setVisitorType } = useVisitor();
+
+  if (!partner) return null;
 
   return (
     <div className="relative flex w-full max-w-full min-w-0 items-center gap-1.5 rounded-md border border-primary/10 bg-primary/[0.04] py-1 pl-2 pr-2 sm:gap-3 sm:py-2 sm:pl-3 sm:pr-4">
@@ -15,21 +14,21 @@ const IfkStocksundBanner = () => {
         aria-hidden="true"
       />
       <img
-        src={IFK_LOGO_SRC}
-        alt="IFK Stocksund"
+        src={partner.logoSrc}
+        alt={partner.logoAlt}
         className="h-6 w-auto shrink-0 object-contain sm:h-10 md:h-11"
-        width={350}
-        height={438}
+        width={partner.logoWidth}
+        height={partner.logoHeight}
         loading="eager"
         decoding="async"
       />
       <div className="min-w-0 flex-1 overflow-hidden [container-type:inline-size]">
         <p className="break-words text-xs font-semibold leading-snug tracking-tight text-primary sm:text-[13px] lg:text-sm">
-          Som spelare i IFK Stocksund har du rabatterade priser hos Caselo
+          Som spelare i {partner.name} har du rabatterade priser hos Caselo
           Idrottsmedicin.
         </p>
         <p className="mt-0.5 text-xs font-normal leading-snug text-muted-foreground/70 sm:text-[11px]">
-          Är du inte spelare i IFK Stocksund?{" "}
+          Är du inte spelare i {partner.name}?{" "}
           <Link
             to="/"
             onClick={() => setVisitorType("general")}

@@ -1,14 +1,17 @@
+import { getPartner, PARTNERS } from "@/lib/partners";
 import { getVisitorType, type VisitorType } from "@/lib/visitor";
 
 /** Ordinary Caselo booking destination — swap here when the URL changes. */
 export const GENERAL_BOOKING_URL = "/boka";
 
 /** IFK Stocksund booking destination — same layout as /boka, partner prices. */
-export const IFK_STOCKSUND_BOOKING_URL = "/boka?partner=ifk-stocksund";
+export const IFK_STOCKSUND_BOOKING_URL = PARTNERS["ifk-stocksund"].bookingUrl;
+
+/** Enebybergs IF booking destination — same layout as /boka, partner prices. */
+export const ENEBYBERGS_IF_BOOKING_URL = PARTNERS["enebybergs-if"].bookingUrl;
 
 /** External Kaddio calendar used when an IFK visitor opens booking in a new window. */
-export const IFK_STOCKSUND_KADDIO_URL =
-  "https://caseloidrottsmedicin.kaddio.com/booking/ifk-stocksund";
+export const IFK_STOCKSUND_KADDIO_URL = PARTNERS["ifk-stocksund"].kaddioBookingUrl;
 
 /** First visit for custom heel cups, children under 18. Matches `/boka` service id. */
 export const CHILD_HEEL_CUP_BOOKING_ID = "halkopp-barn-nybesok";
@@ -16,9 +19,7 @@ export const CHILD_HEEL_CUP_BOOKING_ID = "halkopp-barn-nybesok";
 export const SITE_ORIGIN = "https://www.caseloidrottsmedicin.se";
 
 export function getBookingUrl(visitorType: VisitorType = getVisitorType()): string {
-  return visitorType === "ifk-stocksund"
-    ? IFK_STOCKSUND_BOOKING_URL
-    : GENERAL_BOOKING_URL;
+  return getPartner(visitorType)?.bookingUrl ?? GENERAL_BOOKING_URL;
 }
 
 export function isExternalBookingUrl(url: string): boolean {

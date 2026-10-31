@@ -1,4 +1,6 @@
-export type VisitorType = "general" | "ifk-stocksund";
+import { isPartnerId, type PartnerId } from "@/lib/partners";
+
+export type VisitorType = "general" | PartnerId;
 
 export const VISITOR_STORAGE_KEY = "caselo-visitor-type";
 export const VISITOR_CHANGE_EVENT = "caselo-visitor-change";
@@ -6,7 +8,7 @@ export const VISITOR_CHANGE_EVENT = "caselo-visitor-change";
 export function getVisitorType(): VisitorType {
   try {
     const stored = sessionStorage.getItem(VISITOR_STORAGE_KEY);
-    if (stored === "ifk-stocksund") return "ifk-stocksund";
+    if (isPartnerId(stored)) return stored;
   } catch {
     // sessionStorage may be unavailable (private mode / SSR)
   }
