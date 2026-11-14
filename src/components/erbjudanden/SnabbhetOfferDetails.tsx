@@ -5,15 +5,15 @@ import {
   OFFER_HOURS_LINE,
   OFFER_NO_TIME_LINE,
   OFFER_SURFACE_LINE,
-  SNABBHET_OVERVIEW_POINTS,
+  SNABBHET_DETAIL_POINTS,
 } from "@/data/erbjudanden";
 
 const SnabbhetOfferDetails = () => {
   return (
     <div id="ingar" className="scroll-mt-28 min-w-0 max-w-3xl overflow-x-hidden">
       <ul className={offerDetailsListClass}>
-        {SNABBHET_OVERVIEW_POINTS.map((item) => (
-          <li key={item.detail}>{item.detail}</li>
+        {SNABBHET_DETAIL_POINTS.map((detail) => (
+          <li key={detail}>{detail}</li>
         ))}
         <li>{OFFER_HOURS_LINE}</li>
         <li>{OFFER_NO_TIME_LINE}</li>

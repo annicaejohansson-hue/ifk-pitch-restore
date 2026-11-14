@@ -295,9 +295,15 @@ const Friskvard = () => {
                       har utvecklats när du kommer tillbaka.
                     </span>
                   </p>
-                  <ol className="mb-3 list-none space-y-2.5 p-0">
-                    {SNABBHET_OVERVIEW_POINTS.map((item, index) => (
-                      <li key={item.text} className="flex items-start gap-2.5">
+                  <p id="snabbhet-ingar-rubrik" className={`${offerLeadClass} mb-2.5`}>
+                    I paketet ingår:
+                  </p>
+                  <ol
+                    aria-labelledby="snabbhet-ingar-rubrik"
+                    className="mb-3 list-none space-y-2.5 p-0"
+                  >
+                    {SNABBHET_OVERVIEW_POINTS.map((text, index) => (
+                      <li key={text} className="flex items-start gap-2.5">
                         <span
                           className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 border-primary text-[11px] font-semibold tabular-nums text-primary"
                           aria-hidden="true"
@@ -305,7 +311,7 @@ const Friskvard = () => {
                           {index + 1}
                         </span>
                         <span className="min-w-0 text-base leading-snug text-muted-foreground md:text-lg">
-                          {item.text}
+                          {text}
                         </span>
                       </li>
                     ))}

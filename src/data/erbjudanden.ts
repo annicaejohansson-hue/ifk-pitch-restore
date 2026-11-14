@@ -24,20 +24,17 @@ export const OFFER_WEATHER_LINE =
 export const OFFER_SURFACE_LINE =
   "Testerna förutsätter lämpligt underlag. Vid exempelvis snö eller is kan tiden behöva bokas om.";
 
+/** Numrerade punkter under "I paketet ingår:" på kortet för Snabbhetspaketet. */
 export const SNABBHET_OVERVIEW_POINTS = [
-  {
-    text: "Du testar din snabbhet med laserportar",
-    detail: "Du testar på 10, 20 och 30 meter.",
-  },
-  {
-    text: "Du får ett program anpassat efter dig",
-    detail:
-      "Du får startövningar och vägledning för hur du ökar träningen.",
-  },
-  {
-    text: "Du kommer tillbaka efter 8v för uppföljande test",
-    detail: "Första besöket tar ca 75 min och återbesöket tar ca 45 min.",
-  },
+  "Du värmer upp med instruktör och testar din snabbhet med laserportar. Du får ett individuellt träningsprogram och provar övningarna med vägledning.",
+  "Du kommer tillbaka efter cirka åtta veckor för uppföljande snabbhetstest.",
+] as const;
+
+/** Första punkterna i listan under "Läs mer" för Snabbhetspaketet. */
+export const SNABBHET_DETAIL_POINTS = [
+  "Du testar på 10, 20 och 30 meter.",
+  "Du får startövningar och vägledning för hur du ökar träningen.",
+  "Första besöket tar ca 75 min och återbesöket tar ca 45 min.",
 ] as const;
 
 export type OfferProductId = "snabbhet" | "friskvard-pass" | "friskvard";
