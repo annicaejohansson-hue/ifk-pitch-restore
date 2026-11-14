@@ -150,7 +150,7 @@ const BOOKING_CATEGORIES: BookingCategory[] = [
   },
   {
     id: TRAINING_BOOKING_CATEGORY_ID,
-    name: "Träning och motion",
+    name: "Personlig träning",
     // `name` must match live Kaddio booking type names exactly.
     // These types have no partner variants: partner visitors get the
     // ordinary calendar and price (see calendarPartner below).

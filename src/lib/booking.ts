@@ -16,7 +16,7 @@ export const IFK_STOCKSUND_KADDIO_URL = PARTNERS["ifk-stocksund"].kaddioBookingU
 /** First visit for custom heel cups, children under 18. Matches `/boka` service id. */
 export const CHILD_HEEL_CUP_BOOKING_ID = "halkopp-barn-nybesok";
 
-/** Column "Träning och motion" on `/boka` (PT-pass, Snabbhetspaketet). Matches `/boka` category id. */
+/** Column "Personlig träning" on `/boka` (PT-pass, Snabbhetspaketet). Matches `/boka` category id. */
 export const TRAINING_BOOKING_CATEGORY_ID = "traning-och-motion";
 
 export const SITE_ORIGIN = "https://www.caseloidrottsmedicin.se";
