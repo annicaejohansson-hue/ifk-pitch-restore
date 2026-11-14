@@ -8,7 +8,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Loader2 } from "lucide-react";
-import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -30,7 +30,6 @@ import {
   GIFT_PRODUCT_LABEL,
   OFFER_CONTACT_EMAIL,
   OFFER_PATHS,
-  OFFER_PAYMENT_HASH,
   OFFER_PRODUCTS,
   PT_SESSION_DEFAULT_QUANTITY,
   PT_SESSION_LIST_PRICE_SEK,
@@ -71,8 +70,6 @@ const storageKey = (productId: OfferProductId) =>
 
 const draftKey = (productId: "snabbhet" | "friskvard") =>
   `caselo-offer-draft:${productId}`;
-
-const PAYMENT_HASH = `#${OFFER_PAYMENT_HASH}`;
 
 const readStoredPayment = (
   productId: "snabbhet" | "friskvard",
@@ -320,7 +317,7 @@ const PT_CHECKOUT_STEPS = [
     fields: ["wellnessReceipt", "receiptCustomerName", "personalId"],
   },
   {
-    title: "Dina uppgifter",
+    title: "Betalning",
     fields: [
       "buyerName",
       "buyerEmail",
@@ -341,25 +338,24 @@ const SNABBHET_CHECKOUT_STEPS = [
     fields: ["wellnessReceipt", "receiptCustomerName", "personalId"],
   },
   {
-    title: "Dina uppgifter",
+    title: "Betalning",
     fields: ["buyerName", "buyerEmail", "buyerEmailConfirm", "paymentMethod"],
   },
 ] as const;
 
-const PAYMENT_STEP = { title: "Betalning" } as const;
+/** Rubriken för betalningsinstruktionen; dit rullar sidan när den visas. */
+const PAYMENT_STEPS_ID = "betalningsinstruktion";
 
 const CheckoutStepNav = ({
   steps,
   current,
   onSelect,
-  paymentReady,
 }: {
   steps: readonly { title: string }[];
   current: number;
   onSelect: (index: number) => void;
-  paymentReady: boolean;
 }) => {
-  const allSteps = [...steps, PAYMENT_STEP];
+  const allSteps = steps;
   return (
   <div>
     <p className="mb-2 text-sm font-medium text-muted-foreground md:text-base">
@@ -369,9 +365,9 @@ const CheckoutStepNav = ({
       <ol
         className={cn(
           "grid gap-1 rounded-xl bg-muted p-1",
-          allSteps.length === 4
-            ? "sm:grid-cols-2 lg:grid-cols-4"
-            : "sm:grid-cols-3 lg:grid-cols-5",
+          allSteps.length === 3
+            ? "sm:grid-cols-3"
+            : "sm:grid-cols-2 lg:grid-cols-4",
         )}
       >
         {allSteps.map((step, index) => (
@@ -379,7 +375,6 @@ const CheckoutStepNav = ({
             <button
               type="button"
               aria-current={current === index ? "step" : undefined}
-              disabled={index === steps.length && !paymentReady}
               className={cn(
                 "flex min-h-11 w-full min-w-0 items-center gap-2 rounded-lg px-3 py-2 text-left text-sm leading-snug disabled:cursor-not-allowed disabled:opacity-60 md:text-base lg:px-2.5",
                 current === index
@@ -447,8 +442,6 @@ const DisabledNotice = ({
 
 const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
   const product = OFFER_PRODUCTS[productId];
-  const location = useLocation();
-  const navigate = useNavigate();
   const [checkout, setCheckout] = useState<CheckoutState | null>(null);
   const [checkoutError, setCheckoutError] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -480,8 +473,7 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
     parseGiftLayoutId(searchParams.get("kort")) ?? DEFAULT_GIFT_LAYOUT;
   const quantityFromUrl = parsePtQuantity(searchParams.get("antal"));
   const focusFromUrl = parseFriskvardFocusId(searchParams.get("inriktning"));
-  const showPayment =
-    Boolean(payment) && location.hash === PAYMENT_HASH;
+  const scrollToPaymentRef = useRef(false);
 
   const snabbhetForm = useForm<SnabbhetValues>({
     resolver: zodResolver(snabbhetSchema),
@@ -543,6 +535,23 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
   const selectedParticipantName = friskvardForm.watch("participantName");
   const { isDirty: friskvardDirty } = friskvardForm.formState;
   const { isDirty: snabbhetDirty } = snabbhetForm.formState;
+  const snabbhetPaymentMethod = snabbhetForm.watch("paymentMethod");
+  const friskvardPaymentMethod = friskvardForm.watch("paymentMethod");
+  const formDirty = productId === "snabbhet" ? snabbhetDirty : friskvardDirty;
+  // Betalningsuppgifterna gäller den beställning som skickades. Ändrar kunden
+  // något efteråt döljs de tills en ny beställning (ny referens) har skickats.
+  const orderCurrent = Boolean(payment) && !formDirty;
+  const paymentOrderRef = payment?.orderRef;
+
+  useEffect(() => {
+    if (!orderCurrent || !scrollToPaymentRef.current) return;
+    scrollToPaymentRef.current = false;
+    window.requestAnimationFrame(() => {
+      document
+        .getElementById(PAYMENT_STEPS_ID)
+        ?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }, [orderCurrent, paymentOrderRef]);
 
   useEffect(() => {
     if (skipUrlPrefill.current) return;
@@ -581,15 +590,6 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
     const stored = readStoredPayment(productId);
     if (stored) setPayment(stored);
   }, [productId]);
-
-  useEffect(() => {
-    if (location.hash === PAYMENT_HASH && !payment) {
-      navigate(
-        { pathname: location.pathname, search: location.search, hash: "" },
-        { replace: true },
-      );
-    }
-  }, [location.hash, location.pathname, location.search, navigate, payment]);
 
   const rememberPayment = (next: PaymentState) => {
     setPayment((prev) => {
@@ -646,15 +646,6 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
     });
   };
 
-  const goToPaymentView = () => {
-    navigate({
-      pathname: location.pathname,
-      search: location.search,
-      hash: OFFER_PAYMENT_HASH,
-    });
-    scrollToFormTop();
-  };
-
   const purchaseEnabled = checkout?.purchaseEnabled === true;
   const bankgiroAvailable = checkout?.bankgiroAvailable !== false;
 
@@ -677,10 +668,8 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
       ?.priceLabel || formatOfferPriceWithVat(product.priceSek);
 
   const onSnabbhetSubmit = async (values: SnabbhetValues) => {
-    if (payment && !snabbhetDirty) {
-      goToPaymentView();
-      return;
-    }
+    // Beställningen är redan skickad och oförändrad: uppgifterna visas redan.
+    if (payment && !snabbhetDirty) return;
     if (!purchaseEnabled) return;
     setSubmitting(true);
     setSubmitError(null);
@@ -708,7 +697,7 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
       snabbhetForm.reset(values);
       skipUrlPrefill.current = true;
       rememberPayment(next);
-      goToPaymentView();
+      scrollToPaymentRef.current = true;
     } catch (error) {
       const fields = (error as { fields?: Record<string, string> }).fields;
       if (fields) {
@@ -727,10 +716,8 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
   };
 
   const onFriskvardSubmit = async (values: FriskvardValues) => {
-    if (payment && !friskvardDirty) {
-      goToPaymentView();
-      return;
-    }
+    // Beställningen är redan skickad och oförändrad: uppgifterna visas redan.
+    if (payment && !friskvardDirty) return;
     if (!purchaseEnabled) return;
     setSubmitting(true);
     setSubmitError(null);
@@ -769,7 +756,7 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
       friskvardForm.reset(values);
       skipUrlPrefill.current = true;
       rememberPayment(next);
-      goToPaymentView();
+      scrollToPaymentRef.current = true;
     } catch (error) {
       const fields = (error as { fields?: Record<string, string> }).fields;
       if (fields) {
@@ -792,19 +779,10 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
       ? SNABBHET_CHECKOUT_STEPS.length
       : PT_CHECKOUT_STEPS.length;
 
+  const lastCheckoutStep = formStepCount - 1;
+
   const goToCheckoutStep = (next: number) => {
-    if (next >= formStepCount) {
-      if (payment) goToPaymentView();
-      return;
-    }
-    setCheckoutStep(next);
-    if (location.hash === PAYMENT_HASH) {
-      navigate({
-        pathname: location.pathname,
-        search: location.search,
-        hash: "",
-      });
-    }
+    setCheckoutStep(Math.min(Math.max(next, 0), lastCheckoutStep));
     scrollToFormTop();
   };
 
@@ -859,7 +837,7 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
     goToCheckoutStep(Math.min(checkoutStep + 1, PT_CHECKOUT_STEPS.length - 1));
   };
 
-  if (!showPayment && !checkout && !checkoutError) {
+  if (!payment && !checkout && !checkoutError) {
     return (
       <div id="bestall" className="scroll-mt-28">
         <p className="text-base text-muted-foreground">Laddar köpuppgifter…</p>
@@ -867,7 +845,7 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
     );
   }
 
-  if (!showPayment && checkoutError) {
+  if (!payment && checkoutError) {
     return (
       <div id="bestall" className="scroll-mt-28">
         <DisabledNotice
@@ -907,7 +885,7 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
     );
   }
 
-  if (!showPayment && checkout && !purchaseEnabled) {
+  if (!payment && checkout && !purchaseEnabled) {
     return (
       <div id="bestall" className="scroll-mt-28">
         <div className="mb-4">
@@ -996,12 +974,36 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Hur vill du betala?</FormLabel>
-              <FormDescription>
-                Betalningsuppgifterna visas i nästa steg.
-              </FormDescription>
               <FormControl>
                 <RadioGroup
-                  onValueChange={field.onChange}
+                  onValueChange={(value) => {
+                    const next = value === "bankgiro" ? "bankgiro" : "swish";
+                    if (!orderCurrent) {
+                      field.onChange(next);
+                      return;
+                    }
+                    // Beställningen är redan skickad: byt bara vilka
+                    // betalningsuppgifter som visas, utan ny beställning.
+                    if (form === snabbhetForm) {
+                      snabbhetForm.resetField("paymentMethod", {
+                        defaultValue: next,
+                      });
+                      writeFormDraft(
+                        "snabbhet",
+                        snabbhetForm.getValues(),
+                        checkoutStep,
+                      );
+                    } else {
+                      friskvardForm.resetField("paymentMethod", {
+                        defaultValue: next,
+                      });
+                      writeFormDraft(
+                        "friskvard",
+                        friskvardForm.getValues(),
+                        checkoutStep,
+                      );
+                    }
+                  }}
                   value={field.value ?? ""}
                   className="gap-1"
                 >
@@ -1291,39 +1293,65 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
     );
   };
 
+  const orderSummaryClass =
+    "rounded-xl border border-border/70 bg-muted/50 px-4 py-3";
+
+  const paymentStepHeading = (
+    <h3 className="text-xl font-bold text-foreground md:text-2xl">
+      {bankgiroAvailable
+        ? "Betala med Swish eller bankgiro"
+        : "Betala med Swish"}
+    </h3>
+  );
+
+  const personalDataNote = (
+    <p className="text-sm leading-relaxed text-muted-foreground">
+      Uppgifterna används för att hantera beställningen. Frågor om
+      personuppgifter? Mejla{" "}
+      <a
+        className="font-medium text-primary underline underline-offset-4 hover:text-primary/80"
+        href={`mailto:${OFFER_CONTACT_EMAIL}`}
+      >
+        {OFFER_CONTACT_EMAIL}
+      </a>
+      .
+    </p>
+  );
+
+  const submitErrorNote = submitError ? (
+    <p className="text-sm text-destructive" role="alert">
+      {submitError}
+    </p>
+  ) : null;
+
+  const shownPaymentMethod =
+    productId === "snabbhet" ? snabbhetPaymentMethod : friskvardPaymentMethod;
+
+  // Betalningsinstruktionen visas i samma steg som uppgifterna, så snart
+  // beställningen är skickad och har fått sin betalningsreferens.
+  const paymentInstructions =
+    orderCurrent && payment ? (
+      <PaymentPanel
+        payment={payment}
+        method={shownPaymentMethod === "bankgiro" ? "bankgiro" : "swish"}
+        headingId={PAYMENT_STEPS_ID}
+        onClaimed={rememberPayment}
+        onBack={() => goToCheckoutStep(lastCheckoutStep - 1)}
+      />
+    ) : null;
+
+  const showStepButtons = !(checkoutStep === lastCheckoutStep && orderCurrent);
+
   return (
     <div id="bestall" className="scroll-mt-28">
       <UnsavedCheckoutGuard
-        enabled={
-          !showPayment &&
-          ((productId === "friskvard" && friskvardDirty) ||
-            (productId === "snabbhet" && snabbhetDirty))
-        }
+        enabled={formDirty}
       />
       <div
         ref={formTopRef}
         className="scroll-mt-28 rounded-2xl border border-border/60 bg-card p-5 shadow-[var(--shadow-card)] sm:p-6 md:p-8"
       >
-        {showPayment && payment ? (
-          <div className="space-y-5">
-            <CheckoutStepNav
-              steps={
-                productId === "snabbhet"
-                  ? SNABBHET_CHECKOUT_STEPS
-                  : PT_CHECKOUT_STEPS
-              }
-              current={formStepCount}
-              onSelect={goToCheckoutStep}
-              paymentReady
-            />
-            <PaymentPanel
-              payment={payment}
-              onClaimed={rememberPayment}
-              onBack={() => goToCheckoutStep(formStepCount - 1)}
-            />
-          </div>
-        ) : null}
-        <div className={cn(showPayment && "hidden")}>
+        <div>
         {productId === "snabbhet" ? (
           <Form {...snabbhetForm}>
             <form
@@ -1345,7 +1373,6 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
                 steps={SNABBHET_CHECKOUT_STEPS}
                 current={checkoutStep}
                 onSelect={goToCheckoutStep}
-                paymentReady={Boolean(payment)}
               />
 
               <div className={cn("space-y-5", checkoutStep !== 0 && "hidden")}>
@@ -1367,26 +1394,31 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
               </div>
 
               <div className={cn("space-y-5", checkoutStep !== 2 && "hidden")}>
-                {sharedFields(snabbhetForm)}
-                <p className="text-sm leading-relaxed text-muted-foreground">
-                  Uppgifterna används för att hantera beställningen. Frågor om
-                  personuppgifter? Mejla{" "}
-                  <a
-                    className="font-medium text-primary underline underline-offset-4 hover:text-primary/80"
-                    href={`mailto:${OFFER_CONTACT_EMAIL}`}
-                  >
-                    {OFFER_CONTACT_EMAIL}
-                  </a>
-                  .
-                </p>
-                {submitError ? (
-                  <p className="text-sm text-destructive" role="alert">
-                    {submitError}
+                {paymentStepHeading}
+                <div className={orderSummaryClass}>
+                  <p className="text-sm font-semibold text-foreground md:text-base">
+                    Orderöversikt
                   </p>
-                ) : null}
+                  <ul className="mt-2 space-y-1 break-words text-sm leading-snug text-foreground md:text-base">
+                    <li>Upplägg: {product.name}</li>
+                    <li>Totalt: {priceLabel}</li>
+                    {snabbhetWellnessReceipt === "yes" ? (
+                      <li>Kvitto för friskvårdsbidrag</li>
+                    ) : null}
+                  </ul>
+                </div>
+                {sharedFields(snabbhetForm)}
+                {personalDataNote}
+                {submitErrorNote}
+                {paymentInstructions}
               </div>
 
-              <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <div
+                className={cn(
+                  "flex flex-col gap-3 sm:flex-row sm:flex-wrap",
+                  !showStepButtons && "hidden",
+                )}
+              >
                 {checkoutStep > 0 ? (
                   <Button
                     type="button"
@@ -1416,7 +1448,7 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
                     {submitting ? (
                       <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
                     ) : null}
-                    Gå vidare till betalning
+                    Visa betalningsuppgifter
                   </Button>
                 )}
               </div>
@@ -1443,7 +1475,6 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
                 steps={PT_CHECKOUT_STEPS}
                 current={checkoutStep}
                 onSelect={goToCheckoutStep}
-                paymentReady={Boolean(payment)}
               />
 
               <div className={cn("space-y-5", checkoutStep !== 0 && "hidden")}>
@@ -1587,24 +1618,13 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
               </div>
 
               <div className={cn("space-y-5", checkoutStep !== 3 && "hidden")}>
-                {sharedFields(friskvardForm)}
-                <p className="text-sm leading-relaxed text-muted-foreground">
-                  Uppgifterna används för att hantera beställningen. Frågor om
-                  personuppgifter? Mejla{" "}
-                  <a
-                    className="font-medium text-primary underline underline-offset-4 hover:text-primary/80"
-                    href={`mailto:${OFFER_CONTACT_EMAIL}`}
-                  >
-                    {OFFER_CONTACT_EMAIL}
-                  </a>
-                  .
-                </p>
+                {paymentStepHeading}
                 {selectedQuote || selectedFocusLabel ? (
-                  <div className="rounded-xl border border-border/70 bg-muted/50 px-4 py-3">
+                  <div className={orderSummaryClass}>
                     <p className="text-sm font-semibold text-foreground md:text-base">
                       Orderöversikt
                     </p>
-                    <ul className="mt-2 space-y-1 text-sm leading-snug text-foreground md:text-base">
+                    <ul className="mt-2 space-y-1 break-words text-sm leading-snug text-foreground md:text-base">
                       <li>
                         Upplägg:{" "}
                         {selectedQuote
@@ -1624,11 +1644,7 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
                     </ul>
                   </div>
                 ) : null}
-                {submitError ? (
-                  <p className="text-sm text-destructive" role="alert">
-                    {submitError}
-                  </p>
-                ) : null}
+                {sharedFields(friskvardForm)}
                 <FormField
                   control={friskvardForm.control}
                   name="personalConfirm"
@@ -1653,9 +1669,17 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
                     </FormItem>
                   )}
                 />
+                {personalDataNote}
+                {submitErrorNote}
+                {paymentInstructions}
               </div>
 
-              <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <div
+                className={cn(
+                  "flex flex-col gap-3 sm:flex-row sm:flex-wrap",
+                  !showStepButtons && "hidden",
+                )}
+              >
                 {checkoutStep > 0 ? (
                   <Button
                     type="button"
@@ -1685,21 +1709,22 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
                     {submitting ? (
                       <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
                     ) : null}
-                    Gå vidare till betalning
+                    Visa betalningsuppgifter
                   </Button>
                 )}
               </div>
             </form>
           </Form>
         )}
-        {payment ? (
+        {payment && showStepButtons ? (
           <p className="mt-5 text-sm leading-relaxed text-muted-foreground">
             Du har redan en beställning med betalningsreferens{" "}
             <span className="font-medium text-foreground">
               {payment.orderRef}
-            </span>{" "}
-            – den finns under steget Betalning. Om du ändrar något och går
-            vidare igen får du en ny betalningsreferens.
+            </span>
+            {formDirty
+              ? ". Eftersom du har ändrat något får du en ny betalningsreferens när du klickar på Visa betalningsuppgifter."
+              : " – betalningsuppgifterna finns under steget Betalning. Om du ändrar något får du en ny betalningsreferens."}
           </p>
         ) : null}
         </div>

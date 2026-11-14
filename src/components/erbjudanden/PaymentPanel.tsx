@@ -18,36 +18,15 @@ import { offerGoldCtaClass, offerOutlineCtaClass } from "./offerUi";
 
 type PaymentPanelProps = {
   payment: PaymentState;
+  /** Betalsättet som är valt i formuläret ovanför. */
+  method: PaymentMethod;
+  /** Id på rubriken, så att sidan kan rulla hit när instruktionen visas. */
+  headingId?: string;
   onClaimed: (next: PaymentState) => void;
   onBack: () => void;
 };
 
-const PAYMENT_METHODS: { id: PaymentMethod; label: string }[] = [
-  { id: "swish", label: "Swish" },
-  { id: "bankgiro", label: "Bankgiro" },
-];
-
 const CLAIM_BUTTON_LABEL = "Jag har betalat – Slutför";
-
-const methodKey = (orderRef: string) => `caselo-offer-method:${orderRef}`;
-
-/** Valt betalsätt följer beställningen, så att det står kvar efter Föregående eller omladdning. */
-const readStoredMethod = (orderRef: string): PaymentMethod | null => {
-  try {
-    const stored = window.sessionStorage.getItem(methodKey(orderRef));
-    return stored === "swish" || stored === "bankgiro" ? stored : null;
-  } catch {
-    return null;
-  }
-};
-
-const writeStoredMethod = (orderRef: string, method: PaymentMethod) => {
-  try {
-    window.sessionStorage.setItem(methodKey(orderRef), method);
-  } catch {
-    // Utan sessionStorage börjar valet om på Swish, vilket är ofarligt.
-  }
-};
 
 const TOUCH_QUERY = "(pointer: coarse)";
 
@@ -152,22 +131,25 @@ const PayStep = ({
 
 const nowrapClass = "whitespace-nowrap font-semibold";
 
-const PaymentPanel = ({ payment, onClaimed, onBack }: PaymentPanelProps) => {
+/**
+ * Steg-för-steg-instruktion för betalningen. Visas i kassans sista steg när
+ * beställningen är skickad; betalsättet väljs i formuläret ovanför.
+ */
+const PaymentPanel = ({
+  payment,
+  method: chosenMethod,
+  headingId,
+  onClaimed,
+  onBack,
+}: PaymentPanelProps) => {
   const [claiming, setClaiming] = useState(false);
   const [claimError, setClaimError] = useState<string | null>(null);
   const [manualSwishOpen, setManualSwishOpen] = useState(false);
   const touchDevice = useTouchDevice();
 
   const hasBankgiro = Boolean(payment.bankgiroNumber);
-  const [selectedMethod, setSelectedMethod] = useState<PaymentMethod>(
-    () =>
-      payment.reportedPaymentMethod ??
-      readStoredMethod(payment.orderRef) ??
-      payment.chosenPaymentMethod ??
-      "swish",
-  );
   const method: PaymentMethod =
-    hasBankgiro && selectedMethod === "bankgiro" ? "bankgiro" : "swish";
+    hasBankgiro && chosenMethod === "bankgiro" ? "bankgiro" : "swish";
   const isBankgiro = method === "bankgiro";
   const hasSwishLink = Boolean(payment.swishAppUrl);
   const reportedBankgiro =
@@ -181,11 +163,10 @@ const PaymentPanel = ({ payment, onClaimed, onBack }: PaymentPanelProps) => {
     <span className="font-semibold">{CLAIM_BUTTON_LABEL}</span>
   );
 
-  const selectMethod = (next: PaymentMethod) => {
-    setSelectedMethod(next);
-    writeStoredMethod(payment.orderRef, next);
+  // Ett felmeddelande hör till det betalsätt som var valt när det uppstod.
+  useEffect(() => {
     setClaimError(null);
-  };
+  }, [method]);
 
   const claim = async () => {
     setClaiming(true);
@@ -231,8 +212,8 @@ const PaymentPanel = ({ payment, onClaimed, onBack }: PaymentPanelProps) => {
         onClick={() => setManualSwishOpen((open) => !open)}
       >
         <span className="underline underline-offset-4">
-          Fungerar det inte? Swisha
-        </span>{" "}
+          Fungerar det inte? Swisha{" "}
+        </span>
         {/* Pilen hålls ihop med sista ordet när texten radbryts. */}
         <span className="whitespace-nowrap">
           <span className="underline underline-offset-4">manuellt</span>
@@ -264,64 +245,12 @@ const PaymentPanel = ({ payment, onClaimed, onBack }: PaymentPanelProps) => {
   );
 
   return (
-    <div className="min-w-0">
-      <h3 className="text-xl font-bold text-foreground md:text-2xl">
-        {hasBankgiro
-          ? "Betala med Swish eller bankgiro"
-          : "Betala med Swish"}
-      </h3>
-
-      {/* Samma orderöversikt som i steget före betalningen. Ligger ovanför
-          valet av betalsätt, så att den är densamma för Swish och bankgiro. */}
-      <div className="mt-6 rounded-xl border border-border/70 bg-muted/50 px-4 py-3">
-        <p className="text-sm font-semibold text-foreground md:text-base">
-          Orderöversikt
-        </p>
-        <ul className="mt-2 space-y-1 break-words text-sm leading-snug text-foreground md:text-base">
-          <li>Upplägg: {payment.productName}</li>
-          {payment.focusLabel ? <li>Fokus: {payment.focusLabel}</li> : null}
-          <li>Totalt: {payment.amountLabel}</li>
-          {payment.wellnessReceipt ? (
-            <li>Kvitto för friskvårdsbidrag</li>
-          ) : null}
-        </ul>
-      </div>
-
-      {hasBankgiro ? (
-        <div className="mt-6">
-          <p
-            id="payment-method-label"
-            className="mb-2 text-sm font-medium text-muted-foreground md:text-base"
-          >
-            Välj betalsätt
-          </p>
-          <div
-            role="group"
-            aria-labelledby="payment-method-label"
-            className="grid grid-cols-2 gap-1 rounded-xl bg-muted p-1 sm:max-w-sm"
-          >
-            {PAYMENT_METHODS.map((option) => (
-              <button
-                key={option.id}
-                type="button"
-                aria-pressed={method === option.id}
-                className={cn(
-                  "min-h-11 min-w-0 rounded-lg px-3 py-2 text-base leading-snug",
-                  method === option.id
-                    ? "bg-secondary font-semibold text-secondary-foreground shadow-sm"
-                    : "text-muted-foreground hover:bg-background hover:text-foreground",
-                )}
-                onClick={() => selectMethod(option.id)}
-              >
-                {option.label}
-              </button>
-            ))}
-          </div>
-        </div>
-      ) : null}
-
+    <div className="min-w-0 border-t border-border/70 pt-6">
       {/* Steg för steg: varje uppgift står i det steg där den behövs. */}
-      <h4 className="mt-8 text-lg font-bold text-foreground md:text-xl">
+      <h4
+        id={headingId}
+        className="scroll-mt-28 text-lg font-bold text-foreground md:text-xl"
+      >
         {isBankgiro
           ? "Så betalar du med bankgiro"
           : "Så betalar du med Swish"}

@@ -523,8 +523,6 @@ export const OFFER_PATHS = {
   kontakt: "/kontakt",
 } as const;
 
-export const OFFER_PAYMENT_HASH = "betalning";
-
 export function offerCheckoutPath(
   product: "snabbhet" | "pass",
   options?: { quantity?: string },

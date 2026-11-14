@@ -1,5 +1,5 @@
 import { Helmet } from "react-helmet";
-import { Link, useLocation, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import Partner from "@/components/Partner";
 import PageIntro from "@/components/PageIntro";
 import OfferOrderForm from "@/components/erbjudanden/OfferOrderForm";
@@ -9,11 +9,7 @@ import {
   offerNarrowClass,
   offerSectionClass,
 } from "@/components/erbjudanden/offerUi";
-import {
-  OFFER_PATHS,
-  OFFER_PAYMENT_HASH,
-  offerCheckoutPath,
-} from "@/data/erbjudanden";
+import { OFFER_PATHS, offerCheckoutPath } from "@/data/erbjudanden";
 import { SITE_ORIGIN } from "@/lib/booking";
 
 const PAGE_PATH = OFFER_PATHS.kassa;
@@ -29,9 +25,7 @@ const parseProduct = (value: string | null): "snabbhet" | "friskvard" | null => 
 
 const Kassa = () => {
   const [searchParams] = useSearchParams();
-  const location = useLocation();
   const productId = parseProduct(searchParams.get("produkt"));
-  const onPayment = location.hash === `#${OFFER_PAYMENT_HASH}`;
 
   const title =
     productId === "snabbhet"
@@ -63,9 +57,7 @@ const Kassa = () => {
               title={title}
             >
               {productId
-                ? onPayment
-                  ? undefined
-                  : "Fyll i dina uppgifter."
+                ? "Fyll i dina uppgifter."
                 : "Välj vilket erbjudande du vill köpa."}
             </PageIntro>
 
