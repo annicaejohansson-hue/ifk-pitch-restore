@@ -238,34 +238,19 @@ const PaymentPanel = ({ payment, onClaimed, onBack }: PaymentPanelProps) => {
           : "i meddelandet när du swishar, så att vi kan matcha betalningen."}
       </p>
 
-      <div className="mt-6 flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-        {showSwishLink ? (
-          <Button asChild variant="secondary" className={offerGoldCtaClass}>
-            <a href={payment.swishAppUrl}>Öppna Swish</a>
-          </Button>
-        ) : null}
-        <Button
-          type="button"
-          variant="outline"
-          className={offerOutlineCtaClass}
-          onClick={() => void claim()}
-          disabled={claiming || payment.customerReportedPayment}
-        >
-          {claiming ? (
-            <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
-          ) : null}
-          {payment.customerReportedPayment
-            ? "Tack, vi kontrollerar betalningen"
-            : "Jag har betalat"}
-        </Button>
-      </div>
-
       {showSwishLink ? (
-        <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-          Skanna QR-koden med Swish-appen, eller öppna Swish på mobilen.
-          Belopp och referens fylls i automatiskt. Du kan också swisha
-          manuellt med numret och referensen ovan.
-        </p>
+        <>
+          <div className="mt-6 flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+            <Button asChild variant="secondary" className={offerGoldCtaClass}>
+              <a href={payment.swishAppUrl}>Öppna Swish</a>
+            </Button>
+          </div>
+          <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+            Skanna QR-koden med Swish-appen, eller öppna Swish på mobilen.
+            Belopp och referens fylls i automatiskt. Du kan också swisha
+            manuellt med numret och referensen ovan.
+          </p>
+        </>
       ) : null}
 
       {isBankgiro ? (
@@ -274,23 +259,6 @@ const PaymentPanel = ({ payment, onClaimed, onBack }: PaymentPanelProps) => {
           du ha underlagen snabbare går det fortare med Swish.
         </p>
       ) : null}
-
-      {claimError ? (
-        <p className="mt-4 text-sm leading-relaxed text-destructive" role="alert">
-          {claimError}
-        </p>
-      ) : null}
-
-      {payment.customerReportedPayment ? (
-        <p className="mt-4 rounded-xl bg-muted px-4 py-3 text-sm leading-relaxed text-foreground md:text-base">
-          {payment.message} Underlagen skickas till din e-post när Caselo har
-          sett betalningen.
-        </p>
-      ) : (
-        <p className="mt-4 text-sm leading-relaxed text-muted-foreground md:text-base">
-          När betalningen syns hos Caselo skickas underlagen inom 24 timmar.
-        </p>
-      )}
 
       <p className="mt-6 text-sm leading-relaxed text-muted-foreground">
         Frågor? Mejla{" "}
@@ -310,6 +278,7 @@ const PaymentPanel = ({ payment, onClaimed, onBack }: PaymentPanelProps) => {
         .
       </p>
 
+      {/* Sist i steget, som Föregående/Nästa i stegen före. */}
       <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
         <Button
           type="button"
@@ -319,6 +288,38 @@ const PaymentPanel = ({ payment, onClaimed, onBack }: PaymentPanelProps) => {
         >
           Föregående
         </Button>
+        <Button
+          type="button"
+          variant="secondary"
+          className={offerGoldCtaClass}
+          onClick={() => void claim()}
+          disabled={claiming || payment.customerReportedPayment}
+        >
+          {claiming ? (
+            <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+          ) : null}
+          {payment.customerReportedPayment
+            ? "Tack, vi kontrollerar betalningen"
+            : "Jag har betalat – Slutför"}
+        </Button>
+      </div>
+
+      <div aria-live="polite">
+        {claimError ? (
+          <p
+            className="mt-4 text-sm leading-relaxed text-destructive"
+            role="alert"
+          >
+            {claimError}
+          </p>
+        ) : null}
+
+        {/* Visas först när kunden har klickat på Jag har betalat – Slutför. */}
+        {payment.customerReportedPayment ? (
+          <p className="mt-4 rounded-xl bg-muted px-4 py-3 text-sm leading-relaxed text-foreground md:text-base">
+            När betalningen syns hos Caselo skickas underlagen inom 24 timmar.
+          </p>
+        ) : null}
       </div>
     </div>
   );
