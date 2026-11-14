@@ -212,12 +212,16 @@ const Friskvard = () => {
                     </div>
                   </figure>
                   <PtCampaignPrice className="mb-3" />
-                  <PtQuantityPicker
-                    id="pt-antal-kort"
-                    variant="offer"
-                    value={quantityValue}
-                    onChange={setQuantityValue}
-                  />
+                  {/* Från md står korten bredvid varandra: rutans överkant
+                      linjerar då med versalhöjden i grannkortets första textrad. */}
+                  <div className="min-w-0 md:mt-[7px]">
+                    <PtQuantityPicker
+                      id="pt-antal-kort"
+                      variant="offer"
+                      value={quantityValue}
+                      onChange={setQuantityValue}
+                    />
+                  </div>
                   <div className="mt-4 min-w-0">
                     <p className={`${offerLeadClass} mb-2`}>
                       Vid köpet väljer du ett eller flera fokus för dina pass:
