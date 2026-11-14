@@ -284,8 +284,11 @@ const Friskvard = () => {
                   </div>
                   <p className={`${offerLeadClass} mb-4`}>
                     För dig som vill bli snabbare – och veta vad som faktiskt tar
-                    dig dit. Du får se var du står i dag, vad du ska träna på och
-                    hur du har utvecklats när du kommer tillbaka.
+                    dig dit.
+                    <span className="block">
+                      Du får se var du står i dag, vad du ska träna på och hur du
+                      har utvecklats när du kommer tillbaka.
+                    </span>
                   </p>
                   <ol className="mb-3 list-none space-y-2.5 p-0">
                     {SNABBHET_OVERVIEW_POINTS.map((item, index) => (
