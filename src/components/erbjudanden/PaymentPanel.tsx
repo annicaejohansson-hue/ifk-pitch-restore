@@ -255,7 +255,7 @@ const PaymentPanel = ({ payment, onClaimed, onBack }: PaymentPanelProps) => {
             <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
           ) : null}
           {payment.customerReportedPayment
-            ? "Uppgiften är registrerad"
+            ? "Tack, vi kontrollerar betalningen"
             : "Jag har betalat"}
         </Button>
       </div>

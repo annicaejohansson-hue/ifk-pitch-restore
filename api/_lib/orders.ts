@@ -584,9 +584,6 @@ type PaymentClaim = {
   status: OrderStatus;
 };
 
-const paymentMethodLabel = (method: PaymentMethod | null) =>
-  method === "bankgiro" ? "bankgiro" : method === "swish" ? "Swish" : "";
-
 export async function claimOfferPayment(
   input: {
     orderRef?: unknown;
@@ -817,7 +814,7 @@ async function persistOrder(order: OfferOrder, config: ServerConfig) {
           ? `Swish eller bankgiro ${formatBankgiroNumber(config.bankgiroNumber)}. Caselo kontrollerar betalningen manuellt.`
           : "Swish. Caselo kontrollerar betalningen manuellt.",
         intern_checklista: checklist,
-        varning: `Markera inte som betald förrän inbetalningen syns i ${paymentChannelsLabel(config)}. Kundens knapp Jag har betalat är bara en uppgift.`,
+        varning: `Markera inte som betald förrän inbetalningen syns i ${paymentChannelsLabel(config)}. Du får inget mejl när kunden klickar på Jag har betalat. Matcha inbetalningen mot referensen ${order.orderRef}.`,
       });
       formspreeOk = true;
     } catch {
@@ -830,36 +827,17 @@ async function persistOrder(order: OfferOrder, config: ServerConfig) {
   if (!formspreeOk && !localOk) throw new Error("persist-failed");
 }
 
+/**
+ * Kundens klick på Jag har betalat skickas inte vidare till Formspree: varje
+ * beställning ska ge ett enda inskick (beställningsmejlet). Betalningen matchas
+ * mot referensen i Swish eller på bankgirot. Lokalt sparas uppgiften i filen;
+ * på den publicerade sajten finns ingen lagring och klicket bekräftas ändå.
+ */
 async function persistClaim(claim: PaymentClaim, config: ServerConfig) {
-  const tasks: Promise<void>[] = [];
-  if (config.allowLocalStore) tasks.push(writeLocalClaim(claim));
-  if (config.formspreeId) {
-    const method = claim.customerReportedPaymentMethod;
-    // Kundens uppgift styr var Henrik tittar först; utan uppgift nämns alla kanaler.
-    const whereToLook =
-      method === "bankgiro"
-        ? "bankgirot"
-        : method === "swish"
-          ? "Swish"
-          : paymentChannelsLabel(config);
-    tasks.push(
-      notifyFormspree(config.formspreeId, {
-        _subject: `Kunden uppger sig ha betalat ${claim.orderRef} – kontrollera ${whereToLook}`,
-        status: "Inväntar betalning",
-        kundens_uppgift: "Kunden uppger sig ha betalat. Detta är inte en bekräftad betalning.",
-        betalsatt_enligt_kund: paymentMethodLabel(method) || "Ej angivet",
-        orderRef: claim.orderRef,
-        tidpunkt: formatMailTime(claim.customerReportedPaymentAt),
-        varning:
-          method === "bankgiro"
-            ? "Ändra inte status till betald förrän inbetalningen syns på bankgirot. En bankgirobetalning kan ta 1–2 bankdagar."
-            : `Ändra inte status till betald förrän inbetalningen syns i ${whereToLook}.`,
-      }),
-    );
-  }
-  if (tasks.length === 0) throw new Error("no-persist-channel");
-  const results = await Promise.allSettled(tasks);
-  if (results.every((item) => item.status === "rejected")) {
+  if (!config.allowLocalStore) return;
+  try {
+    await writeLocalClaim(claim);
+  } catch {
     throw new Error("persist-failed");
   }
 }
@@ -990,7 +968,7 @@ export async function handleErbjudandenRequest(req: NodeReq, res: NodeRes) {
       ok: true,
       ...result.payment,
       message:
-        "Tack. Vi har registrerat att du uppger dig ha betalat. Caselo kontrollerar betalningen manuellt och skickar underlagen inom 24 timmar efter att betalningen syns hos oss. Detta är inte ett kvitto.",
+        "Tack. Caselo kontrollerar betalningen manuellt och skickar underlagen inom 24 timmar efter att betalningen syns hos oss. Detta är inte ett kvitto.",
     });
     return;
   }
@@ -1476,6 +1454,40 @@ export async function runOfferOrderChecks() {
       persist,
     );
     if (badClaim.ok) failures.push("accepted unknown ref prefix");
+
+    // Publicerat läge: Jag har betalat ska bekräftas utan något inskick till Formspree.
+    const publishedConfig = loadServerConfig(
+      {
+        OFFERS_SWISH_NUMBER: "1232593654",
+        FORMSPREE_ORDERS_FORM_ID: "testform",
+        OFFERS_SALES_ENABLED: "true",
+        NODE_ENV: "production",
+      },
+      Date.parse("2026-06-01T12:00:00+02:00"),
+    );
+    const realFetch = globalThis.fetch;
+    let claimFetchCalls = 0;
+    globalThis.fetch = (async () => {
+      claimFetchCalls += 1;
+      return new Response("{}");
+    }) as typeof fetch;
+    try {
+      const publishedClaim = await claimOfferPayment(
+        { orderRef: passOrder.orderRef, paymentMethod: "swish" },
+        publishedConfig,
+      );
+      if (publishedConfig.allowLocalStore) {
+        failures.push("published config unexpectedly allows local store");
+      }
+      if (!publishedClaim.ok) {
+        failures.push("published claim failed without a notification channel");
+      }
+      if (claimFetchCalls !== 0) {
+        failures.push(`payment claim sent ${claimFetchCalls} Formspree submission(s)`);
+      }
+    } finally {
+      globalThis.fetch = realFetch;
+    }
     const claimedPass = await claimOfferPayment(
       { orderRef: passOrder.orderRef, paid: true },
       enabledConfig,
