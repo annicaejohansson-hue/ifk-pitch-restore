@@ -130,7 +130,7 @@ export const services: ServiceContent[] = [
     cardDescription:
       "Vill du bli snabbare och starkare? Vi hjälper dig hitta vad som håller dig tillbaka och bygger ett träningsupplägg som tar dig vidare – mer kraft, mer snabbhet och hållbar prestation.",
     overviewBlurb:
-      "Träna med leg. fysioterapeut Henrik Nilsson – i din takt, efter din idrott. Välj mellan personliga träningspass och snabbhetspaket med laserportar.",
+      "Träna med leg. fysioterapeut – i din takt, efter din idrott. Välj mellan personliga träningspass och snabbhetspaket med laserportar.",
     metaDescription:
       "Personlig träning hos Caselo Idrottsmedicin – individuella träningspass och snabbhetspaket med laserportar.",
     image: performanceImageUrl,
