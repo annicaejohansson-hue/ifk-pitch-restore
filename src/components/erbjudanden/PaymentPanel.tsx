@@ -140,6 +140,22 @@ const PaymentPanel = ({ payment, onClaimed, onBack }: PaymentPanelProps) => {
           : "Betala med Swish"}
       </h3>
 
+      {/* Samma orderöversikt som i steget före betalningen. Ligger ovanför
+          valet av betalsätt, så att den är densamma för Swish och bankgiro. */}
+      <div className="mt-6 rounded-xl border border-border/70 bg-muted/50 px-4 py-3">
+        <p className="text-sm font-semibold text-foreground md:text-base">
+          Orderöversikt
+        </p>
+        <ul className="mt-2 space-y-1 break-words text-sm leading-snug text-foreground md:text-base">
+          <li>Upplägg: {payment.productName}</li>
+          {payment.focusLabel ? <li>Fokus: {payment.focusLabel}</li> : null}
+          <li>Totalt: {payment.amountLabel}</li>
+          {payment.wellnessReceipt ? (
+            <li>Kvitto för friskvårdsbidrag</li>
+          ) : null}
+        </ul>
+      </div>
+
       {hasBankgiro ? (
         <div className="mt-6">
           <p
@@ -180,22 +196,6 @@ const PaymentPanel = ({ payment, onClaimed, onBack }: PaymentPanelProps) => {
         )}
       >
         <div className="min-w-0 space-y-3">
-          {/* Samma orderöversikt som i steget före betalningen. */}
-          <div className="rounded-xl border border-border/70 bg-muted/50 px-4 py-3">
-            <p className="text-sm font-semibold text-foreground md:text-base">
-              Orderöversikt
-            </p>
-            <ul className="mt-2 space-y-1 break-words text-sm leading-snug text-foreground md:text-base">
-              <li>Upplägg: {payment.productName}</li>
-              {payment.focusLabel ? (
-                <li>Fokus: {payment.focusLabel}</li>
-              ) : null}
-              <li>Totalt: {payment.amountLabel}</li>
-              {payment.wellnessReceipt ? (
-                <li>Kvitto för friskvårdsbidrag</li>
-              ) : null}
-            </ul>
-          </div>
           {isBankgiro ? (
             <CopyField
               label="Bankgironummer"
