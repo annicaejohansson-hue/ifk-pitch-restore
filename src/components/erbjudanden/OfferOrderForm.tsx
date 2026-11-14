@@ -1487,7 +1487,9 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
                                     name="sportName"
                                     render={({ field: sportField }) => (
                                       <FormItem>
-                                        <FormLabel>Vilken idrott?</FormLabel>
+                                        <FormLabel>
+                                          Vilken idrott/motionsform?
+                                        </FormLabel>
                                         <FormControl>
                                           <Input
                                             className={fieldClass}
