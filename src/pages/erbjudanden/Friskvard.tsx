@@ -227,16 +227,20 @@ const Friskvard = () => {
                             quantity: quantityValue,
                           })}
                         >
-                          Köp pass nu
-                          <br />
-                          (boka tid senare)
+                          <span>
+                            <span className="font-bold">Köp pass nu</span>
+                            <br />
+                            (boka tid senare)
+                          </span>
                         </Link>
                       </Button>
                       <Button asChild variant="secondary" className={cardStackCtaClass}>
                         <BookingLink>
-                          Boka tid nu
-                          <br />
-                          (betala vid besöket)
+                          <span>
+                            <span className="font-bold">Boka tid nu</span>
+                            <br />
+                            (betala vid besöket)
+                          </span>
                         </BookingLink>
                       </Button>
                     </div>
@@ -313,16 +317,20 @@ const Friskvard = () => {
                     <div className="grid min-w-0 grid-cols-1 items-stretch gap-2 sm:grid-cols-2 sm:gap-3">
                       <Button asChild variant="secondary" className={cardStackCtaClass}>
                         <Link to={offerCheckoutPath("snabbhet")}>
-                          Köp paketet nu
-                          <br />
-                          (boka tid senare)
+                          <span>
+                            <span className="font-bold">Köp paketet nu</span>
+                            <br />
+                            (boka tid senare)
+                          </span>
                         </Link>
                       </Button>
                       <Button asChild variant="secondary" className={cardStackCtaClass}>
                         <BookingLink>
-                          Boka tid nu
-                          <br />
-                          (betala vid besöket)
+                          <span>
+                            <span className="font-bold">Boka tid nu</span>
+                            <br />
+                            (betala vid besöket)
+                          </span>
                         </BookingLink>
                       </Button>
                     </div>
