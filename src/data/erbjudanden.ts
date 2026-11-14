@@ -27,7 +27,7 @@ export const OFFER_SURFACE_LINE =
 export const SNABBHET_OVERVIEW_POINTS = [
   {
     text: "Du testar din snabbhet med laserportar",
-    detail: "Du testar på 10, 20 och 30 meter. Besöket tar 60 minuter.",
+    detail: "Du testar på 10, 20 och 30 meter.",
   },
   {
     text: "Du får ett program anpassat efter dig",
@@ -36,7 +36,7 @@ export const SNABBHET_OVERVIEW_POINTS = [
   },
   {
     text: "Du kommer tillbaka efter 8v för uppföljande test",
-    detail: "Återbesöket tar 45 minuter.",
+    detail: "Första besöket tar ca 75 min och återbesöket tar ca 45 min.",
   },
 ] as const;
 
@@ -66,7 +66,7 @@ export const OFFER_PRODUCTS: Record<OfferProductId, OfferProduct> = {
     vatIncluded: true,
     refPrefix: "SN",
     path: "/erbjudanden/friskvard",
-    durationNote: "Första besöket 60 minuter, återtest 45 minuter",
+    durationNote: "Första besöket ca 75 minuter, återtest ca 45 minuter",
   },
   "friskvard-pass": {
     id: "friskvard-pass",
@@ -387,7 +387,7 @@ export const OFFER_BOOKING_TYPES: {
   {
     id: "snabbhet-forsta",
     title: "Första snabbhetsbesöket",
-    duration: "60 minuter",
+    duration: "ca 75 minuter",
     description:
       "Samtal, snabbhetstest med laserportar och genomgång av ett individuellt träningsprogram.",
   },
