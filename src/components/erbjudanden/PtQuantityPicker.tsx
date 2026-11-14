@@ -152,6 +152,12 @@ const PtQuantityPicker = ({
   const offerQuantityValue = amountIsSource ? "0" : value;
   const offerTooHigh = tooHigh && !amountIsSource;
 
+  // Den rad man inte använder tonas ned, så att det syns vilken ruta som gäller.
+  // Raden går fortfarande att klicka i, och då byter rutorna roll.
+  const isFilled = (digits: string) => digits !== "" && digits !== "0";
+  const dimAmountRow = !amountIsSource && isFilled(value);
+  const dimQuantityRow = amountIsSource && isFilled(amountDigits);
+
   // Sammanfattningen längst ned i rutan utgår från den ruta man skrev i.
   const summaryQuote = amountIsSource ? (budget?.quote ?? null) : quote;
   const summaryText = !summaryQuote
@@ -186,10 +192,13 @@ const PtQuantityPicker = ({
           Beräkna din rabatt
         </p>
         <div className="pt-calc-grid">
-          <label htmlFor={`${id}-antal`} className={offerLabelClass}>
+          <label
+            htmlFor={`${id}-antal`}
+            className={cn(offerLabelClass, dimQuantityRow && "pt-calc-dim")}
+          >
             Fyll i antal pass du vill köpa:
           </label>
-          <div className="pt-calc-field">
+          <div className={cn("pt-calc-field", dimQuantityRow && "pt-calc-dim")}>
             <SuffixedNumberField
               id={`${id}-antal`}
               value={offerQuantityValue}
@@ -204,10 +213,13 @@ const PtQuantityPicker = ({
               Du kan köpa högst {PT_SESSION_MAX_QUANTITY} pass.
             </p>
           ) : null}
-          <label htmlFor={`${id}-summa`} className={offerLabelClass}>
+          <label
+            htmlFor={`${id}-summa`}
+            className={cn(offerLabelClass, dimAmountRow && "pt-calc-dim")}
+          >
             Eller fyll i önskat totalpris:
           </label>
-          <div className="pt-calc-field">
+          <div className={cn("pt-calc-field", dimAmountRow && "pt-calc-dim")}>
             <SuffixedNumberField
               id={`${id}-summa`}
               value={amountDigits}

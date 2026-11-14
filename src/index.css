@@ -177,6 +177,31 @@ All colors MUST be HSL.
     line-height: 1.35;
   }
 
+  /*
+   * Raden man inte använder tonas ned. Den går fortfarande att använda, och
+   * får full styrka igen så fort man ställer sig i dess ruta.
+   */
+  .pt-calc-label,
+  .pt-calc-field {
+    transition: opacity 150ms ease;
+  }
+
+  .pt-calc-dim {
+    opacity: 0.45;
+  }
+
+  .pt-calc-field.pt-calc-dim:focus-within,
+  .pt-calc-label.pt-calc-dim:has(+ .pt-calc-field:focus-within) {
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pt-calc-label,
+    .pt-calc-field {
+      transition: none;
+    }
+  }
+
   /* Sammanfattningen underst. Smalast: rabatten på egen rad under texten. */
   .pt-calc-summary {
     display: flex;
