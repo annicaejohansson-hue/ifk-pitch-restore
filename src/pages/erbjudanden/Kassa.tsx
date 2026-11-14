@@ -56,9 +56,7 @@ const Kassa = () => {
               eyebrowHref={OFFER_PATHS.friskvard}
               title={title}
             >
-              {productId
-                ? "Fyll i dina uppgifter."
-                : "Välj vilket erbjudande du vill köpa."}
+              {productId ? undefined : "Välj vilket erbjudande du vill köpa."}
             </PageIntro>
 
             {productId ? (
