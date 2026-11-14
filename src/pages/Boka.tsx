@@ -49,39 +49,12 @@ type BookingCategory = {
   packages?: BookingService[];
 };
 
-const STEG1_DESCRIPTION =
-  "Vi kartlägger din acceleration, snabbhet, hoppförmåga och/eller styrka utifrån dina målsättningar. Efter besöket analyseras resultaten och du får en personlig prestationsprofil med dina styrkor och viktigaste utvecklingsområden.";
-const STEG2_DESCRIPTION =
-  "Vi går igenom din prestationsprofil och omsätter resultaten till konkreta träningsprioriteringar. Du får ett individuellt träningsupplägg och praktisk vägledning i de viktigaste övningarna för din fortsatta träning.";
-const STEG3_DESCRIPTION =
-  "Efter träningsperioden upprepar vi relevanta tester och jämför med dina tidigare resultat. Du ser vad som har utvecklats och får nya rekommendationer inför nästa träningsperiod.";
-const STEG1_KADDIO_NAME = "Steg 1: Test och analys av fysisk kapacitet";
-const STEG1_KADDIO_NAME_IFK =
-  "Steg 1: Test och analys av fysisk kapacitet (IFK Stocksund)";
-const STEG2_KADDIO_NAME = "Steg 2: Personligt träningsupplägg";
-const STEG2_KADDIO_NAME_IFK =
-  "Steg 2: Personligt träningsupplägg (IFK Stocksund)";
-const STEG3_KADDIO_NAME = "Steg 3: Uppföljning för att mäta din utveckling";
-const STEG3_KADDIO_NAME_IFK =
-  "Steg 3: Uppföljning för att mäta din utveckling (IFK Stocksund)";
 const SMARTA_NYBESOK_NAME =
   "Bedömning och behandling av smärta och skador - NYBESÖK";
 const SMARTA_ATERBESOK_NAME =
   "Bedömning och behandling av smärta och skador - ÅTERBESÖK";
-const STEG_FOLLOWUP_NOTICE = "OBS: Detta steg bokas efter att Steg 1 genomförts.";
-const PAKET_1_3_NOTICE =
-  "Du bokar endast tid för Steg 1. Tidsbokning för Steg 2 och 3 görs efter att Steg 1 genomförts.";
-const PAKET_1_OCH_3_NOTICE =
-  "Du bokar endast tid för Steg 1. Tidsbokning för Steg 3 görs efter att Steg 1 genomförts.";
-
-/** IFK package prices derived from live IFK step prices (same relative discount as ordinary packages). */
-const IFK_STEG1 = 1525;
-const IFK_STEG2 = 1015;
-const IFK_STEG3 = 1270;
-const IFK_PAKET_1_3_ORD = IFK_STEG1 + IFK_STEG2 + IFK_STEG3; // 3810
-const IFK_PAKET_1_3 = 3395;
-const IFK_PAKET_1_OCH_3_ORD = IFK_STEG1 + IFK_STEG3; // 2795
-const IFK_PAKET_1_OCH_3 = 2545;
+const SNABBHET_BOOKING_NOTICE =
+  "Du bokar tid för första besöket. Återtestet görs cirka 8 veckor senare.";
 
 const BOOKING_CATEGORIES: BookingCategory[] = [
   {
@@ -175,82 +148,29 @@ const BOOKING_CATEGORIES: BookingCategory[] = [
     ],
   },
   {
-    id: "prestationsutveckling",
-    name: "Test och träning för ökad fysisk prestation",
-    // Ordinary `name` must match live Kaddio booking type names exactly.
-    // IFK uses separate Kaddio types (verified on /booking/ifk-stocksund).
+    id: "traning-och-motion",
+    name: "Träning och motion",
+    // `name` must match live Kaddio booking type names exactly.
+    // These types have no partner variants: partner visitors get the
+    // ordinary calendar and price (see calendarPartner below).
     services: [
       {
-        id: "prestationsprofil",
-        name: STEG1_KADDIO_NAME,
-        label: "Steg 1: Test och analys av fysisk kapacitet",
-        durationMin: 90,
-        priceSek: 1795,
-        ifk: {
-          priceSek: IFK_STEG1,
-          name: STEG1_KADDIO_NAME_IFK,
-        },
-        description: STEG1_DESCRIPTION,
+        id: "pt-pass",
+        name: "Personlig Träning (PT-pass)",
+        label: "PT-pass",
+        durationMin: 60,
+        priceSek: 990,
+        description:
+          "Individuellt träningspass à 60 minuter med personlig återkoppling och övningar att fortsätta med. Passet anpassas efter dig, till exempel fotbollsfys, löpteknik och snabbhet eller fys för din idrott eller motionsform.",
       },
       {
-        id: "resultatgenomgang",
-        name: STEG2_KADDIO_NAME,
-        label: "Steg 2: Personligt träningsupplägg",
-        durationMin: 45,
-        priceSek: 1195,
-        ifk: {
-          priceSek: IFK_STEG2,
-          name: STEG2_KADDIO_NAME_IFK,
-        },
-        description: `${STEG2_DESCRIPTION}\n\n${STEG_FOLLOWUP_NOTICE}`,
-        bookingNotice: STEG_FOLLOWUP_NOTICE,
-      },
-      {
-        id: "prestationsuppfoljning",
-        name: STEG3_KADDIO_NAME,
-        label: "Steg 3: Uppföljning för att mäta din utveckling",
+        id: "snabbhetspaketet",
+        name: "Snabbhetspaketet",
+        label: "Snabbhetspaketet",
         durationMin: 75,
-        priceSek: 1495,
-        ifk: {
-          priceSek: IFK_STEG3,
-          name: STEG3_KADDIO_NAME_IFK,
-        },
-        description: `${STEG3_DESCRIPTION}\n\n${STEG_FOLLOWUP_NOTICE}`,
-        bookingNotice: STEG_FOLLOWUP_NOTICE,
-      },
-    ],
-    packages: [
-      {
-        id: "paket-steg-1-3",
-        name: STEG1_KADDIO_NAME,
-        label: "Paket: Steg 1-3",
-        priceSek: 3995,
-        ordinaryPriceSek: 4485,
-        ifk: {
-          priceSek: IFK_PAKET_1_3,
-          ordinaryPriceSek: IFK_PAKET_1_3_ORD,
-          name: STEG1_KADDIO_NAME_IFK,
-        },
-        variant: "package",
-        bookingNotice: PAKET_1_3_NOTICE,
-        description:
-          `Steg 1 – Test och analys av fysisk kapacitet\n${STEG1_DESCRIPTION}\n\nSteg 2 – Personligt träningsupplägg\n${STEG2_DESCRIPTION}\n\nSteg 3 – Uppföljning för att mäta din utveckling\n${STEG3_DESCRIPTION}\n\n${PAKET_1_3_NOTICE}`,
-      },
-      {
-        id: "paket-steg-1-3-utan-2",
-        name: STEG1_KADDIO_NAME,
-        label: "Paket: Steg 1 och 3",
-        priceSek: 2995,
-        ordinaryPriceSek: 3290,
-        ifk: {
-          priceSek: IFK_PAKET_1_OCH_3,
-          ordinaryPriceSek: IFK_PAKET_1_OCH_3_ORD,
-          name: STEG1_KADDIO_NAME_IFK,
-        },
-        variant: "package",
-        bookingNotice: PAKET_1_OCH_3_NOTICE,
-        description:
-          `Steg 1 – Test och analys av fysisk kapacitet\n${STEG1_DESCRIPTION}\n\nSteg 3 – Uppföljning för att mäta din utveckling\n${STEG3_DESCRIPTION}\n\n${PAKET_1_OCH_3_NOTICE}`,
+        priceSek: 1000,
+        description: `Du testar din snabbhet med laserportar på 10, 20 och 30 meter, får ett träningsprogram anpassat efter dig och kommer tillbaka efter cirka 8 veckor för ett uppföljande test. Första besöket tar ca 75 min och återbesöket ca 45 min.\n\n${SNABBHET_BOOKING_NOTICE}`,
+        bookingNotice: SNABBHET_BOOKING_NOTICE,
       },
     ],
   },
@@ -573,16 +493,18 @@ const Boka = () => {
   const selectedDisplayName = selected
     ? selected.subgroupName
       ? `${selected.categoryName} (${selected.subgroupName}) – ${selected.service.label}`
-      : selected.categoryName === "Test och träning för ökad fysisk prestation"
-        ? selected.service.label
-        : `${selected.categoryName} – ${selected.service.label}`
+      : `${selected.categoryName} – ${selected.service.label}`
     : undefined;
 
+  // Tjänster utan partnervariant finns bara i den ordinarie kalendern; under
+  // partnerns kalenderfilter visar Kaddio inga lediga tider för dem.
+  const calendarPartner = selected?.service.ifk ? activePartner : null;
+
   const iframeSrc = selectedServiceName
-    ? iframeUrlForService(selectedServiceName, activePartner)
+    ? iframeUrlForService(selectedServiceName, calendarPartner)
     : undefined;
   const fallbackHref = selectedServiceName
-    ? externalUrlForService(selectedServiceName, activePartner)
+    ? externalUrlForService(selectedServiceName, calendarPartner)
     : activePartner
       ? activePartner.kaddioBookingUrl
       : KADDIO_BOOKING_URL;
