@@ -4,6 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import { ChevronDown } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useVisitor } from "@/context/VisitorContext";
+import { TRAINING_BOOKING_CATEGORY_ID } from "@/lib/booking";
 import { getPartner, isPartnerId, type PartnerConfig } from "@/lib/partners";
 
 const KADDIO_BOOKING_URL = "https://caseloidrottsmedicin.kaddio.com";
@@ -148,7 +149,7 @@ const BOOKING_CATEGORIES: BookingCategory[] = [
     ],
   },
   {
-    id: "traning-och-motion",
+    id: TRAINING_BOOKING_CATEGORY_ID,
     name: "Träning och motion",
     // `name` must match live Kaddio booking type names exactly.
     // These types have no partner variants: partner visitors get the
@@ -319,6 +320,12 @@ const externalUrlForService = (
     : `${KADDIO_BOOKING_URL}/booking/cal/${slug}`;
 };
 
+/** `?kategori=` öppnar en kolumn direkt, utan att någon tjänst är vald. */
+const categoryIdFromParam = (value: string | null): string | undefined =>
+  BOOKING_CATEGORIES.some((category) => category.id === value)
+    ? (value ?? undefined)
+    : undefined;
+
 const servicesInCategory = (category: BookingCategory) => [
   ...(category.subgroups
     ? category.subgroups.flatMap((subgroup) => subgroup.services)
@@ -447,9 +454,13 @@ const ServiceList = ({
 
 const Boka = () => {
   const [selectedServiceId, setSelectedServiceId] = useState<string | undefined>();
-  const [openCategoryId, setOpenCategoryId] = useState<string | undefined>();
   const [iframeEpoch, setIframeEpoch] = useState(0);
   const [searchParams] = useSearchParams();
+  const kategoriParam = searchParams.get("kategori");
+  const [openCategoryId, setOpenCategoryId] = useState<string | undefined>(() =>
+    categoryIdFromParam(kategoriParam),
+  );
+  const appliedKategoriRef = useRef<string | null>(kategoriParam);
   const { partner, setVisitorType } = useVisitor();
   const appliedTjanstRef = useRef<string | null>(null);
   const ignoreIframeLoadRef = useRef(false);
@@ -479,6 +490,14 @@ const Boka = () => {
     appliedTjanstRef.current = tjanst;
     setSelectedServiceId(tjanst);
   }, [searchParams, activePartner]);
+
+  // Om adressen byter kategori medan sidan redan är öppen.
+  useEffect(() => {
+    if (appliedKategoriRef.current === kategoriParam) return;
+    appliedKategoriRef.current = kategoriParam;
+    const categoryId = categoryIdFromParam(kategoriParam);
+    if (categoryId) setOpenCategoryId(categoryId);
+  }, [kategoriParam]);
 
   const categories = useMemo(
     () => categoriesForVisitor(activePartner),

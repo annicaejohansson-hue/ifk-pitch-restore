@@ -16,6 +16,9 @@ export const IFK_STOCKSUND_KADDIO_URL = PARTNERS["ifk-stocksund"].kaddioBookingU
 /** First visit for custom heel cups, children under 18. Matches `/boka` service id. */
 export const CHILD_HEEL_CUP_BOOKING_ID = "halkopp-barn-nybesok";
 
+/** Column "Träning och motion" on `/boka` (PT-pass, Snabbhetspaketet). Matches `/boka` category id. */
+export const TRAINING_BOOKING_CATEGORY_ID = "traning-och-motion";
+
 export const SITE_ORIGIN = "https://www.caseloidrottsmedicin.se";
 
 export function getBookingUrl(visitorType: VisitorType = getVisitorType()): string {
@@ -31,5 +34,13 @@ export function withBookingService(url: string, serviceId?: string): string {
   if (!serviceId || isExternalBookingUrl(url)) return url;
   const parsed = new URL(url, SITE_ORIGIN);
   parsed.searchParams.set("tjanst", serviceId);
+  return `${parsed.pathname}${parsed.search}`;
+}
+
+/** Append `?kategori=` to an internal booking path, so that column opens on `/boka`. External URLs are left unchanged. */
+export function withBookingCategory(url: string, categoryId?: string): string {
+  if (!categoryId || isExternalBookingUrl(url)) return url;
+  const parsed = new URL(url, SITE_ORIGIN);
+  parsed.searchParams.set("kategori", categoryId);
   return `${parsed.pathname}${parsed.search}`;
 }

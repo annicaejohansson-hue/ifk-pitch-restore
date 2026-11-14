@@ -35,7 +35,7 @@ import {
   formatOfferPrice,
   offerCheckoutPath,
 } from "@/data/erbjudanden";
-import { SITE_ORIGIN } from "@/lib/booking";
+import { SITE_ORIGIN, TRAINING_BOOKING_CATEGORY_ID } from "@/lib/booking";
 import { cn } from "@/lib/utils";
 import henrikFoto from "@/assets/IMG_9111.jpg";
 import trainingFoto from "@/assets/IMG_9118.jpg";
@@ -248,7 +248,7 @@ const Friskvard = () => {
                         </Link>
                       </Button>
                       <Button asChild variant="secondary" className={cardStackCtaClass}>
-                        <BookingLink>
+                        <BookingLink categoryId={TRAINING_BOOKING_CATEGORY_ID}>
                           <span>
                             <span className={cardCtaTitleClass}>Boka tid nu</span>
                             <br />
@@ -336,7 +336,7 @@ const Friskvard = () => {
                         </Link>
                       </Button>
                       <Button asChild variant="secondary" className={cardStackCtaClass}>
-                        <BookingLink>
+                        <BookingLink categoryId={TRAINING_BOOKING_CATEGORY_ID}>
                           <span>
                             <span className={cardCtaTitleClass}>Boka tid nu</span>
                             <br />
