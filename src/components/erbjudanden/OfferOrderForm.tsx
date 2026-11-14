@@ -124,6 +124,11 @@ const baseSchema = {
     .string()
     .trim()
     .email("Bekräfta e-postadressen."),
+  // Kunden väljer betalsätt innan beställningen skickas, så att valet kommer
+  // med i det enda mejlet till Caselo.
+  paymentMethod: z.enum(["swish", "bankgiro"], {
+    errorMap: () => ({ message: "Välj hur du vill betala." }),
+  }),
   website: z.string().optional(),
 };
 
@@ -290,6 +295,7 @@ const PT_CHECKOUT_STEPS = [
       "buyerName",
       "buyerEmail",
       "buyerEmailConfirm",
+      "paymentMethod",
       "personalConfirm",
     ],
   },
@@ -306,7 +312,7 @@ const SNABBHET_CHECKOUT_STEPS = [
   },
   {
     title: "Dina uppgifter",
-    fields: ["buyerName", "buyerEmail", "buyerEmailConfirm"],
+    fields: ["buyerName", "buyerEmail", "buyerEmailConfirm", "paymentMethod"],
   },
 ] as const;
 
@@ -556,6 +562,13 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
     setPayment((prev) => {
       const merged = {
         ...next,
+        // Svaret på Jag har betalat saknar valet från kassan när servern inte
+        // har beställningen lagrad; behåll det för samma beställning.
+        chosenPaymentMethod:
+          next.chosenPaymentMethod ??
+          (prev?.orderRef === next.orderRef
+            ? prev.chosenPaymentMethod
+            : undefined),
         focusLabel: next.focusLabel || prev?.focusLabel,
         quantity: next.quantity ?? prev?.quantity,
         amountSek: next.quantity
@@ -607,6 +620,14 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
   };
 
   const purchaseEnabled = checkout?.purchaseEnabled === true;
+  const bankgiroAvailable = checkout?.bankgiroAvailable !== false;
+
+  // Utan bankgiro finns inget att välja mellan: frågan döljs och Swish gäller.
+  useEffect(() => {
+    if (bankgiroAvailable) return;
+    snabbhetForm.setValue("paymentMethod", "swish");
+    friskvardForm.setValue("paymentMethod", "swish");
+  }, [bankgiroAvailable, snabbhetForm, friskvardForm]);
   const selectedQuantity = parsePtQuantity(selectedQuantityRaw);
   const selectedQuote = selectedQuantity
     ? getPtSessionQuote(selectedQuantity)
@@ -633,6 +654,7 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
         buyerName: values.buyerName,
         buyerEmail: values.buyerEmail,
         buyerEmailConfirm: values.buyerEmailConfirm,
+        paymentMethod: values.paymentMethod,
         giftLayout: values.giftLayout,
         recipient: values.recipient,
         giftRecipientName: values.giftRecipientName,
@@ -683,6 +705,7 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
         buyerName: values.buyerName,
         buyerEmail: values.buyerEmail,
         buyerEmailConfirm: values.buyerEmailConfirm,
+        paymentMethod: values.paymentMethod,
         participantName: values.participantName,
         focus: values.focuses.join(","),
         sportName: values.focuses.includes("fys-idrott")
@@ -930,6 +953,52 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
           </FormItem>
         )}
       />
+      {bankgiroAvailable ? (
+        <FormField
+          control={form.control}
+          name="paymentMethod"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Hur vill du betala?</FormLabel>
+              <FormDescription>
+                Betalningsuppgifterna visas i nästa steg.
+              </FormDescription>
+              <FormControl>
+                <RadioGroup
+                  onValueChange={field.onChange}
+                  value={field.value ?? ""}
+                  className="gap-1"
+                >
+                  <label className={radioItemClass}>
+                    <RadioGroupItem
+                      value="swish"
+                      id={`${productId}-payment-swish`}
+                    />
+                    <span className="min-w-0 pt-0.5 text-base leading-snug">
+                      Swish
+                    </span>
+                  </label>
+                  <label className={radioItemClass}>
+                    <RadioGroupItem
+                      value="bankgiro"
+                      id={`${productId}-payment-bankgiro`}
+                    />
+                    <span className="min-w-0 pt-0.5">
+                      <span className="block text-base leading-snug">
+                        Bankgiro
+                      </span>
+                      <span className="mt-0.5 block text-sm leading-snug text-muted-foreground">
+                        Betalningen når normalt Caselo efter 1–2 bankdagar.
+                      </span>
+                    </span>
+                  </label>
+                </RadioGroup>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      ) : null}
       <FormField
         control={form.control}
         name="website"

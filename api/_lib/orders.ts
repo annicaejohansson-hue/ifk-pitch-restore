@@ -47,6 +47,8 @@ export type OfferOrder = {
   customerReportedPaymentAt: string | null;
   /** Kundens egen uppgift om betalsätt. Saknas på äldre beställningar. */
   customerReportedPaymentMethod?: PaymentMethod | null;
+  /** Betalsättet kunden valde i kassan, innan betalningen. Saknas på äldre beställningar. */
+  chosenPaymentMethod?: PaymentMethod | null;
   createdAt: string;
   productId: OfferProductId;
   productName: string;
@@ -253,6 +255,7 @@ export function getCheckoutState(config: ServerConfig) {
     reason,
     message: messages[reason],
     contactEmail: OFFER_CONTACT_EMAIL,
+    bankgiroAvailable: Boolean(config.bankgiroNumber),
     packages: {
       snabbhet: toPackageView(OFFER_PRODUCTS.snabbhet),
       "friskvard-pass": toPackageView(OFFER_PRODUCTS["friskvard-pass"]),
@@ -309,6 +312,7 @@ type CreateInput = {
   wellnessReceipt?: unknown;
   receiptCustomerName?: unknown;
   personalId?: unknown;
+  paymentMethod?: unknown;
   website?: unknown;
   amountSek?: unknown;
   price?: unknown;
@@ -342,6 +346,8 @@ export type PaymentView = {
   /** Tomma strängar när bankgiro inte erbjuds. */
   bankgiroNumber: string;
   bankgiroNumberDisplay: string;
+  /** Betalsättet kunden valde i kassan; förvalt på betalningssidan. */
+  chosenPaymentMethod?: PaymentMethod;
   reportedPaymentMethod?: PaymentMethod;
   paymentVerifiedAutomatically: false;
 };
@@ -355,6 +361,37 @@ const bankgiroView = (config: Pick<ServerConfig, "bankgiroNumber">) => ({
 
 const paymentChannelsLabel = (config: Pick<ServerConfig, "bankgiroNumber">) =>
   config.bankgiroNumber ? "Swish eller på bankgirot" : "Swish";
+
+/**
+ * Rader om betalsätt i beställningsmejlet. Kunden väljer i kassan, före
+ * betalningen, och kan byta på betalningssidan – därför är det en uppgift om
+ * var Henrik ska titta först, inte ett besked om var pengarna finns.
+ */
+export function chosenPaymentMailInfo(
+  order: Pick<OfferOrder, "orderRef" | "chosenPaymentMethod">,
+  config: Pick<ServerConfig, "bankgiroNumber">,
+) {
+  const method = order.chosenPaymentMethod ?? null;
+  const label = method === "bankgiro" ? "Bankgiro" : method === "swish" ? "Swish" : "";
+  const tail = `Du får inget mejl när kunden klickar på Jag har betalat. Matcha inbetalningen mot referensen ${order.orderRef}.`;
+  let warning = `Markera inte som betald förrän inbetalningen syns i ${paymentChannelsLabel(config)}. ${tail}`;
+  if (method === "bankgiro") {
+    warning = `Markera inte som betald förrän inbetalningen syns. Kunden har valt bankgiro, som kan ta 1–2 bankdagar. Syns den inte där, titta även i Swish. ${tail}`;
+  } else if (method === "swish") {
+    warning = config.bankgiroNumber
+      ? `Markera inte som betald förrän inbetalningen syns. Kunden har valt Swish. Syns den inte där, titta även på bankgirot. ${tail}`
+      : `Markera inte som betald förrän inbetalningen syns i Swish. ${tail}`;
+  }
+  return {
+    subjectSuffix: label ? ` (${label})` : "",
+    field: label
+      ? config.bankgiroNumber
+        ? `${label} (valt i kassan, kunden kan byta på betalningssidan)`
+        : label
+      : "Ej angivet",
+    warning,
+  };
+}
 
 const swishAppUrl = (number: string, amountSek: number, message: string) => {
   const params = new URLSearchParams({
@@ -385,6 +422,7 @@ export function toPaymentView(
     swishNumberDisplay: formatSwishNumber(swishNumber),
     swishAppUrl: swishAppUrl(swishNumber, order.amountSek, order.orderRef),
     ...bankgiroView(config),
+    chosenPaymentMethod: order.chosenPaymentMethod ?? undefined,
     paymentVerifiedAutomatically: false,
   };
 }
@@ -531,11 +569,20 @@ export async function createOfferOrder(
     };
   }
 
+  // Kassan kräver ett val. Här är det frivilligt, så att en äldre inläst sida
+  // utan frågan fortfarande kan beställa. Bankgiro räknas bara om det erbjuds.
+  const requestedMethod = parsePaymentMethod(input.paymentMethod);
+  const chosenPaymentMethod =
+    requestedMethod === "bankgiro" && !config.bankgiroNumber
+      ? null
+      : requestedMethod;
+
   const order: OfferOrder = {
     orderRef: createOrderRef(product.refPrefix),
     status: "awaiting_payment",
     customerReportedPayment: false,
     customerReportedPaymentAt: null,
+    chosenPaymentMethod,
     createdAt: new Date(config.nowMs).toISOString(),
     productId: product.id,
     productName,
@@ -786,9 +833,10 @@ async function persistOrder(order: OfferOrder, config: ServerConfig) {
   }
 
   if (hasFormspree) {
+    const paymentInfo = chosenPaymentMailInfo(order, config);
     try {
       await notifyFormspree(config.formspreeId, {
-        _subject: `Ny beställning ${order.orderRef} – Inväntar betalning`,
+        _subject: `Ny beställning ${order.orderRef} – Inväntar betalning${paymentInfo.subjectSuffix}`,
         _replyto: order.buyerEmail,
         status: "Inväntar betalning",
         orderRef: order.orderRef,
@@ -796,6 +844,7 @@ async function persistOrder(order: OfferOrder, config: ServerConfig) {
         specificerat: order.receiptName,
         belopp: formatOfferPriceWithVat(order.amountSek),
         beloppSek: order.amountSek,
+        betalsatt_enligt_kund: paymentInfo.field,
         antalPass: order.quantity || "",
         kopare: order.buyerName,
         epost: order.buyerEmail,
@@ -814,7 +863,7 @@ async function persistOrder(order: OfferOrder, config: ServerConfig) {
           ? `Swish eller bankgiro ${formatBankgiroNumber(config.bankgiroNumber)}. Caselo kontrollerar betalningen manuellt.`
           : "Swish. Caselo kontrollerar betalningen manuellt.",
         intern_checklista: checklist,
-        varning: `Markera inte som betald förrän inbetalningen syns i ${paymentChannelsLabel(config)}. Du får inget mejl när kunden klickar på Jag har betalat. Matcha inbetalningen mot referensen ${order.orderRef}.`,
+        varning: paymentInfo.warning,
       });
       formspreeOk = true;
     } catch {
@@ -1467,11 +1516,42 @@ export async function runOfferOrderChecks() {
     );
     const realFetch = globalThis.fetch;
     let claimFetchCalls = 0;
-    globalThis.fetch = (async () => {
+    const sentPayloads: Record<string, unknown>[] = [];
+    globalThis.fetch = (async (_url: unknown, init?: { body?: unknown }) => {
       claimFetchCalls += 1;
+      sentPayloads.push(JSON.parse(String(init?.body ?? "{}")));
       return new Response("{}");
     }) as typeof fetch;
     try {
+      // En beställning ska ge exakt ett inskick, med kundens valda betalsätt.
+      const publishedOrder = await createOfferOrder(
+        {
+          productId: "snabbhet",
+          buyerName: "Test Testsson",
+          buyerEmail: "test@example.com",
+          buyerEmailConfirm: "test@example.com",
+          recipient: "self",
+          paymentMethod: "bankgiro",
+        },
+        publishedConfig,
+      );
+      if (!publishedOrder.ok) {
+        failures.push(`published order failed: ${publishedOrder.message}`);
+      } else if (sentPayloads.length !== 1) {
+        failures.push(`order sent ${sentPayloads.length} Formspree submission(s)`);
+      } else {
+        const mail = sentPayloads[0];
+        if (
+          mail._subject !==
+          `Ny beställning ${publishedOrder.order.orderRef} – Inväntar betalning (Bankgiro)`
+        ) {
+          failures.push(`order mail subject ${String(mail._subject)}`);
+        }
+        if (!String(mail.betalsatt_enligt_kund).startsWith("Bankgiro")) {
+          failures.push(`order mail method ${String(mail.betalsatt_enligt_kund)}`);
+        }
+      }
+      claimFetchCalls = 0;
       const publishedClaim = await claimOfferPayment(
         { orderRef: passOrder.orderRef, paymentMethod: "swish" },
         publishedConfig,
@@ -1684,6 +1764,7 @@ export async function runOfferOrderChecks() {
       buyerEmail: "test@example.com",
       buyerEmailConfirm: "test@example.com",
       recipient: "self",
+      paymentMethod: "bankgiro",
     },
     bankgiroConfig,
     persist,
@@ -1691,6 +1772,56 @@ export async function runOfferOrderChecks() {
   if (!bankgiroOrder.ok) {
     failures.push(`bankgiro order failed: ${bankgiroOrder.message}`);
   } else {
+    if (
+      bankgiroOrder.order.chosenPaymentMethod !== "bankgiro" ||
+      bankgiroOrder.payment.chosenPaymentMethod !== "bankgiro"
+    ) {
+      failures.push("chosen payment method bankgiro not kept on order");
+    }
+    const bankgiroMail = chosenPaymentMailInfo(bankgiroOrder.order, bankgiroConfig);
+    if (
+      bankgiroMail.subjectSuffix !== " (Bankgiro)" ||
+      !bankgiroMail.field.startsWith("Bankgiro") ||
+      !bankgiroMail.warning.includes("1–2 bankdagar") ||
+      !bankgiroMail.warning.includes(bankgiroOrder.order.orderRef)
+    ) {
+      failures.push(`bankgiro mail info ${JSON.stringify(bankgiroMail)}`);
+    }
+    const swishMail = chosenPaymentMailInfo(
+      { orderRef: "SN-ABC234", chosenPaymentMethod: "swish" },
+      bankgiroConfig,
+    );
+    if (
+      swishMail.subjectSuffix !== " (Swish)" ||
+      !swishMail.warning.includes("titta även på bankgirot")
+    ) {
+      failures.push(`swish mail info ${JSON.stringify(swishMail)}`);
+    }
+    const unknownMail = chosenPaymentMailInfo(
+      { orderRef: "SN-ABC234" },
+      bankgiroConfig,
+    );
+    if (unknownMail.subjectSuffix !== "" || unknownMail.field !== "Ej angivet") {
+      failures.push(`unknown mail info ${JSON.stringify(unknownMail)}`);
+    }
+    if (!getCheckoutState(bankgiroConfig).bankgiroAvailable) {
+      failures.push("checkout state does not announce bankgiro");
+    }
+    const oddMethodOrder = await createOfferOrder(
+      {
+        productId: "snabbhet",
+        buyerName: "Test Testsson",
+        buyerEmail: "test@example.com",
+        buyerEmailConfirm: "test@example.com",
+        recipient: "self",
+        paymentMethod: "kort",
+      },
+      bankgiroConfig,
+      persist,
+    );
+    if (!oddMethodOrder.ok || oddMethodOrder.order.chosenPaymentMethod) {
+      failures.push("unknown chosen payment method not ignored");
+    }
     if (
       bankgiroOrder.payment.bankgiroNumber !== "1234566" ||
       bankgiroOrder.payment.bankgiroNumberDisplay !== "123-4566"

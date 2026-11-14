@@ -7,6 +7,8 @@ export type CheckoutState = {
   reason: string;
   message: string;
   contactEmail: string;
+  /** Saknas i svar från en äldre server; då räknas bankgiro som tillgängligt. */
+  bankgiroAvailable?: boolean;
   packages: Record<
     OfferProductId,
     { id: OfferProductId; name: string; priceSek: number; priceLabel: string }
@@ -32,6 +34,8 @@ export type PaymentState = {
   /** Tomt eller saknas när bankgiro inte erbjuds (även i äldre sparade betalningar). */
   bankgiroNumber?: string;
   bankgiroNumberDisplay?: string;
+  /** Betalsättet kunden valde i kassan; förvalt på betalningssidan. */
+  chosenPaymentMethod?: PaymentMethod;
   reportedPaymentMethod?: PaymentMethod;
   paymentVerifiedAutomatically: false;
   message: string;
@@ -53,6 +57,7 @@ export type OrderPayload = {
   wellnessReceipt?: "yes" | "no";
   receiptCustomerName?: string;
   personalId?: string;
+  paymentMethod?: PaymentMethod;
   website?: string;
 };
 

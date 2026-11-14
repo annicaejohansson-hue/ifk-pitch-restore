@@ -101,6 +101,7 @@ const PaymentPanel = ({ payment, onClaimed, onBack }: PaymentPanelProps) => {
     () =>
       payment.reportedPaymentMethod ??
       readStoredMethod(payment.orderRef) ??
+      payment.chosenPaymentMethod ??
       "swish",
   );
   const method: PaymentMethod =
