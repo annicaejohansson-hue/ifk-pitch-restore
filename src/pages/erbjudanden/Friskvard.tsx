@@ -177,8 +177,9 @@ const Friskvard = () => {
               </p>
               <p className={offerLeadClass}>
                 Betala med Swish eller bankgiro och lämna kvittot till din
-                arbetsgivare – kvittot uppfyller Skatteverkets krav. Träningstillfällen som
-                köps under 2026 kan genomföras till och med{" "}
+                arbetsgivare (kvittot uppfyller Skatteverkets krav).
+                Träningstillfällen som köps under 2026 kan genomföras till och
+                med{" "}
                 {OFFER_FIRST_VISIT_END_LABEL}.
               </p>
             </aside>
