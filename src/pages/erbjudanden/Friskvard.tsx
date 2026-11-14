@@ -287,8 +287,7 @@ const Friskvard = () => {
                     />
                   </div>
                   <p className={`${offerLeadClass} mb-4`}>
-                    För dig som vill bli snabbare – och veta vad som faktiskt tar
-                    dig dit.
+                    För dig som vill träna upp din snabbhet.
                   </p>
                   <p id="snabbhet-ingar-rubrik" className={`${offerLeadClass} mb-2.5`}>
                     I paketet ingår två tillfällen:
