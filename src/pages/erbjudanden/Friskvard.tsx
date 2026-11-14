@@ -17,7 +17,6 @@ import {
   offerDetailsListClass,
   offerLeadClass,
   offerNarrowClass,
-  offerSectionClass,
 } from "@/components/erbjudanden/offerUi";
 import {
   FRISKVARD_FOCUS_OPTIONS,
@@ -168,12 +167,15 @@ const Friskvard = () => {
 
       <section
         id="erbjudanden"
-        className={`scroll-mt-28 bg-gradient-to-b from-muted/40 to-background ${offerSectionClass}`}
+        // Samma luft ovanför brödsmulan som på övriga tjänstesidor.
+        className="scroll-mt-28 bg-gradient-to-b from-muted/40 to-background pb-12 pt-8 md:pb-20 md:pt-14"
       >
         <div className={offerContainerClass}>
           <div className={offerNarrowClass}>
             <PageIntro
               className="mb-8 md:mb-10"
+              eyebrow="Tjänster"
+              eyebrowHref="/tjanster"
               title="Personlig träning"
             >
               Träna med leg. fysioterapeut Henrik Nilsson i Danderyd – i din
