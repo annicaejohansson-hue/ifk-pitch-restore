@@ -180,18 +180,22 @@ const PaymentPanel = ({ payment, onClaimed, onBack }: PaymentPanelProps) => {
         )}
       >
         <div className="min-w-0 space-y-3">
-          <CopyField label="Upplägg" value={payment.productName} />
-          {payment.quantity ? (
-            <CopyField label="Antal pass" value={String(payment.quantity)} />
-          ) : null}
-          {payment.focusLabel ? (
-            <CopyField label="Fokus" value={payment.focusLabel} />
-          ) : null}
-          <CopyField
-            label="Belopp"
-            value={String(payment.amountSek)}
-            displayValue={payment.amountLabel}
-          />
+          {/* Samma orderöversikt som i steget före betalningen. */}
+          <div className="rounded-xl border border-border/70 bg-muted/50 px-4 py-3">
+            <p className="text-sm font-semibold text-foreground md:text-base">
+              Orderöversikt
+            </p>
+            <ul className="mt-2 space-y-1 break-words text-sm leading-snug text-foreground md:text-base">
+              <li>Upplägg: {payment.productName}</li>
+              {payment.focusLabel ? (
+                <li>Fokus: {payment.focusLabel}</li>
+              ) : null}
+              <li>Totalt: {payment.amountLabel}</li>
+              {payment.wellnessReceipt ? (
+                <li>Kvitto för friskvårdsbidrag</li>
+              ) : null}
+            </ul>
+          </div>
           {isBankgiro ? (
             <CopyField
               label="Bankgironummer"

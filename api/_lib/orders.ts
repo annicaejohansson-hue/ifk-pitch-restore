@@ -340,6 +340,8 @@ export type PaymentView = {
   amountLabel: string;
   quantity?: number;
   focusLabel?: string;
+  /** Satt när kunden har bett om kvitto för friskvårdsbidrag; visas i orderöversikten. */
+  wellnessReceipt?: boolean;
   swishNumber: string;
   swishNumberDisplay: string;
   swishAppUrl: string;
@@ -418,6 +420,7 @@ export function toPaymentView(
     amountLabel: formatOfferPriceWithVat(order.amountSek),
     quantity: order.quantity || undefined,
     focusLabel: order.focusLabel || "",
+    wellnessReceipt: order.wellnessReceipt || undefined,
     swishNumber,
     swishNumberDisplay: formatSwishNumber(swishNumber),
     swishAppUrl: swishAppUrl(swishNumber, order.amountSek, order.orderRef),
@@ -1432,6 +1435,18 @@ export async function runOfferOrderChecks() {
     failures.push(`stored personal id ${wellnessWithId.order.personalId}`);
   } else if (wellnessWithId.order.receiptCustomerName !== "Kim Karlsson") {
     failures.push("receipt customer name missing");
+  } else {
+    // Orderöversikten på betalningssidan visar kvittoraden utifrån svaret.
+    if (toPaymentView(wellnessWithId.order, enabledConfig).wellnessReceipt !== true) {
+      failures.push("payment view should carry wellnessReceipt");
+    }
+    const withoutReceipt = toPaymentView(
+      { ...wellnessWithId.order, wellnessReceipt: false },
+      enabledConfig,
+    );
+    if (withoutReceipt.wellnessReceipt !== undefined) {
+      failures.push("payment view wellnessReceipt should be omitted when not requested");
+    }
   }
 
   const wellnessSnabbhet = await createOfferOrder(

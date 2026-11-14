@@ -28,6 +28,8 @@ export type PaymentState = {
   amountLabel: string;
   quantity?: number;
   focusLabel?: string;
+  /** Satt när kunden har bett om kvitto för friskvårdsbidrag. */
+  wellnessReceipt?: boolean;
   swishNumber: string;
   swishNumberDisplay: string;
   swishAppUrl: string;
