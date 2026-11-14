@@ -139,11 +139,6 @@ const PaymentPanel = ({ payment, onClaimed, onBack }: PaymentPanelProps) => {
           ? "Betala med Swish eller bankgiro"
           : "Betala med Swish"}
       </h3>
-      <p className="mt-2 text-base leading-relaxed text-muted-foreground md:text-lg">
-        {isBankgiro
-          ? "Beställningen är sparad med status Inväntar betalning. Betala till bankgirot i din internetbank eller bankapp och ange referensen som meddelande. Caselo kontrollerar betalningen manuellt. Ett klick här eller en skickad beställning är inte ett kvitto."
-          : "Beställningen är sparad med status Inväntar betalning. Ange referensen i meddelandefältet i Swish. Caselo kontrollerar betalningen manuellt. Ett klick här, en öppnad Swish-app eller en skickad beställning är inte ett kvitto."}
-      </p>
 
       {hasBankgiro ? (
         <div className="mt-6">
