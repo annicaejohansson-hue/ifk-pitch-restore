@@ -125,10 +125,10 @@ export const services: ServiceContent[] = [
     path: PERSONAL_TRAINING_PATH,
     title: "Personlig träning",
     titleLines: ["Personlig träning"],
-    cardTitle: "Snabbare och starkare prestation",
-    cardTitleMobile: "Starkare prestation",
+    cardTitle: "Personlig träning",
+    // Samma text som på Tjänster-sidans kort.
     cardDescription:
-      "Vill du bli snabbare och starkare? Vi hjälper dig hitta vad som håller dig tillbaka och bygger ett träningsupplägg som tar dig vidare – mer kraft, mer snabbhet och hållbar prestation.",
+      "Träna med leg. fysioterapeut – i din takt, efter din idrott. Välj mellan personliga träningspass och snabbhetspaket med laserportar.",
     overviewBlurb:
       "Träna med leg. fysioterapeut – i din takt, efter din idrott. Välj mellan personliga träningspass och snabbhetspaket med laserportar.",
     metaDescription:
