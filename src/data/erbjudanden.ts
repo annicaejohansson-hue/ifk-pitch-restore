@@ -62,7 +62,7 @@ export const OFFER_PRODUCTS: Record<OfferProductId, OfferProduct> = {
     ordinaryPriceSek: 2685,
     vatIncluded: true,
     refPrefix: "SN",
-    path: "/erbjudanden/friskvard",
+    path: "/personligtraning",
     durationNote: "Första besöket ca 75 minuter, återtest ca 45 minuter",
   },
   "friskvard-pass": {
@@ -73,7 +73,7 @@ export const OFFER_PRODUCTS: Record<OfferProductId, OfferProduct> = {
     priceSek: 990,
     vatIncluded: true,
     refPrefix: "PT",
-    path: "/erbjudanden/friskvard",
+    path: "/personligtraning",
     durationNote: "60 minuter per pass",
   },
   friskvard: {
@@ -84,7 +84,7 @@ export const OFFER_PRODUCTS: Record<OfferProductId, OfferProduct> = {
     priceSek: 2700,
     vatIncluded: true,
     refPrefix: "TP",
-    path: "/erbjudanden/friskvard",
+    path: "/personligtraning",
     durationNote: "3 individuella träningspass à 60 minuter",
   },
 };
@@ -514,9 +514,10 @@ export function getGiftLayout(id: GiftLayoutId | string) {
   );
 }
 
+/** Sidan hette tidigare /erbjudanden/friskvard; den adressen omdirigeras hit. */
 export const OFFER_PATHS = {
-  snabbhet: "/erbjudanden/friskvard",
-  friskvard: "/erbjudanden/friskvard",
+  snabbhet: "/personligtraning",
+  friskvard: "/personligtraning",
   kassa: "/erbjudanden/kassa",
   boka: "/erbjudanden/boka",
   kontakt: "/kontakt",

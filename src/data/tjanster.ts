@@ -1,10 +1,17 @@
 import performanceImage from "@/assets/IMG_9118.jpg";
+import { OFFER_PATHS } from "@/data/erbjudanden";
 
 export const injuryImageUrl =
   "https://simplifaster.com/wp-content/uploads/2025/06/Female-Soccer-Striker.jpg";
 export const heelCupImageUrl =
   "https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?auto=format&fit=crop&w=800&q=80";
 export const performanceImageUrl = performanceImage;
+
+/** Sidan Personlig träning (tidigare /erbjudanden/friskvard). */
+export const PERSONAL_TRAINING_PATH = OFFER_PATHS.friskvard;
+
+/** Tidigare tjänstesida med Steg 1–3; omdirigeras till PERSONAL_TRAINING_PATH. */
+export const PERFORMANCE_LEGACY_PATH = "/tjanster/fysisk-prestation";
 
 export const HEEL_CUP_SERVICE_PATH = "/tjanster/halkoppar-barn";
 
@@ -18,7 +25,7 @@ export const HEEL_CUP_LEGACY_PATHS = [
 export type ServiceSlug =
   | "smarta-och-skador"
   | "halkoppar-barn"
-  | "fysisk-prestation";
+  | "personlig-traning";
 
 export type ServiceSection = {
   title: string;
@@ -30,8 +37,8 @@ export type ServiceContent = {
   path: string;
   /** Full title used on Tjänster overview + detail pages */
   title: string;
-  /** Two-line split used on the Tjänster overview cards */
-  titleLines: [string, string];
+  /** One or two lines used on the Tjänster overview cards */
+  titleLines: [string] | [string, string];
   /** Shorter title used on homepage service cards */
   cardTitle: string;
   /** Optional homepage card title for small screens */
@@ -47,7 +54,7 @@ export type ServiceContent = {
   imagePosition: "left" | "right";
   intro: string[];
   sections: ServiceSection[];
-  /** When true, sections render as an ordered list (prestationskedja) */
+  /** When true, sections render as an ordered list */
   numberedSections?: boolean;
 };
 
@@ -113,46 +120,25 @@ export const services: ServiceContent[] = [
     sections: [],
   },
   {
-    slug: "fysisk-prestation",
-    path: "/tjanster/fysisk-prestation",
-    title: "Test och träning för ökad fysisk prestation",
-    titleLines: ["Test och träning för ökad", "fysisk prestation"],
+    // Egen sida utanför /tjanster: kortet länkar till sidan Personlig träning.
+    slug: "personlig-traning",
+    path: PERSONAL_TRAINING_PATH,
+    title: "Personlig träning",
+    titleLines: ["Personlig träning"],
     cardTitle: "Snabbare och starkare prestation",
     cardTitleMobile: "Starkare prestation",
     cardDescription:
       "Vill du bli snabbare och starkare? Vi hjälper dig hitta vad som håller dig tillbaka och bygger ett träningsupplägg som tar dig vidare – mer kraft, mer snabbhet och hållbar prestation.",
     overviewBlurb:
-      "Från objektiv testning till konkret träningsplan och uppföljning – så att du vet vad som fungerar och vad som behöver prioriteras.",
+      "Träna med leg. fysioterapeut Henrik Nilsson – i din takt, efter din idrott. Välj mellan personliga träningspass och snabbhetspaket med laserportar.",
     metaDescription:
-      "Test och träning för ökad fysisk prestation hos Caselo Idrottsmedicin – kapacitetstest, personligt träningsupplägg och uppföljning.",
+      "Personlig träning hos Caselo Idrottsmedicin – individuella träningspass och snabbhetspaket med laserportar.",
     image: performanceImageUrl,
-    imageAlt: "Test och träning för ökad fysisk prestation på planen",
+    imageAlt: "Henrik Nilsson guidar individuell träning på knä på Danderyd Arena",
     accentClass: "bg-[hsl(210_42%_52%)]",
     imagePosition: "left",
-    intro: [
-      "Vill du träna mer träffsäkert och se hur din fysik utvecklas över tid? Vår prestationskedja tar dig från objektiv testning till konkret träningsplan och uppföljning – så att du vet vad som fungerar och vad som behöver prioriteras härnäst.",
-    ],
-    numberedSections: true,
-    sections: [
-      {
-        title: "Steg 1: Test och analys av fysisk kapacitet",
-        paragraphs: [
-          "Vi kartlägger din acceleration, snabbhet, hoppförmåga och/eller styrka utifrån dina målsättningar. Efter besöket analyseras resultaten och du får en personlig prestationsprofil med dina styrkor och viktigaste utvecklingsområden – en tydlig utgångspunkt för fortsatt träning.",
-        ],
-      },
-      {
-        title: "Steg 2: Personligt träningsupplägg",
-        paragraphs: [
-          "Vi går igenom din prestationsprofil och omsätter resultaten till konkreta träningsprioriteringar. Du får ett individuellt träningsupplägg och praktisk vägledning i de viktigaste övningarna, så att du kan träna vidare med fokus på det som ger mest effekt för dig.",
-        ],
-      },
-      {
-        title: "Steg 3: Uppföljning för att mäta din utveckling",
-        paragraphs: [
-          "Efter träningsperioden upprepar vi relevanta tester och jämför med dina tidigare resultat. Du ser vad som har utvecklats och får nya rekommendationer inför nästa träningsperiod – så att utvecklingen fortsätter på ett medvetet sätt.",
-        ],
-      },
-    ],
+    intro: [],
+    sections: [],
   },
 ];
 

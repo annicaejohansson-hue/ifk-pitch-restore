@@ -19,7 +19,7 @@ const Tjanster = () => {
         <title>Tjänster – Caselo Idrottsmedicin</title>
         <meta
           name="description"
-          content="Smärta och skador, hälkoppsinlägg för barn med hälsmärta samt test och träning för ökad fysisk prestation hos Caselo Idrottsmedicin."
+          content="Smärta och skador, hälkoppsinlägg för barn med hälsmärta samt personlig träning hos Caselo Idrottsmedicin."
         />
       </Helmet>
 
@@ -55,25 +55,20 @@ const Tjanster = () => {
                   />
                 </div>
                 <div className="flex flex-1 flex-col p-5 text-left sm:p-6 md:p-7">
-                  <h2 className="mb-3 text-xl font-bold leading-snug tracking-tight text-primary md:text-[1.2rem] lg:text-xl">
-                    <span
-                      className={
-                        service.slug === "halkoppar-barn"
-                          ? "block"
-                          : "block md:whitespace-nowrap"
-                      }
-                    >
-                      {service.titleLines[0]}
-                    </span>
-                    <span
-                      className={
-                        service.slug === "halkoppar-barn"
-                          ? "block"
-                          : "block md:whitespace-nowrap"
-                      }
-                    >
-                      {service.titleLines[1]}
-                    </span>
+                  {/* md:min-h = två rader, så att texterna under börjar på samma höjd i alla kort */}
+                  <h2 className="mb-3 text-xl font-bold leading-snug tracking-tight text-primary md:min-h-[2.75em] md:text-[1.2rem] lg:text-xl">
+                    {service.titleLines.map((line) => (
+                      <span
+                        key={line}
+                        className={
+                          service.slug === "halkoppar-barn"
+                            ? "block"
+                            : "block md:whitespace-nowrap"
+                        }
+                      >
+                        {line}
+                      </span>
+                    ))}
                   </h2>
                   <p className="mb-4 flex-1 text-base leading-relaxed text-muted-foreground">
                     {service.overviewBlurb}

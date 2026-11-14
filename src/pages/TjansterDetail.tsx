@@ -26,6 +26,11 @@ const TjansterDetail = () => {
     return <Navigate to="/tjanster" replace />;
   }
 
+  // Tjänster med egen sida (Personlig träning) har ingen detaljsida här.
+  if (service.path !== `/tjanster/${service.slug}`) {
+    return <PermanentRedirect to={service.path} />;
+  }
+
   return (
     <main className="min-h-[calc(100vh-7rem)] bg-gradient-to-b from-muted/40 to-background">
       <Helmet>

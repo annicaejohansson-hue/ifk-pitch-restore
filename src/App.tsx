@@ -31,6 +31,8 @@ import PermanentRedirect from "@/components/PermanentRedirect";
 import {
   HEEL_CUP_LEGACY_PATHS,
   HEEL_CUP_SERVICE_PATH,
+  PERFORMANCE_LEGACY_PATH,
+  PERSONAL_TRAINING_PATH,
 } from "@/data/tjanster";
 import { VisitorProvider } from "@/context/VisitorContext";
 import Analytics from "@/components/Analytics";
@@ -44,7 +46,13 @@ const SnabbhetRedirect = () => {
     hash === "#bestall" || hash === "#presentkort" || hash === "#ingar"
       ? hash
       : "#snabbhet";
-  return <PermanentRedirect to={`/erbjudanden/friskvard${mapped}`} />;
+  return <PermanentRedirect to={`${PERSONAL_TRAINING_PATH}${mapped}`} />;
+};
+
+/** Gamla adressen /erbjudanden/friskvard: behåll frågesträng och ankare. */
+const PersonalTrainingRedirect = () => {
+  const { search, hash } = useLocation();
+  return <PermanentRedirect to={`${PERSONAL_TRAINING_PATH}${search}${hash}`} />;
 };
 
 const AppLayout = () => (
@@ -72,6 +80,10 @@ const router = createBrowserRouter(
           element={<PermanentRedirect to={HEEL_CUP_SERVICE_PATH} />}
         />
       ))}
+      <Route
+        path={PERFORMANCE_LEGACY_PATH}
+        element={<PermanentRedirect to={PERSONAL_TRAINING_PATH} />}
+      />
       <Route path="/tjanster/:slug" element={<TjansterDetail />} />
       <Route path="/om" element={<Om />} />
       <Route path="/kontakt" element={<Kontakt />} />
@@ -79,7 +91,8 @@ const router = createBrowserRouter(
       <Route path="/forening/tranare" element={<ForeningTranare />} />
       <Route path="/forening/spelare" element={<ForeningSpelare />} />
       <Route path="/erbjudanden/snabbhet" element={<SnabbhetRedirect />} />
-      <Route path="/erbjudanden/friskvard" element={<ErbjudandenFriskvard />} />
+      <Route path={PERSONAL_TRAINING_PATH} element={<ErbjudandenFriskvard />} />
+      <Route path="/erbjudanden/friskvard" element={<PersonalTrainingRedirect />} />
       <Route path="/erbjudanden/kassa" element={<ErbjudandenKassa />} />
       <Route path="/erbjudanden/boka" element={<ErbjudandenBoka />} />
       <Route path="*" element={<NotFound />} />

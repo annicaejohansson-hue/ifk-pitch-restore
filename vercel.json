@@ -17,7 +17,17 @@
     },
     {
       "source": "/erbjudanden/snabbhet",
-      "destination": "/erbjudanden/friskvard",
+      "destination": "/personligtraning",
+      "permanent": true
+    },
+    {
+      "source": "/erbjudanden/friskvard",
+      "destination": "/personligtraning",
+      "permanent": true
+    },
+    {
+      "source": "/tjanster/fysisk-prestation",
+      "destination": "/personligtraning",
       "permanent": true
     }
   ],
