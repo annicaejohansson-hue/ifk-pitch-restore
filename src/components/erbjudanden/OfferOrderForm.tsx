@@ -1,5 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
+import {
+  useForm,
+  type FieldValues,
+  type Path,
+  type UseFormReturn,
+} from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Loader2 } from "lucide-react";
@@ -269,6 +274,25 @@ type FriskvardValues = z.infer<typeof friskvardSchema>;
 const fieldClass =
   "h-11 min-h-11 w-full whitespace-normal text-base";
 
+/**
+ * Kassan kontrollerar ett steg i taget med `trigger`, och sådana fel ligger
+ * annars kvar tills man trycker på Nästa igen. Här kontrolleras de fält som
+ * redan visar ett fel om så fort något ändras, så att felet försvinner när
+ * fältet är rätt ifyllt. Fält utan fel berörs inte.
+ */
+function useRecheckShownErrors<T extends FieldValues>(form: UseFormReturn<T>) {
+  useEffect(() => {
+    const subscription = form.watch((_values, info) => {
+      if (!info.name) return;
+      const shown = (Object.keys(form.getValues()) as Path<T>[]).filter(
+        (name) => form.getFieldState(name).error,
+      );
+      if (shown.length > 0) void form.trigger(shown);
+    });
+    return () => subscription.unsubscribe();
+  }, [form]);
+}
+
 const radioItemClass =
   "flex min-h-11 items-start gap-3 rounded-lg border border-transparent px-2 py-2 hover:bg-muted/60";
 
@@ -495,6 +519,9 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
       ...friskvardDraft?.values,
     },
   });
+
+  useRecheckShownErrors(snabbhetForm);
+  useRecheckShownErrors(friskvardForm);
 
   const snabbhetRecipient = snabbhetForm.watch("recipient");
   const snabbhetGiftLayout = snabbhetForm.watch("giftLayout");

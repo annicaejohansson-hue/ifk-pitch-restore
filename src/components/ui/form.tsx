@@ -76,9 +76,10 @@ const FormLabel = React.forwardRef<
   React.ElementRef<typeof LabelPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root>
 >(({ className, ...props }, ref) => {
-  const { error, formItemId } = useFormField();
+  const { formItemId } = useFormField();
 
-  return <Label ref={ref} className={cn(error && "text-destructive", className)} htmlFor={formItemId} {...props} />;
+  // Felet visas bara på ett ställe: i den röda raden under fältet (FormMessage).
+  return <Label ref={ref} className={className} htmlFor={formItemId} {...props} />;
 });
 FormLabel.displayName = "FormLabel";
 
