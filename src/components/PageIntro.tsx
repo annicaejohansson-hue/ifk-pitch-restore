@@ -1,10 +1,10 @@
 import type { ReactNode } from "react";
-import { Link } from "react-router-dom";
+import { Link, type To } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
 type PageIntroProps = {
-  eyebrow: string;
-  eyebrowHref?: string;
+  eyebrow?: string;
+  eyebrowHref?: To;
   title: string;
   mobileTitle?: string;
   children?: ReactNode;
@@ -24,18 +24,20 @@ const PageIntro = ({
 
   return (
     <header className={cn("min-w-0 w-full max-w-full", className)}>
-      {eyebrowHref ? (
-        <p className={eyebrowClass}>
-          <Link
-            to={eyebrowHref}
-            className="transition-colors hover:text-primary/80"
-          >
-            {eyebrow}
-          </Link>
-        </p>
-      ) : (
-        <p className={eyebrowClass}>{eyebrow}</p>
-      )}
+      {eyebrow ? (
+        eyebrowHref ? (
+          <p className={eyebrowClass}>
+            <Link
+              to={eyebrowHref}
+              className="inline-flex min-h-11 items-center underline underline-offset-4 transition-colors hover:text-primary/80"
+            >
+              {eyebrow}
+            </Link>
+          </p>
+        ) : (
+          <p className={eyebrowClass}>{eyebrow}</p>
+        )
+      ) : null}
       <h1
         className={cn(
           "w-full max-w-full break-words text-3xl font-bold leading-snug tracking-tight text-foreground sm:text-4xl md:text-[2.75rem] md:leading-tight lg:text-5xl",

@@ -2,7 +2,14 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import {
+  Outlet,
+  Route,
+  createBrowserRouter,
+  createRoutesFromElements,
+  RouterProvider,
+  useLocation,
+} from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import SiteHeader from "@/components/SiteHeader";
@@ -17,6 +24,9 @@ import Forening from "@/pages/Forening";
 import ForeningTranare from "@/pages/ForeningTranare";
 import ForeningSpelare from "@/pages/ForeningSpelare";
 import HalkopparBarn from "@/pages/HalkopparBarn";
+import ErbjudandenFriskvard from "@/pages/erbjudanden/Friskvard";
+import ErbjudandenKassa from "@/pages/erbjudanden/Kassa";
+import ErbjudandenBoka from "@/pages/erbjudanden/Boka";
 import PermanentRedirect from "@/components/PermanentRedirect";
 import {
   HEEL_CUP_LEGACY_PATHS,
@@ -28,41 +38,61 @@ import ScrollToTop from "@/components/ScrollToTop";
 
 const queryClient = new QueryClient();
 
+const SnabbhetRedirect = () => {
+  const { hash } = useLocation();
+  const mapped =
+    hash === "#bestall" || hash === "#presentkort" || hash === "#ingar"
+      ? hash
+      : "#snabbhet";
+  return <PermanentRedirect to={`/erbjudanden/friskvard${mapped}`} />;
+};
+
+const AppLayout = () => (
+  <VisitorProvider>
+    <ScrollToTop />
+    <Analytics />
+    <SiteHeader />
+    <Outlet />
+  </VisitorProvider>
+);
+
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route element={<AppLayout />}>
+      <Route path="/" element={<Index />} />
+      <Route path="/ifk-stocksund" element={<IfkStocksund />} />
+      <Route path="/enebybergs-if" element={<EnebybergsIf />} />
+      <Route path="/boka" element={<Boka />} />
+      <Route path="/tjanster" element={<Tjanster />} />
+      <Route path="/tjanster/halkoppar-barn" element={<HalkopparBarn />} />
+      {HEEL_CUP_LEGACY_PATHS.map((from) => (
+        <Route
+          key={from}
+          path={from}
+          element={<PermanentRedirect to={HEEL_CUP_SERVICE_PATH} />}
+        />
+      ))}
+      <Route path="/tjanster/:slug" element={<TjansterDetail />} />
+      <Route path="/om" element={<Om />} />
+      <Route path="/kontakt" element={<Kontakt />} />
+      <Route path="/forening" element={<Forening />} />
+      <Route path="/forening/tranare" element={<ForeningTranare />} />
+      <Route path="/forening/spelare" element={<ForeningSpelare />} />
+      <Route path="/erbjudanden/snabbhet" element={<SnabbhetRedirect />} />
+      <Route path="/erbjudanden/friskvard" element={<ErbjudandenFriskvard />} />
+      <Route path="/erbjudanden/kassa" element={<ErbjudandenKassa />} />
+      <Route path="/erbjudanden/boka" element={<ErbjudandenBoka />} />
+      <Route path="*" element={<NotFound />} />
+    </Route>,
+  ),
+);
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
-        <VisitorProvider>
-          <ScrollToTop />
-          <Analytics />
-          <SiteHeader />
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/ifk-stocksund" element={<IfkStocksund />} />
-            <Route path="/enebybergs-if" element={<EnebybergsIf />} />
-            <Route path="/boka" element={<Boka />} />
-            <Route path="/tjanster" element={<Tjanster />} />
-            <Route path="/tjanster/halkoppar-barn" element={<HalkopparBarn />} />
-            {HEEL_CUP_LEGACY_PATHS.map((from) => (
-              <Route
-                key={from}
-                path={from}
-                element={<PermanentRedirect to={HEEL_CUP_SERVICE_PATH} />}
-              />
-            ))}
-            <Route path="/tjanster/:slug" element={<TjansterDetail />} />
-            <Route path="/om" element={<Om />} />
-            <Route path="/kontakt" element={<Kontakt />} />
-            <Route path="/forening" element={<Forening />} />
-            <Route path="/forening/tranare" element={<ForeningTranare />} />
-            <Route path="/forening/spelare" element={<ForeningSpelare />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </VisitorProvider>
-      </BrowserRouter>
+      <RouterProvider router={router} />
     </TooltipProvider>
   </QueryClientProvider>
 );

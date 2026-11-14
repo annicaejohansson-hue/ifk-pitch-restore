@@ -14,9 +14,14 @@
       "source": "/tjanster/halkoppsinlag",
       "destination": "/tjanster/halkoppar-barn",
       "permanent": true
+    },
+    {
+      "source": "/erbjudanden/snabbhet",
+      "destination": "/erbjudanden/friskvard",
+      "permanent": true
     }
   ],
   "rewrites": [
-    { "source": "/(.*)", "destination": "/" }
+    { "source": "/((?!api/).*)", "destination": "/" }
   ]
 }

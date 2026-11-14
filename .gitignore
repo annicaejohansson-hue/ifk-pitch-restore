@@ -12,6 +12,10 @@ dist
 dist-ssr
 *.local
 
+# Local offer order store (development)
+/data/erbjudanden-orders.json
+/data/erbjudanden-orders.jsonl
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
