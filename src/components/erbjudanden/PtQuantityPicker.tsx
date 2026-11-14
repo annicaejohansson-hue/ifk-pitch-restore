@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   PT_SESSION_LIST_PRICE_SEK,
   PT_SESSION_MAX_QUANTITY,
@@ -104,19 +104,8 @@ const PtQuantityPicker = ({
   const [amountDigits, setAmountDigits] = useState("0");
   const [source, setSource] = useState<"quantity" | "amount" | null>(null);
   // På erbjudandekortet är de två rutorna alternativ: den man inte skriver i
-  // fylls aldrig i automatiskt. I kassan följer rutorna varandra.
+  // fylls aldrig i automatiskt. I kassan finns bara antalsrutan.
   const isOffer = variant === "offer";
-
-  useEffect(() => {
-    if (isOffer || source === "amount") return;
-    if (quote) {
-      setAmountDigits(String(quote.totalSek));
-      return;
-    }
-    if (value === "" || value === "0") {
-      setAmountDigits("0");
-    }
-  }, [isOffer, quote, source, value]);
 
   const amount = parsePtAmount(amountDigits);
   const budget = amount !== null ? getPtSessionsForBudget(amount) : null;
@@ -263,65 +252,41 @@ const PtQuantityPicker = ({
     );
   }
 
+  // Kassan: bara antal. Priset räknas ut och visas som en mening under rutan.
+  const checkoutSummary = !quote
+    ? ""
+    : quote.discountPercent > 0
+      ? `${quote.quantity} pass kostar totalt ${formatOfferPrice(quote.totalSek)} (${formatOfferPrice(quote.unitPriceSek)}/pass istället för ord. pris ${formatOfferPrice(quote.listUnitPriceSek)}/pass, det vill säga ${quote.discountPercent}\u00a0% rabatt).`
+      : `${quote.quantity} pass kostar ${formatOfferPrice(quote.totalSek)}.`;
+
   return (
     <div className="min-w-0">
       <p className="mb-3 text-sm leading-relaxed text-muted-foreground md:text-base">
         Fyll i antal pass du vill köpa.
       </p>
-      <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-x-10 sm:gap-y-3">
-        <div className="min-w-0 sm:w-auto">
-          <label
-            htmlFor={`${id}-antal`}
-            className="mb-1.5 block px-2.5 text-sm font-semibold leading-snug text-foreground md:text-base"
-          >
-            Antal träningspass
-          </label>
-          <SuffixedNumberField
-            id={`${id}-antal`}
-            value={value}
-            suffix="pass"
-            minCh={1}
-            onDigitsChange={setQuantityDigits}
-          />
-        </div>
-        <div className="min-w-0 sm:w-auto">
-          <label
-            htmlFor={`${id}-summa`}
-            className="mb-1.5 block px-2.5 text-sm font-semibold leading-snug text-foreground md:text-base"
-          >
-            Totalt pris
-          </label>
-          <SuffixedNumberField
-            id={`${id}-summa`}
-            value={amountDigits}
-            suffix="kr"
-            minCh={1}
-            grouped
-            onDigitsChange={setAmountValue}
-          />
-        </div>
+      <div className="min-w-0">
+        <label
+          htmlFor={`${id}-antal`}
+          className="mb-1.5 block px-2.5 text-sm font-semibold leading-snug text-foreground md:text-base"
+        >
+          Antal träningspass
+        </label>
+        <SuffixedNumberField
+          id={`${id}-antal`}
+          value={value}
+          suffix="pass"
+          minCh={1}
+          onDigitsChange={setQuantityDigits}
+        />
       </div>
       <div className="mt-3 min-w-0" aria-live="polite">
         {tooHigh ? (
           <p className="text-sm leading-snug text-muted-foreground md:text-base">
             Du kan köpa högst {PT_SESSION_MAX_QUANTITY} pass.
           </p>
-        ) : source === "amount" && amount !== null && amount > 0 && !budget ? (
-          <p className="text-xs leading-snug text-muted-foreground/70 sm:text-sm">
-            Minst {formatOfferPrice(PT_SESSION_LIST_PRICE_SEK)} för 1 pass.
-          </p>
-        ) : source === "amount" && budget ? (
-          <p className="text-xs leading-snug text-muted-foreground/70 sm:text-sm">
-            För {formatOfferPrice(budget.amountSek)} får du {budget.quantity}{" "}
-            pass för {formatOfferPrice(budget.quote.unitPriceSek)}/pass.
-            {budget.leftoverSek > 0 && budget.toNextSessionSek !== null
-              ? ` Om du lägger till ${formatOfferPrice(budget.toNextSessionSek)} får du ytterligare ett pass.`
-              : null}
-          </p>
-        ) : quote ? (
-          <p className="text-sm leading-snug text-muted-foreground md:text-base">
-            {quote.quantity} pass kostar {formatOfferPrice(quote.unitPriceSek)}
-            /pass, det vill säga {quote.discountPercent} % rabatt.
+        ) : checkoutSummary ? (
+          <p className="break-words text-sm leading-snug text-muted-foreground md:text-base">
+            {checkoutSummary}
           </p>
         ) : null}
         {error ? (
