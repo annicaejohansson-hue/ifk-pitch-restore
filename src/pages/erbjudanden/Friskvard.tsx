@@ -108,6 +108,16 @@ const detailsPanelClass =
 const cardStackCtaClass =
   "!h-16 min-h-16 w-full min-w-0 flex-wrap items-center justify-center break-words !whitespace-normal px-1.5 py-1.5 text-center text-xs leading-tight shadow-[var(--shadow-button)] transition-[var(--transition-smooth)] hover:shadow-[var(--shadow-hover)] sm:px-2.5 sm:text-sm sm:leading-snug";
 
+/** Översta raden i kortens knappar: fet och något större än raden inom parentes. */
+const cardCtaTitleClass = "text-[13px] font-bold sm:text-base";
+
+/**
+ * Raden inom parentes i kortens knappar: ljusare färg. Mellan md och lg är
+ * knapparna som smalast (ca 147 px), så där är raden 13 px för att rymmas på en rad.
+ */
+const cardCtaNoteClass =
+  "text-secondary-foreground/70 md:max-lg:text-[13px]";
+
 const cardMoreLinkClass =
   "inline-flex min-h-11 items-center text-base font-medium text-primary underline underline-offset-4 hover:text-primary/80";
 
@@ -227,18 +237,18 @@ const Friskvard = () => {
                           })}
                         >
                           <span>
-                            <span className="font-bold">Köp pass nu</span>
+                            <span className={cardCtaTitleClass}>Köp pass nu</span>
                             <br />
-                            (boka tid senare)
+                            <span className={cardCtaNoteClass}>(boka tid senare)</span>
                           </span>
                         </Link>
                       </Button>
                       <Button asChild variant="secondary" className={cardStackCtaClass}>
                         <BookingLink>
                           <span>
-                            <span className="font-bold">Boka tid nu</span>
+                            <span className={cardCtaTitleClass}>Boka tid nu</span>
                             <br />
-                            (betala vid besöket)
+                            <span className={cardCtaNoteClass}>(betala vid besöket)</span>
                           </span>
                         </BookingLink>
                       </Button>
@@ -315,18 +325,18 @@ const Friskvard = () => {
                       <Button asChild variant="secondary" className={cardStackCtaClass}>
                         <Link to={offerCheckoutPath("snabbhet")}>
                           <span>
-                            <span className="font-bold">Köp paketet nu</span>
+                            <span className={cardCtaTitleClass}>Köp paketet nu</span>
                             <br />
-                            (boka tid senare)
+                            <span className={cardCtaNoteClass}>(boka tid senare)</span>
                           </span>
                         </Link>
                       </Button>
                       <Button asChild variant="secondary" className={cardStackCtaClass}>
                         <BookingLink>
                           <span>
-                            <span className="font-bold">Boka tid nu</span>
+                            <span className={cardCtaTitleClass}>Boka tid nu</span>
                             <br />
-                            (betala vid besöket)
+                            <span className={cardCtaNoteClass}>(betala vid besöket)</span>
                           </span>
                         </BookingLink>
                       </Button>
