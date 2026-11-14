@@ -46,7 +46,9 @@ import {
   parseFriskvardFocusIds,
   parseGiftLayoutId,
   parsePtQuantity,
-  parseSwedishPersonalId,
+  parseFullPersonalId,
+  PERSONAL_ID_FORMAT_LABEL,
+  formatPersonalIdInput,
   type GiftLayoutId,
   type OfferProductId,
 } from "@/data/erbjudanden";
@@ -131,9 +133,14 @@ const baseSchema = {
     .email("Bekräfta e-postadressen."),
   // Kunden väljer betalsätt innan beställningen skickas, så att valet kommer
   // med i det enda mejlet till Caselo.
-  paymentMethod: z.enum(["swish", "bankgiro"], {
-    errorMap: () => ({ message: "Välj hur du vill betala." }),
-  }),
+  // Fältet är tomt tills kunden har valt. Det får inte bli ett typfel i zod:
+  // då avbryts kontrollen innan reglerna som beror på flera fält körs (idrott,
+  // kvittonamn, personnummer, e-postadresserna), och de stegen släpps igenom.
+  paymentMethod: z
+    .custom<"swish" | "bankgiro" | undefined>(() => true)
+    .refine((value) => value === "swish" || value === "bankgiro", {
+      message: "Välj hur du vill betala.",
+    }),
   website: z.string().optional(),
 };
 
@@ -184,13 +191,12 @@ const requireWellnessDetails =
     }
     if (
       needsFriskvardPersonalId(amountSek) &&
-      !parseSwedishPersonalId(values.personalId)
+      !parseFullPersonalId(values.personalId)
     ) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         path: ["personalId"],
-        message:
-          "Ange ett giltigt personnummer. Det behövs på kvittot när beloppet överstiger 4 000 kr.",
+        message: `Ange ett giltigt personnummer i formatet ${PERSONAL_ID_FORMAT_LABEL}.`,
       });
     }
   };
@@ -1251,13 +1257,25 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
                       <Input
                         inputMode="numeric"
                         autoComplete="off"
+                        placeholder={PERSONAL_ID_FORMAT_LABEL}
                         className={fieldClass}
                         {...field}
+                        onChange={(event) =>
+                          field.onChange(
+                            formatPersonalIdInput(event.target.value),
+                          )
+                        }
                       />
                     </FormControl>
                     <FormDescription>
-                      Skatteverket kräver namn eller personnummer på kvittot
-                      när beloppet överstiger 4 000 kr.
+                      Skriv tolv siffror{" "}
+                      <span className="whitespace-nowrap">
+                        ({PERSONAL_ID_FORMAT_LABEL})
+                      </span>
+                      . Bindestrecket läggs in automatiskt. Skatteverket kräver
+                      namn eller personnummer på kvittot när beloppet
+                      överstiger{" "}
+                      <span className="whitespace-nowrap">4 000 kr</span>.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>

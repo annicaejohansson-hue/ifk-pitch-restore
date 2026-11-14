@@ -565,6 +565,41 @@ export function parseSwedishPersonalId(
   return null;
 }
 
+/** Formatet som personnumret skrivs i kassan. */
+export const PERSONAL_ID_FORMAT_LABEL = "ÅÅÅÅMMDD-NNNN";
+
+/**
+ * Styr inmatningen i kassan: bara siffror, högst tolv, och bindestrecket
+ * läggs in automatiskt efter de åtta första (ÅÅÅÅMMDD-NNNN).
+ */
+export function formatPersonalIdInput(value: string | null | undefined): string {
+  const digits = String(value ?? "").replace(/\D/g, "").slice(0, 12);
+  return digits.length > 8
+    ? `${digits.slice(0, 8)}-${digits.slice(8)}`
+    : digits;
+}
+
+/**
+ * Godkänner bara ett fullständigt personnummer i formatet ÅÅÅÅMMDD-NNNN med
+ * rimligt datum (dag 61–91 är samordningsnummer).
+ */
+export function parseFullPersonalId(
+  value: string | null | undefined,
+  nowMs: number = Date.now(),
+): string | null {
+  const match = /^(\d{4})(\d{2})(\d{2})-(\d{4})$/.exec(
+    String(value ?? "").trim(),
+  );
+  if (!match) return null;
+  const year = Number(match[1]);
+  const month = Number(match[2]);
+  const day = Number(match[3]);
+  if (year < 1900 || year > new Date(nowMs).getFullYear()) return null;
+  if (month < 1 || month > 12) return null;
+  if (!((day >= 1 && day <= 31) || (day >= 61 && day <= 91))) return null;
+  return `${match[1]}${match[2]}${match[3]}-${match[4]}`;
+}
+
 export function isOfferSalesOpen(nowMs: number = Date.now()): boolean {
   const end = Date.parse(OFFER_SALES_END_ISO);
   return Number.isFinite(end) && nowMs <= end;
