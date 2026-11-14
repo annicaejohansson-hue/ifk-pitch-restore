@@ -260,24 +260,6 @@ const PaymentPanel = ({ payment, onClaimed, onBack }: PaymentPanelProps) => {
         </p>
       ) : null}
 
-      <p className="mt-6 text-sm leading-relaxed text-muted-foreground">
-        Frågor? Mejla{" "}
-        <a
-          className="font-medium text-primary underline underline-offset-4 hover:text-primary/80"
-          href={`mailto:${OFFER_CONTACT_EMAIL}`}
-        >
-          {OFFER_CONTACT_EMAIL}
-        </a>
-        . Boka tid när du har fått bekräftelsen, via{" "}
-        <Link
-          className="font-medium text-primary underline underline-offset-4 hover:text-primary/80"
-          to={OFFER_PATHS.boka}
-        >
-          bokningssidan för erbjudanden
-        </Link>
-        .
-      </p>
-
       {/* Sist i steget, som Föregående/Nästa i stegen före. */}
       <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
         <Button
@@ -316,9 +298,29 @@ const PaymentPanel = ({ payment, onClaimed, onBack }: PaymentPanelProps) => {
 
         {/* Visas först när kunden har klickat på Jag har betalat – Slutför. */}
         {payment.customerReportedPayment ? (
-          <p className="mt-4 rounded-xl bg-muted px-4 py-3 text-sm leading-relaxed text-foreground md:text-base">
-            När betalningen syns hos Caselo skickas underlagen inom 24 timmar.
-          </p>
+          <>
+            <p className="mt-4 rounded-xl bg-muted px-4 py-3 text-sm leading-relaxed text-foreground md:text-base">
+              När betalningen syns hos Caselo skickas underlagen inom 24
+              timmar.
+            </p>
+            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+              Frågor? Mejla{" "}
+              <a
+                className="font-medium text-primary underline underline-offset-4 hover:text-primary/80"
+                href={`mailto:${OFFER_CONTACT_EMAIL}`}
+              >
+                {OFFER_CONTACT_EMAIL}
+              </a>
+              . Boka tid när du har fått bekräftelsen, via{" "}
+              <Link
+                className="font-medium text-primary underline underline-offset-4 hover:text-primary/80"
+                to={OFFER_PATHS.boka}
+              >
+                bokningssidan för erbjudanden
+              </Link>
+              .
+            </p>
+          </>
         ) : null}
       </div>
     </div>
