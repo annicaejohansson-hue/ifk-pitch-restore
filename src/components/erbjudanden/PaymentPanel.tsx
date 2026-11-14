@@ -264,8 +264,7 @@ const PaymentPanel = ({ payment, onClaimed, onBack }: PaymentPanelProps) => {
         <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
           Skanna QR-koden med Swish-appen, eller öppna Swish på mobilen.
           Belopp och referens fylls i automatiskt. Du kan också swisha
-          manuellt med numret och referensen ovan. Öppnad Swish-app betyder
-          inte att betalningen är mottagen.
+          manuellt med numret och referensen ovan.
         </p>
       ) : null}
 
