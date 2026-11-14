@@ -305,7 +305,7 @@ type OfferOrderFormProps = {
 
 const PT_CHECKOUT_STEPS = [
   {
-    title: "Pass och fokus",
+    title: "Tjänst",
     fields: ["participantName", "quantity", "focuses", "sportName"],
   },
   {
