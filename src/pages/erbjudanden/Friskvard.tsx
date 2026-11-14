@@ -28,7 +28,6 @@ import {
   OFFER_NO_TIME_LINE,
   OFFER_PATHS,
   OFFER_PRODUCTS,
-  OFFER_SALES_UNTIL_LINE,
   OFFER_WEATHER_LINE,
   PT_SESSION_DEFAULT_QUANTITY,
   PT_SESSION_LIST_PRICE_SEK,
@@ -312,9 +311,6 @@ const Friskvard = () => {
                       </li>
                     ))}
                   </ol>
-                  <p className={`${offerLeadClass} mb-5`}>
-                    {OFFER_SALES_UNTIL_LINE}
-                  </p>
                   <div className="mt-auto flex flex-col gap-3 pt-8">
                     <div className="grid min-w-0 grid-cols-1 items-stretch gap-2 sm:grid-cols-2 sm:gap-3">
                       <Button asChild variant="secondary" className={cardStackCtaClass}>

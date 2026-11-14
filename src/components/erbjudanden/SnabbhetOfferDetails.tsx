@@ -4,6 +4,7 @@ import {
   OFFER_CONTACT_EMAIL,
   OFFER_HOURS_LINE,
   OFFER_NO_TIME_LINE,
+  OFFER_SALES_UNTIL_LINE,
   OFFER_SURFACE_LINE,
   SNABBHET_DETAIL_POINTS,
 } from "@/data/erbjudanden";
@@ -15,6 +16,7 @@ const SnabbhetOfferDetails = () => {
         {SNABBHET_DETAIL_POINTS.map((detail) => (
           <li key={detail}>{detail}</li>
         ))}
+        <li>{OFFER_SALES_UNTIL_LINE}</li>
         <li>{OFFER_HOURS_LINE}</li>
         <li>{OFFER_NO_TIME_LINE}</li>
         <li>{OFFER_SURFACE_LINE}</li>
