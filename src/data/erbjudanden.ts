@@ -24,9 +24,9 @@ export const OFFER_WEATHER_LINE =
 export const OFFER_SURFACE_LINE =
   "Testerna förutsätter lämpligt underlag. Vid exempelvis snö eller is kan tiden behöva bokas om.";
 
-/** Numrerade punkter under "I paketet ingår:" på kortet för Snabbhetspaketet. */
+/** Numrerade punkter under "I paketet ingår två tillfällen:" på kortet för Snabbhetspaketet. */
 export const SNABBHET_OVERVIEW_POINTS = [
-  "Du värmer upp med instruktör och testar din snabbhet med laserportar. Du får ett individuellt träningsprogram och provar övningarna med vägledning.",
+  "Du testar din snabbhet med laserportar, efter uppvärmning med instruktör. Du får ett individuellt träningsprogram och provar övningarna med vägledning.",
   "Du kommer tillbaka efter cirka åtta veckor för uppföljande snabbhetstest.",
 ] as const;
 

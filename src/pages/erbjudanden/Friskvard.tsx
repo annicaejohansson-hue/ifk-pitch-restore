@@ -290,13 +290,9 @@ const Friskvard = () => {
                   <p className={`${offerLeadClass} mb-4`}>
                     För dig som vill bli snabbare – och veta vad som faktiskt tar
                     dig dit.
-                    <span className="mt-3 block">
-                      Du får se var du står i dag, vad du ska träna på och hur du
-                      har utvecklats när du kommer tillbaka.
-                    </span>
                   </p>
                   <p id="snabbhet-ingar-rubrik" className={`${offerLeadClass} mb-2.5`}>
-                    I paketet ingår:
+                    I paketet ingår två tillfällen:
                   </p>
                   <ol
                     aria-labelledby="snabbhet-ingar-rubrik"
