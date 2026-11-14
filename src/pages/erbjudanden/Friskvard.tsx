@@ -165,10 +165,10 @@ const Friskvard = () => {
           <div className={offerNarrowClass}>
             <PageIntro
               className="mb-8 md:mb-10"
-              title="Personlig träning i Danderyd"
+              title="Personlig träning"
             >
-              Träna med leg. fysioterapeut Henrik Nilsson – i din takt, efter
-              din idrott.
+              Träna med leg. fysioterapeut Henrik Nilsson i Danderyd – i din
+              takt, efter din idrott.
             </PageIntro>
 
             <aside className="mb-8 rounded-2xl bg-secondary/45 px-5 py-4 sm:px-6 sm:py-5">
