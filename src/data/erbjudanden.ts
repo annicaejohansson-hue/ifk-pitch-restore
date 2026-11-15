@@ -427,6 +427,23 @@ export function defaultGiftInscription(
   return `Presentkort på ${label}`;
 }
 
+/** Landsida som QR-koden på presentkortet pekar till. */
+export const GIFT_CARD_LANDING_PATH = "/personligtraning";
+
+/**
+ * QR-adressen till personlig träning. Lokalt används samma host så att
+ * förhandsgranskningen går att testa; på sajten används den publika adressen.
+ */
+export function giftCardLandingUrl(): string {
+  if (typeof window !== "undefined") {
+    const { hostname, origin } = window.location;
+    if (hostname === "localhost" || hostname === "127.0.0.1") {
+      return `${origin}${GIFT_CARD_LANDING_PATH}`;
+    }
+  }
+  return `https://www.caseloidrottsmedicin.se${GIFT_CARD_LANDING_PATH}`;
+}
+
 export const GIFT_LAYOUT_OPTIONS: {
   id: GiftLayoutId;
   label: string;

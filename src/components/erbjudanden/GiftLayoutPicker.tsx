@@ -26,6 +26,7 @@ type GiftLayoutPickerProps = {
   hidePreview?: boolean;
   productName?: string;
   inscription?: string;
+  quantity?: number;
 };
 
 const GiftLayoutPicker = ({
@@ -37,6 +38,7 @@ const GiftLayoutPicker = ({
   hidePreview = false,
   productName,
   inscription,
+  quantity,
 }: GiftLayoutPickerProps) => {
   const [previewId, setPreviewId] = useState<GiftLayoutId | null>(null);
   const preview = GIFT_LAYOUT_OPTIONS.find((item) => item.id === previewId);
@@ -79,6 +81,7 @@ const GiftLayoutPicker = ({
               size="large"
               productName={productName}
               inscription={inscription}
+              quantity={quantity}
             />
             <Button
               type="button"
@@ -104,6 +107,7 @@ const GiftLayoutPicker = ({
                 size="large"
                 productName={productName}
                 inscription={inscription}
+                quantity={quantity}
               />
             ) : null}
           </DialogContent>
@@ -152,6 +156,7 @@ const GiftLayoutPicker = ({
                   <GiftCardPreview
                     layout={option.id}
                     productName={productName}
+                    quantity={quantity}
                   />
                 </div>
                 <div className="mt-3">
@@ -182,6 +187,8 @@ const GiftLayoutPicker = ({
               layout={previewId}
               size="large"
               productName={productName}
+              inscription={inscription}
+              quantity={quantity}
             />
           ) : null}
           {selectable && previewId ? (

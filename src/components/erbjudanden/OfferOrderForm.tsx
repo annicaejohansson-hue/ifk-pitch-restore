@@ -1107,6 +1107,7 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
     recipient: "self" | "gift",
     layout: GiftLayoutId,
     inscription: string,
+    quantity?: number | null,
   ) => (
     <>
       <FormField
@@ -1153,6 +1154,7 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
             size="large"
             productName={giftProductLabel}
             inscription={inscription || giftDefaultInscription}
+            quantity={quantity ?? undefined}
           />
         </div>
         <FormField
@@ -1173,6 +1175,7 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
                   onChange={field.onChange}
                   productName={giftProductLabel}
                   inscription={inscription || giftDefaultInscription}
+                  quantity={quantity ?? undefined}
                 />
               </FormControl>
               <FormMessage />
@@ -1731,6 +1734,7 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
                   friskvardRecipient,
                   friskvardGiftLayout,
                   friskvardGiftInscription,
+                  selectedQuantity,
                 )}
               </div>
 

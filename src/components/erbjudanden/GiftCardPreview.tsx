@@ -1,5 +1,10 @@
+import { QRCodeSVG } from "qrcode.react";
 import { cn } from "@/lib/utils";
-import type { GiftLayoutId } from "@/data/erbjudanden";
+import {
+  giftCardLandingUrl,
+  OFFER_PLACE,
+  type GiftLayoutId,
+} from "@/data/erbjudanden";
 import logoNavy from "@/assets/caselo-logo-navy.png";
 import logoWhite from "@/assets/caselo-logo-white.png";
 
@@ -8,6 +13,8 @@ type GiftCardPreviewProps = {
   size?: "tile" | "large";
   productName?: string;
   inscription?: string;
+  /** Antal träningspass – visas på personlig träning-kort. */
+  quantity?: number;
   className?: string;
 };
 
@@ -62,6 +69,7 @@ const GiftCardPreview = ({
   size = "tile",
   productName = "Snabbhetspaket",
   inscription,
+  quantity,
   className,
 }: GiftCardPreviewProps) => {
   const large = size === "large";
@@ -72,6 +80,11 @@ const GiftCardPreview = ({
   const isChristmas = TREE_LAYOUTS.includes(layout);
   const isBirthday = layout === "fodelsedag";
   const isLight = layout === "fodelsedag";
+  const qrUrl = giftCardLandingUrl();
+  const sessionLine =
+    typeof quantity === "number" && quantity > 0
+      ? `${quantity} träningspass`
+      : null;
 
   const kicker = large
     ? "text-[0.65rem] font-medium uppercase tracking-[0.22em] sm:text-xs"
@@ -85,7 +98,7 @@ const GiftCardPreview = ({
 
   const shell = cn(
     "relative flex h-full min-w-0 flex-col overflow-hidden rounded-xl text-left shadow-[0_10px_30px_-12px_rgba(14,22,39,0.45)]",
-    large ? "min-h-[18rem] p-6 sm:p-8" : "min-h-[13.75rem] p-3 sm:p-4",
+    large ? "min-h-[22rem] p-6 sm:min-h-[24rem] sm:p-8" : "min-h-[13.75rem] p-3 sm:p-4",
     layout === "neutral" && "bg-[#0e1627] text-[#f5f2ea]",
     layout === "julklapp-gron" && "bg-[#1c2621] text-[#f3ead7]",
     layout === "julklapp-rod" && "bg-[#3a1c24] text-[#f6ead8]",
@@ -103,6 +116,8 @@ const GiftCardPreview = ({
         ? "text-[#f6ead8]/75"
         : "text-[#f5f2ea]/80";
   const iconColor = isLight ? "text-[#8a7040]" : "text-[#c6b07a]";
+  const qrFg = isLight ? "#1b2430" : "#0e1627";
+  const qrBg = isLight ? "#ebe0cc" : "#ffffff";
 
   return (
     <article className={shell}>
@@ -149,18 +164,44 @@ const GiftCardPreview = ({
         {productName}
       </p>
       <div className={cn("mt-2 h-px w-10", ruleColor)} aria-hidden="true" />
-      <div className="min-h-0 flex-1" aria-hidden="true" />
-      <img
-        src={isLight ? logoNavy : logoWhite}
-        alt=""
-        aria-hidden="true"
-        className={cn(
-          "pointer-events-none absolute z-[1] w-auto max-w-[42%] object-contain",
-          large
-            ? "bottom-5 right-5 h-8 sm:bottom-6 sm:right-6 sm:h-10"
-            : "bottom-3 right-3 h-5 sm:bottom-4 sm:right-4 sm:h-6",
+
+      {/* Fakta så att gåvomottagaren förstår vad presentkortet gäller. */}
+      <ul className={cn(body, "mt-3 space-y-0.5", productColor)}>
+        {sessionLine ? <li>{sessionLine}</li> : null}
+        <li>Hos leg. fysioterapeut Henrik Nilsson</li>
+        <li>{OFFER_PLACE}</li>
+      </ul>
+
+      <div className="mt-4 flex min-h-0 flex-1 items-end justify-between gap-3">
+        {large ? (
+          <figure className="shrink-0 rounded-md bg-white p-1.5 shadow-sm">
+            <QRCodeSVG
+              value={qrUrl}
+              size={96}
+              level="M"
+              marginSize={1}
+              bgColor={qrBg}
+              fgColor={qrFg}
+              className="h-20 w-20 sm:h-24 sm:w-24"
+              title={`QR-kod till ${qrUrl}`}
+            />
+            <figcaption className="sr-only">
+              Skanna för mer information om personlig träning hos Caselo.
+            </figcaption>
+          </figure>
+        ) : (
+          <span className="block" aria-hidden="true" />
         )}
-      />
+        <img
+          src={isLight ? logoNavy : logoWhite}
+          alt=""
+          aria-hidden="true"
+          className={cn(
+            "pointer-events-none z-[1] ml-auto w-auto max-w-[42%] object-contain",
+            large ? "h-8 sm:h-10" : "h-5 sm:h-6",
+          )}
+        />
+      </div>
     </article>
   );
 };
