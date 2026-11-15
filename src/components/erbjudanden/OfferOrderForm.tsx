@@ -306,7 +306,14 @@ type OfferOrderFormProps = {
 const PT_CHECKOUT_STEPS = [
   {
     title: "Tjänst",
-    fields: ["participantName", "quantity", "focuses", "sportName"],
+    // Bekräftelsen hör till tjänsten, inte till betalningen.
+    fields: [
+      "participantName",
+      "quantity",
+      "focuses",
+      "sportName",
+      "personalConfirm",
+    ],
   },
   {
     title: "Presentkort",
@@ -323,7 +330,6 @@ const PT_CHECKOUT_STEPS = [
       "buyerEmail",
       "buyerEmailConfirm",
       "paymentMethod",
-      "personalConfirm",
     ],
   },
 ] as const;
@@ -791,7 +797,8 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
       errors.quantity ||
       errors.participantName ||
       errors.focuses ||
-      errors.sportName
+      errors.sportName ||
+      errors.personalConfirm
     ) {
       goToCheckoutStep(0);
       return;
@@ -1597,6 +1604,30 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
                     </FormItem>
                   )}
                 />
+                <FormField
+                  control={friskvardForm.control}
+                  name="personalConfirm"
+                  render={({ field }) => (
+                    <FormItem>
+                      <label className="flex min-h-11 items-start gap-3">
+                        <FormControl>
+                          <Checkbox
+                            className="mt-1 h-5 w-5"
+                            checked={field.value === true}
+                            onCheckedChange={(checked) =>
+                              field.onChange(checked === true)
+                            }
+                          />
+                        </FormControl>
+                        <span className="text-sm leading-relaxed text-foreground md:text-base">
+                          Jag förstår att träningen är personlig och inte kan
+                          överlåtas eller bytas mot andra tjänster.
+                        </span>
+                      </label>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
 
               <div className={cn("space-y-5", checkoutStep !== 1 && "hidden")}>
@@ -1645,30 +1676,6 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
                   </div>
                 ) : null}
                 {sharedFields(friskvardForm)}
-                <FormField
-                  control={friskvardForm.control}
-                  name="personalConfirm"
-                  render={({ field }) => (
-                    <FormItem>
-                      <label className="flex min-h-11 items-start gap-3">
-                        <FormControl>
-                          <Checkbox
-                            className="mt-1 h-5 w-5"
-                            checked={field.value === true}
-                            onCheckedChange={(checked) =>
-                              field.onChange(checked === true)
-                            }
-                          />
-                        </FormControl>
-                        <span className="text-sm leading-relaxed text-foreground md:text-base">
-                          Jag förstår att träningen är personlig och inte kan
-                          överlåtas eller bytas mot andra tjänster.
-                        </span>
-                      </label>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
                 {personalDataNote}
                 {submitErrorNote}
                 {paymentInstructions}
