@@ -192,7 +192,7 @@ const giftLayoutSchema = z.enum(
 );
 
 const giftDecorationSchema = z.enum(
-  ["none", "gran", "stjarna", "hjarta", "snoflinga", "boll"],
+  ["none", "gran", "stjarna", "hjarta", "snoflinga", "medalj"],
   { required_error: "Välj dekoration." },
 );
 

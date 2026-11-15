@@ -130,26 +130,22 @@ const GoldSnowflake = ({ className }: { className?: string }) => (
   </svg>
 );
 
-/**
- * Enkel fotbollssymbol: cirkel + mittpentagon. Läses som boll utan
- * plottriga sömmar i liten storlek.
- */
-const GoldBall = ({ className }: { className?: string }) => (
+/** Ren medalj – allmänt idrottssymbol utan specifik sport. */
+const GoldMedal = ({ className }: { className?: string }) => (
   <svg
     viewBox="0 0 24 24"
     className={className}
     aria-hidden="true"
-    fill="currentColor"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.4"
+    strokeLinecap="round"
+    strokeLinejoin="round"
   >
-    <circle
-      cx="12"
-      cy="12"
-      r="8.5"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.4"
-    />
-    <path d="M12 8.2 14.6 10.1 13.6 13.2 10.4 13.2 9.4 10.1Z" />
+    <path d="M8.2 2.8 12 9.2 15.8 2.8" />
+    <path d="M9.4 2.8h5.2" />
+    <circle cx="12" cy="14.2" r="6" />
+    <circle cx="12" cy="14.2" r="3.2" />
   </svg>
 );
 
@@ -164,7 +160,7 @@ const DecorationIcon = ({
   if (id === "stjarna") return <GoldSparkle className={className} />;
   if (id === "hjarta") return <GoldHeart className={className} />;
   if (id === "snoflinga") return <GoldSnowflake className={className} />;
-  return <GoldBall className={className} />;
+  return <GoldMedal className={className} />;
 };
 
 const GiftCardPreview = ({

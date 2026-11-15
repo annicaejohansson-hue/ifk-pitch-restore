@@ -435,7 +435,7 @@ export type GiftDecorationId =
   | "stjarna"
   | "hjarta"
   | "snoflinga"
-  | "boll";
+  | "medalj";
 
 export const DEFAULT_GIFT_DECORATION: GiftDecorationId = "none";
 
@@ -448,7 +448,7 @@ export const GIFT_DECORATION_OPTIONS: {
   { id: "stjarna", label: "Stjärna" },
   { id: "hjarta", label: "Hjärta" },
   { id: "snoflinga", label: "Snöflinga" },
-  { id: "boll", label: "Fotboll" },
+  { id: "medalj", label: "Medalj" },
 ];
 
 const GIFT_DECORATION_IDS = new Set(
@@ -488,8 +488,15 @@ export function parseGiftDecorationId(
   ) {
     return "snoflinga";
   }
-  if (normalized === "boll" || normalized === "ball" || normalized === "fotboll") {
-    return "boll";
+  if (
+    normalized === "medalj" ||
+    normalized === "medal" ||
+    // Äldre val (fotboll) mappas till medalj.
+    normalized === "boll" ||
+    normalized === "ball" ||
+    normalized === "fotboll"
+  ) {
+    return "medalj";
   }
   return isGiftDecorationId(normalized) ? normalized : null;
 }
