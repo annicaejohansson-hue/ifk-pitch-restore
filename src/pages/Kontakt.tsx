@@ -1,8 +1,10 @@
 import { useEffect } from "react";
 import { Helmet } from "react-helmet";
+import { Link } from "react-router-dom";
 import { Clock, ExternalLink, Mail, MapPin } from "lucide-react";
 import PageIntro from "@/components/PageIntro";
 import sportsImage from "@/assets/caselo-banner-kontakt.jpg";
+import { PRIVACY_PATH } from "@/pages/Personuppgifter";
 
 const ADDRESS_LINE_1 = "Rinkebyvägen 4";
 const ADDRESS_LINE_2 = "182 36 Danderyd";
@@ -79,6 +81,14 @@ const Kontakt = () => {
                         </a>
                       </li>
                     </ul>
+                    <p className="mt-5 text-sm leading-relaxed text-muted-foreground md:mt-6 md:text-base">
+                      <Link
+                        to={PRIVACY_PATH}
+                        className="font-medium text-primary underline underline-offset-4 hover:text-primary/80"
+                      >
+                        Personuppgiftspolicy
+                      </Link>
+                    </p>
                   </div>
 
                   <div>
