@@ -1,11 +1,9 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Check, ChevronDown, Copy, Loader2 } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
-import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
   OFFER_CONTACT_EMAIL,
-  OFFER_PATHS,
   formatOfferPrice,
 } from "@/data/erbjudanden";
 import {
@@ -351,20 +349,20 @@ const PaymentPanel = ({
         >
           Föregående
         </Button>
-        <Button
-          type="button"
-          variant="secondary"
-          className={offerGoldCtaClass}
-          onClick={() => void claim()}
-          disabled={claiming || payment.customerReportedPayment}
-        >
-          {claiming ? (
-            <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
-          ) : null}
-          {payment.customerReportedPayment
-            ? "Tack, vi kontrollerar betalningen"
-            : CLAIM_BUTTON_LABEL}
-        </Button>
+        {!payment.customerReportedPayment ? (
+          <Button
+            type="button"
+            variant="secondary"
+            className={offerGoldCtaClass}
+            onClick={() => void claim()}
+            disabled={claiming}
+          >
+            {claiming ? (
+              <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+            ) : null}
+            {CLAIM_BUTTON_LABEL}
+          </Button>
+        ) : null}
       </div>
 
       <div aria-live="polite">
@@ -379,32 +377,21 @@ const PaymentPanel = ({
 
         {/* Visas först när kunden har klickat på Jag har betalat – Slutför. */}
         {payment.customerReportedPayment ? (
-          <>
-            <p className="mt-4 rounded-xl bg-muted px-4 py-3 text-sm leading-relaxed text-foreground md:text-base">
-              När betalningen syns hos Caselo skickas underlagen inom 24
-              timmar.
-              {reportedBankgiro
-                ? " En bankgirobetalning syns normalt hos Caselo efter 1–2 bankdagar."
-                : null}
-            </p>
-            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-              Frågor? Mejla{" "}
-              <a
-                className="font-medium text-primary underline underline-offset-4 hover:text-primary/80"
-                href={`mailto:${OFFER_CONTACT_EMAIL}`}
-              >
-                {OFFER_CONTACT_EMAIL}
-              </a>
-              . Boka tid när du har fått bekräftelsen, via{" "}
-              <Link
-                className="font-medium text-primary underline underline-offset-4 hover:text-primary/80"
-                to={OFFER_PATHS.boka}
-              >
-                bokningssidan för erbjudanden
-              </Link>
-              .
-            </p>
-          </>
+          <p className="mt-4 rounded-xl bg-muted px-4 py-3 text-sm leading-relaxed text-foreground md:text-base">
+            Tack, vi kontrollerar betalningen. När betalningen syns hos Caselo
+            skickas kvitto och/eller presentkort inom 24 timmar. Om du behöver
+            kvitto eller presentkort tidigare, maila{" "}
+            <a
+              className="font-medium text-primary underline underline-offset-4 hover:text-primary/80"
+              href={`mailto:${OFFER_CONTACT_EMAIL}`}
+            >
+              {OFFER_CONTACT_EMAIL}
+            </a>
+            .
+            {reportedBankgiro
+              ? " En bankgirobetalning syns normalt hos Caselo efter 1–2 bankdagar."
+              : null}
+          </p>
         ) : null}
       </div>
     </div>

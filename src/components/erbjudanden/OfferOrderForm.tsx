@@ -1596,7 +1596,7 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
                       {submitting ? (
                         <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
                       ) : null}
-                      Visa betalningsuppgifter
+                      Gå vidare till betalning
                     </Button>
                   )}
                 </div>
@@ -1896,7 +1896,7 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
                       {submitting ? (
                         <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
                       ) : null}
-                      Visa betalningsuppgifter
+                      Gå vidare till betalning
                     </Button>
                   )}
                 </div>
@@ -1911,7 +1911,7 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
               {payment.orderRef}
             </span>
             {formDirty
-              ? ". Eftersom du har ändrat något får du en ny betalningsreferens när du klickar på Visa betalningsuppgifter."
+              ? ". Eftersom du har ändrat något får du en ny betalningsreferens när du klickar på Gå vidare till betalning."
               : " – betalningsuppgifterna finns under steget Betalning. Om du ändrar något får du en ny betalningsreferens."}
           </p>
         ) : null}
