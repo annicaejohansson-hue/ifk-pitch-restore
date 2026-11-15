@@ -123,8 +123,8 @@ export const services: ServiceContent[] = [
     // Egen sida utanför /tjanster: kortet länkar till sidan Personlig träning.
     slug: "personlig-traning",
     path: PERSONAL_TRAINING_PATH,
-    title: "Personlig träning",
-    titleLines: ["Personlig träning"],
+    title: "Personlig träning efter dina mål",
+    titleLines: ["Personlig träning", "efter dina mål"],
     cardTitle: "Personlig träning efter dina mål",
     // Samma text som på Tjänster-sidans kort.
     cardDescription:

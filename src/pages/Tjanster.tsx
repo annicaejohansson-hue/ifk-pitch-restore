@@ -28,7 +28,7 @@ const Tjanster = () => {
           <PageIntro
             className="mb-8 md:mb-10"
             eyebrow="Tjänster"
-            title="Bedömning, behandling och träning efter dina mål"
+            title="Bedömning, behandling och träning"
           >
             Hos Caselo Idrottsmedicin får du evidensbaserad vård anpassad efter
             dig – oavsett om målet är att bli av med smärta, återgå till idrott
