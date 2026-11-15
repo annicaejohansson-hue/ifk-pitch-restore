@@ -1574,12 +1574,12 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
                                     render={({ field: sportField }) => (
                                       <FormItem>
                                         <FormLabel>
-                                          Vilken idrott/motionsform?
+                                          Vilken idrott/motionsform?{" "}
+                                          <span className="font-normal text-muted-foreground">
+                                            (Så att passen kan anpassas efter
+                                            idrotten.)
+                                          </span>
                                         </FormLabel>
-                                        <FormDescription>
-                                          Så att passen kan anpassas efter
-                                          idrotten.
-                                        </FormDescription>
                                         <FormControl>
                                           <Input
                                             className={fieldClass}
