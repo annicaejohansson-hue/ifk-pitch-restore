@@ -19,6 +19,8 @@ type PtQuantityPickerProps = {
   onChange: (digits: string) => void;
   error?: string;
   variant?: "checkout" | "offer";
+  /** När föräldern redan har en rubrik – dölj den inbyggda instruktionen. */
+  hideInstruction?: boolean;
 };
 
 const formatGroupedDigits = (digits: string): string => {
@@ -98,6 +100,7 @@ const PtQuantityPicker = ({
   onChange,
   error,
   variant = "checkout",
+  hideInstruction = false,
 }: PtQuantityPickerProps) => {
   const quantity = parsePtQuantity(value);
   const quote = quantity ? getPtSessionQuote(quantity) : null;
@@ -255,13 +258,18 @@ const PtQuantityPicker = ({
   // Kassan: bara antal. Priset redovisas i en ruta under antalsfältet.
   return (
     <div className="min-w-0">
-      {/* Instruktionen är också etiketten till antalsrutan. */}
-      <label
-        htmlFor={`${id}-antal`}
-        className="mb-3 block text-sm font-semibold leading-snug text-foreground md:text-base"
-      >
-        Fyll i antal pass du vill köpa.
-      </label>
+      {hideInstruction ? (
+        <label htmlFor={`${id}-antal`} className="sr-only">
+          Antal pass
+        </label>
+      ) : (
+        <label
+          htmlFor={`${id}-antal`}
+          className="mb-3 block text-sm font-semibold leading-snug text-foreground md:text-base"
+        >
+          Fyll i antal pass du vill köpa.
+        </label>
+      )}
       <div className="min-w-0">
         <SuffixedNumberField
           id={`${id}-antal`}

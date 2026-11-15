@@ -1522,131 +1522,168 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
                 onSelect={goToCheckoutStep}
               />
 
-              <div className={cn("space-y-5", checkoutStep !== 0 && "hidden")}>
-                <FormField
-                  control={friskvardForm.control}
-                  name="participantName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>
-                        Förnamn och efternamn på den som ska träna
-                      </FormLabel>
-                      <FormControl>
-                        <Input autoComplete="name" className={fieldClass} {...field} />
-                      </FormControl>
-                      <FormDescription>
-                        Träningen är personlig och knuten till den här
-                        deltagaren.
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={friskvardForm.control}
-                  name="quantity"
-                  render={({ field, fieldState }) => (
-                    <FormItem>
-                      <PtQuantityPicker
-                        id="pt-antal-form"
-                        value={field.value}
-                        error={fieldState.error?.message}
-                        onChange={(digits) => {
-                          field.onChange(digits || "0");
-                          const next = new URLSearchParams(searchParams);
-                          next.set("antal", digits || "0");
-                          setSearchParams(next, { replace: true });
-                        }}
-                      />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={friskvardForm.control}
-                  name="focuses"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Fokus för passen</FormLabel>
-                      <FormDescription>
-                        Välj ett eller flera fokus.
-                      </FormDescription>
-                      <div className="space-y-1">
-                        {FRISKVARD_FOCUS_OPTIONS.map((option) => {
-                          const checked = field.value?.includes(option.id);
-                          return (
-                            <div key={option.id}>
-                              <label className={radioItemClass}>
-                                <Checkbox
-                                  className="mt-1 h-5 w-5"
-                                  checked={checked}
-                                  onCheckedChange={(value) => {
-                                    const current = field.value ?? [];
-                                    field.onChange(
-                                      value === true
-                                        ? [...current, option.id]
-                                        : current.filter(
-                                            (id) => id !== option.id,
-                                          ),
-                                    );
-                                  }}
-                                />
-                                <span className="min-w-0 pt-0.5">
-                                  <span className="block text-base leading-snug">
-                                    {option.label}
-                                  </span>
-                                  <span className="mt-0.5 block text-sm leading-snug text-muted-foreground">
-                                    {option.summary}
-                                  </span>
-                                </span>
-                              </label>
-                              {option.id === "fys-idrott" ? (
-                                <div
+              {/* Tjänst-steget: tre tydliga frågor + bekräftelse sist. */}
+              <div className={cn("space-y-8", checkoutStep !== 0 && "hidden")}>
+                <section className="space-y-3" aria-labelledby="pt-tjanst-vem">
+                  <h3
+                    id="pt-tjanst-vem"
+                    className="text-base font-semibold leading-snug text-foreground md:text-lg"
+                  >
+                    1. Vem ska träna?
+                  </h3>
+                  <FormField
+                    control={friskvardForm.control}
+                    name="participantName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          Förnamn och efternamn
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            autoComplete="name"
+                            className={fieldClass}
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </section>
+
+                <section
+                  className="space-y-3 border-t border-border/60 pt-6"
+                  aria-labelledby="pt-tjanst-antal"
+                >
+                  <h3
+                    id="pt-tjanst-antal"
+                    className="text-base font-semibold leading-snug text-foreground md:text-lg"
+                  >
+                    2. Antal pass
+                  </h3>
+                  <FormField
+                    control={friskvardForm.control}
+                    name="quantity"
+                    render={({ field, fieldState }) => (
+                      <FormItem>
+                        <PtQuantityPicker
+                          id="pt-antal-form"
+                          value={field.value}
+                          error={fieldState.error?.message}
+                          hideInstruction
+                          onChange={(digits) => {
+                            field.onChange(digits || "0");
+                            const next = new URLSearchParams(searchParams);
+                            next.set("antal", digits || "0");
+                            setSearchParams(next, { replace: true });
+                          }}
+                        />
+                      </FormItem>
+                    )}
+                  />
+                </section>
+
+                <section
+                  className="space-y-3 border-t border-border/60 pt-6"
+                  aria-labelledby="pt-tjanst-fokus"
+                >
+                  <div className="space-y-1">
+                    <h3
+                      id="pt-tjanst-fokus"
+                      className="text-base font-semibold leading-snug text-foreground md:text-lg"
+                    >
+                      3. Fokus för passen
+                    </h3>
+                    <p className="text-sm leading-relaxed text-muted-foreground">
+                      Välj ett eller flera. Kan justeras senare.
+                    </p>
+                  </div>
+                  <FormField
+                    control={friskvardForm.control}
+                    name="focuses"
+                    render={({ field }) => (
+                      <FormItem>
+                        <div className="overflow-hidden rounded-xl border border-border/70 divide-y divide-border/60">
+                          {FRISKVARD_FOCUS_OPTIONS.map((option) => {
+                            const checked = field.value?.includes(option.id);
+                            return (
+                              <div key={option.id} className="bg-background">
+                                <label
                                   className={cn(
-                                    "pb-2 pl-10 pr-2",
-                                    !checked && "hidden",
+                                    "flex min-h-11 cursor-pointer items-start gap-3 px-3 py-3 sm:px-4",
+                                    checked && "bg-muted/40",
                                   )}
                                 >
-                                  <FormField
-                                    control={friskvardForm.control}
-                                    name="sportName"
-                                    render={({ field: sportField }) => (
-                                      <FormItem>
-                                        <FormLabel>
-                                          Vilken idrott/motionsform?{" "}
-                                          <span className="font-normal text-muted-foreground">
-                                            (Så att passen kan anpassas efter
-                                            idrotten.)
-                                          </span>
-                                        </FormLabel>
-                                        <FormControl>
-                                          <Input
-                                            className={fieldClass}
-                                            {...sportField}
-                                          />
-                                        </FormControl>
-                                        <FormMessage />
-                                      </FormItem>
-                                    )}
+                                  <Checkbox
+                                    className="mt-1 h-5 w-5"
+                                    checked={checked}
+                                    onCheckedChange={(value) => {
+                                      const current = field.value ?? [];
+                                      field.onChange(
+                                        value === true
+                                          ? [...current, option.id]
+                                          : current.filter(
+                                              (id) => id !== option.id,
+                                            ),
+                                      );
+                                    }}
                                   />
-                                </div>
-                              ) : null}
-                            </div>
-                          );
-                        })}
-                      </div>
-                      <p className="text-sm leading-relaxed text-muted-foreground">
-                        Fokus för passen kan justeras senare, ifall du skulle
-                        ändra dig.
-                      </p>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                                  <span className="min-w-0 pt-0.5">
+                                    <span className="block text-base leading-snug text-foreground">
+                                      {option.label}
+                                    </span>
+                                    <span className="mt-0.5 block text-sm leading-snug text-muted-foreground">
+                                      {option.summary}
+                                    </span>
+                                  </span>
+                                </label>
+                                {option.id === "fys-idrott" ? (
+                                  <div
+                                    className={cn(
+                                      "border-t border-border/50 bg-muted/20 px-3 pb-3 pt-2 sm:px-4 sm:pl-12",
+                                      !checked && "hidden",
+                                    )}
+                                  >
+                                    <FormField
+                                      control={friskvardForm.control}
+                                      name="sportName"
+                                      render={({ field: sportField }) => (
+                                        <FormItem>
+                                          <FormLabel>
+                                            Vilken idrott/motionsform?{" "}
+                                            <span className="font-normal text-muted-foreground">
+                                              (Så att passen kan anpassas efter
+                                              idrotten.)
+                                            </span>
+                                          </FormLabel>
+                                          <FormControl>
+                                            <Input
+                                              className={fieldClass}
+                                              {...sportField}
+                                            />
+                                          </FormControl>
+                                          <FormMessage />
+                                        </FormItem>
+                                      )}
+                                    />
+                                  </div>
+                                ) : null}
+                              </div>
+                            );
+                          })}
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </section>
+
                 <FormField
                   control={friskvardForm.control}
                   name="personalConfirm"
                   render={({ field }) => (
-                    <FormItem>
+                    <FormItem className="border-t border-border/60 pt-6">
                       <label className="flex min-h-11 items-start gap-3">
                         <FormControl>
                           <Checkbox
