@@ -252,13 +252,7 @@ const PtQuantityPicker = ({
     );
   }
 
-  // Kassan: bara antal. Priset räknas ut och visas som en mening under rutan.
-  const checkoutSummary = !quote
-    ? ""
-    : quote.discountPercent > 0
-      ? `${quote.quantity} pass kostar totalt ${formatOfferPrice(quote.totalSek)} (${formatOfferPrice(quote.unitPriceSek)}/pass istället för ord. pris ${formatOfferPrice(quote.listUnitPriceSek)}/pass, det vill säga ${quote.discountPercent}\u00a0% rabatt).`
-      : `${quote.quantity} pass kostar ${formatOfferPrice(quote.totalSek)}.`;
-
+  // Kassan: bara antal. Priset redovisas i en ruta under antalsfältet.
   return (
     <div className="min-w-0">
       {/* Instruktionen är också etiketten till antalsrutan. */}
@@ -282,10 +276,41 @@ const PtQuantityPicker = ({
           <p className="text-sm leading-snug text-muted-foreground md:text-base">
             Du kan köpa högst {PT_SESSION_MAX_QUANTITY} pass.
           </p>
-        ) : checkoutSummary ? (
-          <p className="break-words text-sm leading-snug text-muted-foreground md:text-base">
-            {checkoutSummary}
-          </p>
+        ) : quote ? (
+          <div className="rounded-xl border border-border/70 bg-muted/50 px-4 py-3">
+            <ul className="space-y-1 break-words text-sm leading-snug text-foreground md:text-base">
+              <li>
+                Totalpris:{" "}
+                <span className="whitespace-nowrap font-semibold">
+                  {formatOfferPrice(quote.totalSek)}
+                </span>
+              </li>
+              <li>
+                Pris per pass:{" "}
+                <span className="whitespace-nowrap font-semibold">
+                  {formatOfferPrice(quote.unitPriceSek)}
+                </span>
+                {quote.discountPercent > 0 ? (
+                  <>
+                    {" "}
+                    <span className="whitespace-nowrap text-muted-foreground">
+                      (ord. pris {formatOfferPrice(quote.listUnitPriceSek)})
+                    </span>
+                  </>
+                ) : null}
+              </li>
+              {quote.discountPercent > 0 ? (
+                <li className="flex flex-wrap items-center gap-x-1.5 gap-y-1">
+                  <span>Rabatt:</span>
+                  <PaintbrushHighlight className="text-sm md:text-base">
+                    <span className="whitespace-nowrap font-semibold">
+                      {quote.discountPercent}&nbsp;%
+                    </span>
+                  </PaintbrushHighlight>
+                </li>
+              ) : null}
+            </ul>
+          </div>
         ) : null}
         {error ? (
           <p className="mt-1 text-sm text-destructive" role="alert">
