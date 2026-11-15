@@ -295,31 +295,23 @@ const PtQuantityPicker = ({
               </li>
               <li>
                 Pris per pass:{" "}
-                {quote.discountPercent > 0 ? (
-                  <span className="whitespace-nowrap">
-                    <span className="font-semibold">
-                      {formatOfferPrice(quote.unitPriceSek)}
-                    </span>{" "}
-                    <span className="text-muted-foreground">
-                      (ord. pris {formatOfferPrice(quote.listUnitPriceSek)})
-                    </span>
-                  </span>
-                ) : (
-                  <span className="whitespace-nowrap font-semibold">
+                <span className="whitespace-nowrap">
+                  <span className="font-semibold">
                     {formatOfferPrice(quote.unitPriceSek)}
+                  </span>{" "}
+                  <span className="text-muted-foreground">
+                    (ord. pris {formatOfferPrice(quote.listUnitPriceSek)})
                   </span>
-                )}
+                </span>
               </li>
-              {quote.discountPercent > 0 ? (
-                <li className="flex flex-wrap items-center gap-x-1.5 gap-y-1">
-                  <span>Rabatt:</span>
-                  <PaintbrushHighlight className="text-sm md:text-base">
-                    <span className="whitespace-nowrap font-semibold">
-                      {quote.discountPercent}&nbsp;%
-                    </span>
-                  </PaintbrushHighlight>
-                </li>
-              ) : null}
+              <li className="flex flex-wrap items-center gap-x-1.5 gap-y-1">
+                <span>Rabatt:</span>
+                <PaintbrushHighlight className="text-sm md:text-base">
+                  <span className="whitespace-nowrap font-semibold">
+                    {quote.discountPercent}&nbsp;%
+                  </span>
+                </PaintbrushHighlight>
+              </li>
             </ul>
           </div>
         ) : null}
