@@ -1115,7 +1115,7 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
         name="recipient"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Presentkort</FormLabel>
+            <FormLabel>Vill du ha ett presentkort?</FormLabel>
             <FormControl>
               <RadioGroup
                 onValueChange={field.onChange}
