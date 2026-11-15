@@ -71,9 +71,36 @@ const storageKey = (productId: OfferProductId) =>
 const draftKey = (productId: "snabbhet" | "friskvard") =>
   `caselo-offer-draft:${productId}`;
 
+/**
+ * På localhost ska omladdning ge ett tomt formulär. Därför varken sparas
+ * eller återställs utkast/betalning från sessionStorage i lokal miljö.
+ */
+const isLocalCheckoutDev = () => {
+  if (typeof window === "undefined") return Boolean(import.meta.env.DEV);
+  const host = window.location.hostname;
+  return (
+    import.meta.env.DEV || host === "localhost" || host === "127.0.0.1"
+  );
+};
+
+const clearLocalOfferStorage = () => {
+  if (!isLocalCheckoutDev()) return;
+  try {
+    for (const id of ["snabbhet", "friskvard"] as const) {
+      sessionStorage.removeItem(draftKey(id));
+      sessionStorage.removeItem(storageKey(id));
+    }
+  } catch {
+    /* ignore */
+  }
+};
+
+clearLocalOfferStorage();
+
 const readStoredPayment = (
   productId: "snabbhet" | "friskvard",
 ): PaymentState | null => {
+  if (isLocalCheckoutDev()) return null;
   try {
     const raw = sessionStorage.getItem(storageKey(productId));
     if (!raw) return null;
@@ -92,6 +119,7 @@ const readStoredPayment = (
 };
 
 const readFormDraft = <T,>(productId: "snabbhet" | "friskvard") => {
+  if (isLocalCheckoutDev()) return null;
   try {
     const raw = sessionStorage.getItem(draftKey(productId));
     if (!raw) return null;
@@ -108,6 +136,7 @@ const writeFormDraft = (
   values: unknown,
   step: number,
 ) => {
+  if (isLocalCheckoutDev()) return;
   try {
     sessionStorage.setItem(draftKey(productId), JSON.stringify({ values, step }));
   } catch {
@@ -647,10 +676,12 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
             ? prev.swishAppUrl
             : next.swishAppUrl,
       };
-      try {
-        sessionStorage.setItem(storageKey(productId), JSON.stringify(merged));
-      } catch {
-        /* ignore */
+      if (!isLocalCheckoutDev()) {
+        try {
+          sessionStorage.setItem(storageKey(productId), JSON.stringify(merged));
+        } catch {
+          /* ignore */
+        }
       }
       return merged;
     });
