@@ -510,11 +510,9 @@ export const GIFT_PRODUCT_LABEL = {
 export function defaultGiftInscription(
   productId: "snabbhet" | "friskvard" | "friskvard-pass",
 ): string {
-  const label =
-    productId === "snabbhet"
-      ? GIFT_PRODUCT_LABEL.snabbhet
-      : GIFT_PRODUCT_LABEL.friskvard;
-  return `Presentkort på ${label}`;
+  return productId === "snabbhet"
+    ? GIFT_PRODUCT_LABEL.snabbhet
+    : GIFT_PRODUCT_LABEL.friskvard;
 }
 
 /** Landsida som QR-koden på presentkortet pekar till. */
@@ -550,7 +548,7 @@ export const GIFT_LAYOUT_OPTIONS: {
   },
   {
     id: "caselo-ljusbla",
-    label: "Caselo ljusblå",
+    label: "Ljusblå",
     shortLabel: "Ljusblå",
     description: "Caselos ljusblå – sparsam med bläck och tydlig i utskrift.",
     isGift: true,

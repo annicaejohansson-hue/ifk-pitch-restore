@@ -1185,11 +1185,6 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
           </div>
 
           <div className="min-w-0 space-y-5">
-            <p className="text-sm leading-relaxed text-muted-foreground">
-              Standard är mörkblått med texten {giftDefaultInscription}. Byt
-              färg, dekoration och text här – förhandsgranskningen
-              uppdateras direkt.
-            </p>
             <FormField
               control={form.control}
               name="giftLayout"
@@ -1223,7 +1218,7 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
                 <FormItem>
                   <FormLabel>Dekoration</FormLabel>
                   <FormDescription>
-                    Valfritt. Visas uppe till höger på presentkortet.
+                    Visas uppe till höger på presentkortet.
                   </FormDescription>
                   <FormControl>
                     <RadioGroup

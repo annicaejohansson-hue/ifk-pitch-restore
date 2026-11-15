@@ -86,7 +86,10 @@ const GoldSparkle = ({ className }: { className?: string }) => (
   </svg>
 );
 
-/** Konturhjärta med lite ojämn linje – handwriting-känsla, ej ifyllt. */
+/**
+ * Kalligrafiskt hjärta efter inspobild: öppet nedtill, penselstråk med
+ * varierande tjocklek, ej ifyllt som en solid form.
+ */
 const GoldHeart = ({ className }: { className?: string }) => (
   <svg
     viewBox="0 0 24 24"
@@ -94,11 +97,19 @@ const GoldHeart = ({ className }: { className?: string }) => (
     aria-hidden="true"
     fill="none"
     stroke="currentColor"
-    strokeWidth="1.35"
     strokeLinecap="round"
     strokeLinejoin="round"
   >
-    <path d="M12.1 19.6c-.3-.2-1.4-1.1-2.9-2.4C6.2 14.7 4.2 12.6 3.6 10.7 2.8 8.3 3.9 5.7 6.3 5.1c1.5-.4 3 .2 3.9 1.4.3.4.6.5.9.4.3.1.5 0 .8-.4.9-1.2 2.4-1.8 3.9-1.4 2.4.6 3.5 3.2 2.7 5.6-.6 1.9-2.6 4-5.6 6.5-1.5 1.3-2.6 2.2-2.8 2.4Z" />
+    {/* Vänster båge – smalare */}
+    <path
+      strokeWidth="1.5"
+      d="M11.6 8.2C10.2 5.2 7.6 3.8 5.4 4.2 3.2 4.6 1.9 6.8 2.4 9.2c.6 3.1 3.4 5.6 7.4 9.1"
+    />
+    {/* Höger båge – tjockare, med svans */}
+    <path
+      strokeWidth="2.35"
+      d="M12.2 7.8C13.7 5 16.5 3.7 18.7 4.2c2.3.5 3.7 2.7 3.2 5.2-.8 4.1-5.2 7.6-9.2 11.2"
+    />
   </svg>
 );
 
@@ -119,32 +130,39 @@ const GoldSnowflake = ({ className }: { className?: string }) => (
   </svg>
 );
 
-/** Klassisk fotboll: yttercirkel, svart mittpentagon och sömmar. */
+/**
+ * Klassisk Telstar-fotboll efter inspobild: ifyllda svarta pentagoner
+ * och hexagoner med tydliga sömmar.
+ */
 const GoldBall = ({ className }: { className?: string }) => (
   <svg
     viewBox="0 0 24 24"
     className={className}
     aria-hidden="true"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.35"
-    strokeLinejoin="round"
+    fill="currentColor"
   >
-    <circle cx="12" cy="12" r="9" />
-    <path
-      fill="currentColor"
-      stroke="none"
-      d="M12 8.4 14.35 10.1 13.45 12.9 10.55 12.9 9.65 10.1Z"
+    <circle
+      cx="12"
+      cy="12"
+      r="9.2"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.15"
     />
-    <path d="M12 8.4 14.1 5.2M12 8.4 9.9 5.2" />
-    <path d="M14.35 10.1 18.2 9.1M13.45 12.9 17.4 15.3" />
-    <path d="M10.55 12.9 6.6 15.3M9.65 10.1 5.8 9.1" />
-    <path d="M14.1 5.2 17.2 6.4 18.2 9.1" />
-    <path d="M9.9 5.2 6.8 6.4 5.8 9.1" />
-    <path d="M18.2 9.1 19.3 12.2 17.4 15.3" />
-    <path d="M5.8 9.1 4.7 12.2 6.6 15.3" />
-    <path d="M17.4 15.3 15.2 18.4 12 19.2" />
-    <path d="M6.6 15.3 8.8 18.4 12 19.2" />
+    {/* Övre pentagon */}
+    <path d="M12 3.9 14.55 5.7 13.6 8.55 10.4 8.55 9.45 5.7Z" />
+    {/* Vänster pentagon */}
+    <path d="M4.85 10.6 7.35 9.05 9.55 10.55 8.85 13.2 5.95 13.55Z" />
+    {/* Höger pentagon */}
+    <path d="M19.15 10.6 16.65 9.05 14.45 10.55 15.15 13.2 18.05 13.55Z" />
+    {/* Nedre vänster / höger fragment + mitt-hexagon */}
+    <path
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.05"
+      strokeLinejoin="round"
+      d="M10.4 8.55 12 10.85 13.6 8.55M12 10.85 9.55 10.55 8.85 13.2 12 15.35 15.15 13.2 14.45 10.55 12 10.85M8.85 13.2 7.2 16.1 9.4 18.35 12 17.55M15.15 13.2 16.8 16.1 14.6 18.35 12 17.55M9.45 5.7 6.55 6.85 7.35 9.05M14.55 5.7 17.45 6.85 16.65 9.05M5.95 13.55 4.7 16.4 7.2 16.1M18.05 13.55 19.3 16.4 16.8 16.1M9.4 18.35 12 20.35 14.6 18.35"
+    />
   </svg>
 );
 
