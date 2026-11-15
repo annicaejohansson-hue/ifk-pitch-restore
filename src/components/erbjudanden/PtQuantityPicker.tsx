@@ -261,16 +261,14 @@ const PtQuantityPicker = ({
 
   return (
     <div className="min-w-0">
-      <p className="mb-3 text-sm leading-relaxed text-muted-foreground md:text-base">
+      {/* Instruktionen är också etiketten till antalsrutan. */}
+      <label
+        htmlFor={`${id}-antal`}
+        className="mb-3 block text-sm font-semibold leading-snug text-foreground md:text-base"
+      >
         Fyll i antal pass du vill köpa.
-      </p>
+      </label>
       <div className="min-w-0">
-        <label
-          htmlFor={`${id}-antal`}
-          className="mb-1.5 block px-2.5 text-sm font-semibold leading-snug text-foreground md:text-base"
-        >
-          Antal träningspass
-        </label>
         <SuffixedNumberField
           id={`${id}-antal`}
           value={value}
