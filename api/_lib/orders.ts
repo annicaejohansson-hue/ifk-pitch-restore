@@ -552,13 +552,11 @@ export async function createOfferOrder(
     if (receiptCustomerName.length < 2) {
       fields.receiptCustomerName = "Ange namnet som ska stå på kvittot.";
     }
-    if (needsFriskvardPersonalId(amountSek)) {
-      if (!parsedId) {
-        fields.personalId =
-          "Ange ett giltigt personnummer. Det behövs på kvittot när beloppet överstiger 4 000 kr.";
-      } else {
-        personalId = parsedId;
-      }
+    if (!parsedId) {
+      fields.personalId =
+        "Ange ett giltigt personnummer. Namn och personnummer ska båda stå på kvittot.";
+    } else {
+      personalId = parsedId;
     }
   }
 
@@ -1388,8 +1386,8 @@ export async function runOfferOrderChecks() {
   if (parseSwedishPersonalId("abc") !== null) {
     failures.push("invalid personal id accepted");
   }
-  if (needsFriskvardPersonalId(4000) || !needsFriskvardPersonalId(4001)) {
-    failures.push("personal id threshold should be over 4000 kr");
+  if (!needsFriskvardPersonalId(1) || !needsFriskvardPersonalId(4000)) {
+    failures.push("personal id should always be required for wellness receipts");
   }
 
   const wellnessNoId = await createOfferOrder(
@@ -1409,6 +1407,25 @@ export async function runOfferOrderChecks() {
   );
   if (wellnessNoId.ok) {
     failures.push("accepted 5-pass wellness receipt without personal id");
+  }
+
+  const wellnessLowAmountNoId = await createOfferOrder(
+    {
+      productId: "friskvard-pass",
+      buyerName: "Kim Karlsson",
+      buyerEmail: "kim@example.com",
+      buyerEmailConfirm: "kim@example.com",
+      participantName: "Kim Karlsson",
+      focus: "fotbollsfys",
+      quantity: 1,
+      wellnessReceipt: "yes",
+      receiptCustomerName: "Kim Karlsson",
+    },
+    enabledConfig,
+    persist,
+  );
+  if (wellnessLowAmountNoId.ok) {
+    failures.push("accepted 1-pass wellness receipt without personal id");
   }
 
   const wellnessWithId = await createOfferOrder(
@@ -1449,7 +1466,7 @@ export async function runOfferOrderChecks() {
     }
   }
 
-  const wellnessSnabbhet = await createOfferOrder(
+  const wellnessSnabbhetNoId = await createOfferOrder(
     {
       productId: "snabbhet",
       buyerName: "Test Testsson",
@@ -1462,10 +1479,28 @@ export async function runOfferOrderChecks() {
     enabledConfig,
     persist,
   );
+  if (wellnessSnabbhetNoId.ok) {
+    failures.push("accepted snabbhet wellness receipt without personal id");
+  }
+
+  const wellnessSnabbhet = await createOfferOrder(
+    {
+      productId: "snabbhet",
+      buyerName: "Test Testsson",
+      buyerEmail: "test@example.com",
+      buyerEmailConfirm: "test@example.com",
+      recipient: "self",
+      wellnessReceipt: "yes",
+      receiptCustomerName: "Test Testsson",
+      personalId: "19900101-1234",
+    },
+    enabledConfig,
+    persist,
+  );
   if (!wellnessSnabbhet.ok) {
-    failures.push(`snabbhet wellness without id failed: ${wellnessSnabbhet.message}`);
-  } else if (wellnessSnabbhet.order.personalId) {
-    failures.push("snabbhet stored personal id without need");
+    failures.push(`snabbhet wellness with id failed: ${wellnessSnabbhet.message}`);
+  } else if (wellnessSnabbhet.order.personalId !== "19900101-1234") {
+    failures.push("snabbhet should store personal id on wellness receipt");
   }
 
   const wellnessMissingName = await createOfferOrder(

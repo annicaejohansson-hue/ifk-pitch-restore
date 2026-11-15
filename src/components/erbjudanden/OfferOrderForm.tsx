@@ -40,7 +40,6 @@ import {
   formatPtProductName,
   getPtSessionQuote,
   isFriskvardProduct,
-  needsFriskvardPersonalId,
   parseFriskvardFocusId,
   parseFriskvardFocusIds,
   parseGiftLayoutId,
@@ -174,7 +173,7 @@ const wellnessFieldsSchema = {
 };
 
 const requireWellnessDetails =
-  (amountSek: number) =>
+  (_amountSek?: number) =>
   (
     values: {
       wellnessReceipt?: "no" | "yes";
@@ -191,10 +190,7 @@ const requireWellnessDetails =
         message: "Ange namnet som ska stå på kvittot.",
       });
     }
-    if (
-      needsFriskvardPersonalId(amountSek) &&
-      !parseFullPersonalId(values.personalId)
-    ) {
+    if (!parseFullPersonalId(values.personalId)) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         path: ["personalId"],
@@ -710,7 +706,8 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
         wellnessReceipt: values.wellnessReceipt,
         receiptCustomerName:
           values.wellnessReceipt === "yes" ? values.receiptCustomerName : "",
-        personalId: "",
+        personalId:
+          values.wellnessReceipt === "yes" ? values.personalId : "",
         website: values.website,
       });
       writeFormDraft("snabbhet", values, checkoutStep);
@@ -766,10 +763,7 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
         receiptCustomerName:
           values.wellnessReceipt === "yes" ? values.receiptCustomerName : "",
         personalId:
-          values.wellnessReceipt === "yes" &&
-          needsFriskvardPersonalId(getPtSessionQuote(quantity).totalSek)
-            ? values.personalId
-            : "",
+          values.wellnessReceipt === "yes" ? values.personalId : "",
         website: values.website,
       });
       writeFormDraft("friskvard", values, checkoutStep);
@@ -1183,10 +1177,9 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
   const wellnessFields = (
     form: typeof snabbhetForm | typeof friskvardForm,
     wellness: "no" | "yes",
-    amountSek: number,
+    _amountSek: number,
     defaultName: string,
   ) => {
-    const requirePersonalId = needsFriskvardPersonalId(amountSek);
     return (
       <>
         <FormField
@@ -1272,42 +1265,38 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
                 </FormItem>
               )}
             />
-            {requirePersonalId ? (
-              <FormField
-                control={form.control}
-                name="personalId"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Personnummer</FormLabel>
-                    <FormControl>
-                      <Input
-                        inputMode="numeric"
-                        autoComplete="off"
-                        placeholder={PERSONAL_ID_FORMAT_LABEL}
-                        className={fieldClass}
-                        {...field}
-                        onChange={(event) =>
-                          field.onChange(
-                            formatPersonalIdInput(event.target.value),
-                          )
-                        }
-                      />
-                    </FormControl>
-                    <FormDescription>
-                      Skriv tolv siffror{" "}
-                      <span className="whitespace-nowrap">
-                        ({PERSONAL_ID_FORMAT_LABEL})
-                      </span>
-                      . Bindestrecket läggs in automatiskt. Skatteverket kräver
-                      namn eller personnummer på kvittot när beloppet
-                      överstiger{" "}
-                      <span className="whitespace-nowrap">4 000 kr</span>.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            ) : null}
+            <FormField
+              control={form.control}
+              name="personalId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Personnummer</FormLabel>
+                  <FormControl>
+                    <Input
+                      inputMode="numeric"
+                      autoComplete="off"
+                      placeholder={PERSONAL_ID_FORMAT_LABEL}
+                      className={fieldClass}
+                      {...field}
+                      onChange={(event) =>
+                        field.onChange(
+                          formatPersonalIdInput(event.target.value),
+                        )
+                      }
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    Skriv tolv siffror{" "}
+                    <span className="whitespace-nowrap">
+                      ({PERSONAL_ID_FORMAT_LABEL})
+                    </span>
+                    . Bindestrecket läggs in automatiskt. Namn och
+                    personnummer står båda på kvittot.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </>
         ) : null}
       </>

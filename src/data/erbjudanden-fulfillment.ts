@@ -4,7 +4,6 @@ import {
   formatPtReceiptName,
   getFocusLabel,
   getGiftLayout,
-  needsFriskvardPersonalId,
   OFFER_BOOKABLE_HOURS,
   OFFER_CONTACT_EMAIL,
   OFFER_FIRST_VISIT_END_LABEL,
@@ -56,9 +55,9 @@ function wellnessChecklistLines(ctx: FulfillmentContext): string[] {
   ];
   if (ctx.personalId) {
     lines.push(`Personnummer på kvitto: ${ctx.personalId}.`);
-  } else if (needsFriskvardPersonalId(ctx.amountSek)) {
+  } else {
     lines.push(
-      "Personnummer saknas. Det krävs på kvittot när beloppet överstiger 4 000 kr.",
+      "Personnummer saknas. Namn och personnummer ska båda stå på friskvårdskvittot.",
     );
   }
   lines.push(

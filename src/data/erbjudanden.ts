@@ -543,11 +543,12 @@ export function formatOfferPriceWithVat(priceSek: number): string {
   return `${formatOfferPrice(priceSek)} inklusive moms`;
 }
 
-/** Skatteverket: namn eller personnummer krävs på kvittot över denna gräns. */
-export const FRISKVARD_RECEIPT_ID_THRESHOLD_SEK = 4000;
-
-export function needsFriskvardPersonalId(amountSek: number): boolean {
-  return Number.isFinite(amountSek) && amountSek > FRISKVARD_RECEIPT_ID_THRESHOLD_SEK;
+/**
+ * Caselo lägger alltid både namn och personnummer på friskvårdskvittot,
+ * oavsett belopp, så att kvittot är komplett för arbetsgivaren.
+ */
+export function needsFriskvardPersonalId(_amountSek?: number): boolean {
+  return true;
 }
 
 export function parseSwedishPersonalId(

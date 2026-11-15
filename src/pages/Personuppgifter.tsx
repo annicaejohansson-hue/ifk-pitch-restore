@@ -87,8 +87,8 @@ const Personuppgifter = () => {
                     presentkort och om du vill ha kvitto för friskvårdsbidrag
                   </li>
                   <li>
-                    personnummer, om du begär kvitto för friskvårdsbidrag och
-                    beloppet kräver det enligt Skatteverkets regler
+                    personnummer, om du begär kvitto för friskvårdsbidrag
+                    (namn och personnummer står båda på kvittot)
                   </li>
                   <li>
                     betalningsreferens och uppgift om hur du valt att betala
