@@ -1590,8 +1590,8 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
                         })}
                       </div>
                       <p className="text-sm leading-relaxed text-muted-foreground">
-                        Det går bra att senare justera fokus för passen, ifall
-                        du skulle ändra dig.
+                        Fokus för passen kan justeras senare, ifall du skulle
+                        ändra dig.
                       </p>
                       <FormMessage />
                     </FormItem>
