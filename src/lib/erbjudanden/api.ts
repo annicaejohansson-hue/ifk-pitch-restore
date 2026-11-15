@@ -21,6 +21,27 @@ export type CheckoutState = {
 
 export type PaymentMethod = "swish" | "bankgiro";
 
+/** Beställningsdata som skickas igen vid Jag har betalat (Formspree). */
+export type OrderClaimSnapshot = {
+  productId: OfferProductId;
+  buyerName: string;
+  buyerEmail: string;
+  buyerEmailConfirm: string;
+  recipient?: "self" | "gift";
+  giftLayout?: GiftLayoutId;
+  giftDecoration?: GiftDecorationId;
+  giftRecipientName?: string;
+  giftInscription?: string;
+  participantName?: string;
+  focus?: string;
+  sportName?: string;
+  quantity?: number;
+  wellnessReceipt?: "yes" | "no";
+  receiptCustomerName?: string;
+  personalId?: string;
+  paymentMethod?: PaymentMethod;
+};
+
 export type PaymentState = {
   ok: boolean;
   orderRef: string;
@@ -45,6 +66,8 @@ export type PaymentState = {
   reportedPaymentMethod?: PaymentMethod;
   paymentVerifiedAutomatically: false;
   message: string;
+  /** Behövs för Formspree vid Jag har betalat på den publicerade sajten. */
+  orderSnapshot?: OrderClaimSnapshot;
 };
 
 export type OrderPayload = {
@@ -112,6 +135,7 @@ export async function submitOfferOrder(
 export async function submitPaymentClaim(
   orderRef: string,
   paymentMethod: PaymentMethod,
+  orderSnapshot?: OrderClaimSnapshot,
 ): Promise<PaymentState> {
   const response = await fetch("/api/erbjudanden-payment-claim", {
     method: "POST",
@@ -119,7 +143,7 @@ export async function submitPaymentClaim(
       Accept: "application/json",
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ orderRef, paymentMethod }),
+    body: JSON.stringify({ orderRef, paymentMethod, orderSnapshot }),
   });
   const data = await parseJson(response);
   if (!response.ok) {

@@ -670,6 +670,9 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
           (prev?.orderRef === next.orderRef
             ? prev.chosenPaymentMethod
             : undefined),
+        orderSnapshot:
+          next.orderSnapshot ??
+          (prev?.orderRef === next.orderRef ? prev.orderSnapshot : undefined),
         wellnessReceipt:
           next.wellnessReceipt ??
           (prev?.orderRef === next.orderRef ? prev.wellnessReceipt : undefined),

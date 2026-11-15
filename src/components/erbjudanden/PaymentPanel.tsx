@@ -170,7 +170,11 @@ const PaymentPanel = ({
     setClaiming(true);
     setClaimError(null);
     try {
-      const next = await submitPaymentClaim(payment.orderRef, method);
+      const next = await submitPaymentClaim(
+        payment.orderRef,
+        method,
+        payment.orderSnapshot,
+      );
       onClaimed(next);
     } catch (error) {
       setClaimError(

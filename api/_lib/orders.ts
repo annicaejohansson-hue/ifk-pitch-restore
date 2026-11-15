@@ -327,6 +327,8 @@ type CreateInput = {
   price?: unknown;
   status?: unknown;
   paid?: unknown;
+  /** Vid Jag har betalat: återanvänd referensen från kassan (räknas om server-side). */
+  reuseOrderRef?: unknown;
 };
 
 export type CreateOrderResult =
@@ -361,6 +363,8 @@ export type PaymentView = {
   chosenPaymentMethod?: PaymentMethod;
   reportedPaymentMethod?: PaymentMethod;
   paymentVerifiedAutomatically: false;
+  /** Skickas tillbaka vid Jag har betalat så Formspree kan få hela beställningen. */
+  orderSnapshot?: OrderClaimSnapshot;
 };
 
 const bankgiroView = (config: Pick<ServerConfig, "bankgiroNumber">) => ({
@@ -374,9 +378,8 @@ const paymentChannelsLabel = (config: Pick<ServerConfig, "bankgiroNumber">) =>
   config.bankgiroNumber ? "Swish eller på bankgirot" : "Swish";
 
 /**
- * Rader om betalsätt i beställningsmejlet. Kunden väljer i kassan, före
- * betalningen, och kan byta på betalningssidan – därför är det en uppgift om
- * var Henrik ska titta först, inte ett besked om var pengarna finns.
+ * Rader om betalsätt i beställningsmejlet (skickas när kunden klickat
+ * Jag har betalat). Kunden väljer i kassan och kan byta på betalningssidan.
  */
 export function chosenPaymentMailInfo(
   order: Pick<OfferOrder, "orderRef" | "chosenPaymentMethod">,
@@ -384,7 +387,7 @@ export function chosenPaymentMailInfo(
 ) {
   const method = order.chosenPaymentMethod ?? null;
   const label = method === "bankgiro" ? "Bankgiro" : method === "swish" ? "Swish" : "";
-  const tail = `Du får inget mejl när kunden klickar på Jag har betalat. Matcha inbetalningen mot referensen ${order.orderRef}.`;
+  const tail = `Kunden har klickat på Jag har betalat. Matcha inbetalningen mot referensen ${order.orderRef} innan du skickar underlag.`;
   let warning = `Markera inte som betald förrän inbetalningen syns i ${paymentChannelsLabel(config)}. ${tail}`;
   if (method === "bankgiro") {
     warning = `Markera inte som betald förrän inbetalningen syns. Kunden har valt bankgiro, som kan ta 1–2 bankdagar. Syns den inte där, titta även i Swish. ${tail}`;
@@ -401,6 +404,51 @@ export function chosenPaymentMailInfo(
         : label
       : "Ej angivet",
     warning,
+  };
+}
+
+/** Uppgifter som kunden skickar igen vid Jag har betalat (produktion har ingen serverlagring). */
+export type OrderClaimSnapshot = {
+  productId: OfferProductId;
+  buyerName: string;
+  buyerEmail: string;
+  buyerEmailConfirm: string;
+  recipient?: "self" | "gift";
+  giftLayout?: GiftLayoutId;
+  giftDecoration?: GiftDecorationId;
+  giftRecipientName?: string;
+  giftInscription?: string;
+  participantName?: string;
+  focus?: string;
+  sportName?: string;
+  quantity?: number;
+  wellnessReceipt?: "yes" | "no";
+  receiptCustomerName?: string;
+  personalId?: string;
+  paymentMethod?: PaymentMethod;
+};
+
+export function toClaimSnapshot(order: OfferOrder): OrderClaimSnapshot {
+  const productId =
+    order.productId === "friskvard" ? "friskvard-pass" : order.productId;
+  return {
+    productId,
+    buyerName: order.buyerName,
+    buyerEmail: order.buyerEmail,
+    buyerEmailConfirm: order.buyerEmail,
+    recipient: order.gift ? "gift" : "self",
+    giftLayout: order.giftLayout,
+    giftDecoration: order.giftDecoration,
+    giftRecipientName: order.giftRecipientName || undefined,
+    giftInscription: order.giftInscription || undefined,
+    participantName: order.participantName || undefined,
+    focus: order.focusId || undefined,
+    sportName: order.sportName || undefined,
+    quantity: order.quantity || undefined,
+    wellnessReceipt: order.wellnessReceipt ? "yes" : "no",
+    receiptCustomerName: order.receiptCustomerName || undefined,
+    personalId: order.personalId || undefined,
+    paymentMethod: order.chosenPaymentMethod ?? undefined,
   };
 }
 
@@ -436,6 +484,7 @@ export function toPaymentView(
     ...bankgiroView(config),
     chosenPaymentMethod: order.chosenPaymentMethod ?? undefined,
     paymentVerifiedAutomatically: false,
+    orderSnapshot: toClaimSnapshot(order),
   };
 }
 
@@ -505,11 +554,7 @@ export async function createOfferOrder(
   gift = recipient === "gift";
   if (gift) {
     const parsedLayout = parseGiftLayoutId(clip(input.giftLayout, 32));
-    if (parsedLayout) {
-      giftLayout = parsedLayout;
-    } else {
-      fields.giftLayout = "Välj färg.";
-    }
+    giftLayout = parsedLayout ?? DEFAULT_GIFT_LAYOUT;
     const parsedDecoration = parseGiftDecorationId(clip(input.giftDecoration, 32));
     giftDecoration = parsedDecoration ?? DEFAULT_GIFT_DECORATION;
     giftRecipientName = clip(input.giftRecipientName, 120);
@@ -590,8 +635,35 @@ export async function createOfferOrder(
       ? null
       : requestedMethod;
 
+  let orderRef = createOrderRef(product.refPrefix);
+  const reuseOrderRef = clip(input.reuseOrderRef, 40).toUpperCase();
+  if (reuseOrderRef) {
+    if (!ORDER_REF_PATTERN.test(reuseOrderRef)) {
+      return {
+        ok: false,
+        status: 400,
+        error: "invalid-ref",
+        message: "Ogiltig betalningsreferens.",
+      };
+    }
+    const refProductId = productIdFromOrderRef(reuseOrderRef);
+    const matchesProduct =
+      refProductId === product.id ||
+      (product.id === "friskvard-pass" &&
+        (refProductId === "friskvard-pass" || refProductId === "friskvard"));
+    if (!matchesProduct) {
+      return {
+        ok: false,
+        status: 400,
+        error: "invalid-ref",
+        message: "Betalningsreferensen stämmer inte med beställningen.",
+      };
+    }
+    orderRef = reuseOrderRef;
+  }
+
   const order: OfferOrder = {
-    orderRef: createOrderRef(product.refPrefix),
+    orderRef,
     status: "awaiting_payment",
     customerReportedPayment: false,
     customerReportedPaymentAt: null,
@@ -651,6 +723,7 @@ export async function claimOfferPayment(
     paymentMethod?: unknown;
     status?: unknown;
     paid?: unknown;
+    orderSnapshot?: unknown;
   },
   config: ServerConfig,
   deps: PersistDeps = defaultPersistDeps,
@@ -680,6 +753,57 @@ export async function claimOfferPayment(
       ? null
       : requestedMethod;
 
+  let order =
+    deps.findOrder != null
+      ? await deps.findOrder(orderRef, config)
+      : null;
+
+  if (!order && input.orderSnapshot && typeof input.orderSnapshot === "object") {
+    const snapshot = input.orderSnapshot as OrderClaimSnapshot;
+    const rebuilt = await createOfferOrder(
+      {
+        ...snapshot,
+        reuseOrderRef: orderRef,
+        paymentMethod: snapshot.paymentMethod ?? requestedMethod ?? undefined,
+      },
+      config,
+      {
+        persistOrder: async () => {
+          /* Ephemeral rebuild for Formspree – no second store on create. */
+        },
+        persistClaim: async () => {
+          /* Claim persisted below. */
+        },
+      },
+    );
+    if (!rebuilt.ok) {
+      return {
+        ok: false,
+        status: rebuilt.status,
+        error: rebuilt.error,
+        message:
+          rebuilt.message ||
+          "Vi kunde inte läsa beställningen. Behåll din referens och mejla oss.",
+      };
+    }
+    order = {
+      ...rebuilt.order,
+      customerReportedPayment: true,
+      customerReportedPaymentAt: new Date(config.nowMs).toISOString(),
+      customerReportedPaymentMethod: reportedMethod,
+    };
+  }
+
+  if (!order && config.formspreeId) {
+    return {
+      ok: false,
+      status: 400,
+      error: "missing-order",
+      message:
+        "Beställningen saknas i den här sessionen. Behåll din referens och mejla oss så hjälper vi dig.",
+    };
+  }
+
   const claim: PaymentClaim = {
     orderRef,
     customerReportedPayment: true,
@@ -689,7 +813,7 @@ export async function claimOfferPayment(
   };
 
   try {
-    await deps.persistClaim(claim, config);
+    await deps.persistClaim(claim, config, order ?? undefined);
   } catch {
     return {
       ok: false,
@@ -702,11 +826,8 @@ export async function claimOfferPayment(
 
   const productId = productIdFromOrderRef(orderRef);
   const product = OFFER_PRODUCTS[productId];
-  const stored = deps.findOrder
-    ? await deps.findOrder(orderRef, config)
-    : null;
-  const amountSek = stored?.amountSek ?? product.priceSek;
-  const productName = stored?.productName ?? product.name;
+  const amountSek = order?.amountSek ?? product.priceSek;
+  const productName = order?.productName ?? product.name;
 
   return {
     ok: true,
@@ -714,12 +835,13 @@ export async function claimOfferPayment(
       orderRef,
       status: "awaiting_payment",
       customerReportedPayment: true,
-      productId: stored?.productId ?? productId,
+      productId: order?.productId ?? productId,
       productName,
       amountSek,
       amountLabel: formatOfferPriceWithVat(amountSek),
-      quantity: stored?.quantity || undefined,
-      focusLabel: stored?.focusLabel || "",
+      quantity: order?.quantity || undefined,
+      focusLabel: order?.focusLabel || "",
+      wellnessReceipt: order?.wellnessReceipt || undefined,
       swishNumber: config.swishNumber,
       swishNumberDisplay: config.swishNumber
         ? formatSwishNumber(config.swishNumber)
@@ -728,15 +850,21 @@ export async function claimOfferPayment(
         ? swishAppUrl(config.swishNumber, amountSek, orderRef)
         : "",
       ...bankgiroView(config),
+      chosenPaymentMethod: order?.chosenPaymentMethod ?? undefined,
       reportedPaymentMethod: reportedMethod ?? undefined,
       paymentVerifiedAutomatically: false,
+      orderSnapshot: order ? toClaimSnapshot(order) : undefined,
     },
   };
 }
 
 type PersistDeps = {
   persistOrder: (order: OfferOrder, config: ServerConfig) => Promise<void>;
-  persistClaim: (claim: PaymentClaim, config: ServerConfig) => Promise<void>;
+  persistClaim: (
+    claim: PaymentClaim,
+    config: ServerConfig,
+    order?: OfferOrder,
+  ) => Promise<void>;
   findOrder?: (
     orderRef: string,
     config: ServerConfig,
@@ -807,7 +935,11 @@ async function notifyFormspree(
   }
 }
 
-async function persistOrder(order: OfferOrder, config: ServerConfig) {
+function buildOrderFormspreePayload(
+  order: OfferOrder,
+  config: ServerConfig,
+  claim?: PaymentClaim,
+) {
   const checklist = buildFulfillmentChecklist({
     productId: order.productId,
     orderRef: order.orderRef,
@@ -829,96 +961,113 @@ async function persistOrder(order: OfferOrder, config: ServerConfig) {
     receiptName: order.receiptName,
     chosenPaymentMethod: order.chosenPaymentMethod ?? undefined,
   });
-
-  const hasFormspree = Boolean(config.formspreeId);
-  const hasLocal = config.allowLocalStore;
-  if (!hasFormspree && !hasLocal) {
-    throw new Error("no-persist-channel");
-  }
-
-  let localOk = !hasLocal;
-  let formspreeOk = !hasFormspree;
-
-  if (hasLocal) {
-    try {
-      await writeLocalOrder(order);
-      localOk = true;
-    } catch {
-      localOk = false;
-    }
-  }
-
-  if (hasFormspree) {
-    const paymentInfo = chosenPaymentMailInfo(order, config);
-    try {
-      await notifyFormspree(config.formspreeId, {
-        _subject: `Ny beställning ${order.orderRef} – Inväntar betalning${paymentInfo.subjectSuffix}`,
-        _replyto: order.buyerEmail,
-        status: "Inväntar betalning",
-        orderRef: order.orderRef,
-        paket: order.productName,
-        specificerat: order.receiptName,
-        belopp: formatOfferPriceWithVat(order.amountSek),
-        beloppSek: order.amountSek,
-        betalsatt_enligt_kund: paymentInfo.field,
-        antalPass: order.quantity || "",
-        kopare: order.buyerName,
-        epost: order.buyerEmail,
-        gava: order.gift ? "Ja" : "Nej",
-        presentkortslayout: giftLayoutMailLabel(order),
-        presentkortsdekoration: order.gift
-          ? getGiftDecoration(order.giftDecoration).label
-          : "",
-        mottagare: order.giftRecipientName || "",
-        presentkortstext: order.giftInscription || "",
-        deltagare: order.participantName || "",
-        inriktning: order.focusLabel || "",
-        idrott: order.sportName || "",
-        friskvardskvitto: order.wellnessReceipt ? "Ja" : "Nej",
-        kvittoNamn: order.receiptCustomerName || "",
-        personnummer: order.personalId || "",
-        kvitto_forhandsgranskning: order.wellnessReceipt
-          ? buildWellnessReceiptPreviewUrl({
-              orderRef: order.orderRef,
-              amountSek: order.amountSek,
-              receiptCustomerName: order.receiptCustomerName,
-              personalId: order.personalId,
-              receiptName: order.receiptName,
-              quantity: order.quantity || undefined,
-              productId: order.productId,
-              chosenPaymentMethod: order.chosenPaymentMethod ?? undefined,
-            })
-          : "",
-        skapad: formatMailTime(order.createdAt),
-        betalning: config.bankgiroNumber
-          ? `Swish eller bankgiro ${formatBankgiroNumber(config.bankgiroNumber)}. Caselo kontrollerar betalningen manuellt.`
-          : "Swish. Caselo kontrollerar betalningen manuellt.",
-        intern_checklista: checklist,
-        varning: paymentInfo.warning,
-      });
-      formspreeOk = true;
-    } catch {
-      formspreeOk = false;
-    }
-  }
-
-  if (!hasLocal && !formspreeOk) throw new Error("formspree-failed");
-  if (!hasFormspree && !localOk) throw new Error("local-store-failed");
-  if (!formspreeOk && !localOk) throw new Error("persist-failed");
+  const paymentInfo = chosenPaymentMailInfo(order, config);
+  const reported =
+    claim?.customerReportedPaymentMethod === "bankgiro"
+      ? "Bankgiro"
+      : claim?.customerReportedPaymentMethod === "swish"
+        ? "Swish"
+        : "";
+  return {
+    _subject: `Kunden uppger betalning ${order.orderRef} – kontrollera inbetalning${paymentInfo.subjectSuffix}`,
+    _replyto: order.buyerEmail,
+    status: "Kunden uppger att hen har betalat",
+    orderRef: order.orderRef,
+    paket: order.productName,
+    specificerat: order.receiptName,
+    belopp: formatOfferPriceWithVat(order.amountSek),
+    beloppSek: order.amountSek,
+    betalsatt_enligt_kund: paymentInfo.field,
+    rapporterat_betalsatt: reported || "Ej angivet",
+    rapporterat_tid: claim?.customerReportedPaymentAt
+      ? formatMailTime(claim.customerReportedPaymentAt)
+      : "",
+    antalPass: order.quantity || "",
+    kopare: order.buyerName,
+    epost: order.buyerEmail,
+    gava: order.gift ? "Ja" : "Nej",
+    presentkortslayout: giftLayoutMailLabel(order),
+    presentkortsdekoration: order.gift
+      ? getGiftDecoration(order.giftDecoration).label
+      : "",
+    mottagare: order.giftRecipientName || "",
+    presentkortstext: order.giftInscription || "",
+    deltagare: order.participantName || "",
+    inriktning: order.focusLabel || "",
+    idrott: order.sportName || "",
+    friskvardskvitto: order.wellnessReceipt ? "Ja" : "Nej",
+    kvittoNamn: order.receiptCustomerName || "",
+    personnummer: order.personalId || "",
+    kvitto_forhandsgranskning: order.wellnessReceipt
+      ? buildWellnessReceiptPreviewUrl({
+          orderRef: order.orderRef,
+          amountSek: order.amountSek,
+          receiptCustomerName: order.receiptCustomerName,
+          personalId: order.personalId,
+          receiptName: order.receiptName,
+          quantity: order.quantity || undefined,
+          productId: order.productId,
+          chosenPaymentMethod: order.chosenPaymentMethod ?? undefined,
+        })
+      : "",
+    skapad: formatMailTime(order.createdAt),
+    betalning: config.bankgiroNumber
+      ? `Swish eller bankgiro ${formatBankgiroNumber(config.bankgiroNumber)}. Caselo kontrollerar betalningen manuellt.`
+      : "Swish. Caselo kontrollerar betalningen manuellt.",
+    intern_checklista: checklist,
+    varning: paymentInfo.warning,
+  };
 }
 
 /**
- * Kundens klick på Jag har betalat skickas inte vidare till Formspree: varje
- * beställning ska ge ett enda inskick (beställningsmejlet). Betalningen matchas
- * mot referensen i Swish eller på bankgirot. Lokalt sparas uppgiften i filen;
- * på den publicerade sajten finns ingen lagring och klicket bekräftas ändå.
+ * Beställningen sparas lokalt i utvecklingsläge. Formspree skickas inte här –
+ * mejlet går först när kunden klickar Jag har betalat.
  */
-async function persistClaim(claim: PaymentClaim, config: ServerConfig) {
+async function persistOrder(order: OfferOrder, config: ServerConfig) {
   if (!config.allowLocalStore) return;
   try {
-    await writeLocalClaim(claim);
+    await writeLocalOrder(order);
   } catch {
-    throw new Error("persist-failed");
+    throw new Error("local-store-failed");
+  }
+}
+
+/**
+ * Kundens klick på Jag har betalat: lokalt sparas uppgiften, och i produktion
+ * skickas det enda Formspree-mejlet med beställningen.
+ */
+async function persistClaim(
+  claim: PaymentClaim,
+  config: ServerConfig,
+  order?: OfferOrder,
+) {
+  if (config.allowLocalStore) {
+    try {
+      await writeLocalClaim(claim);
+    } catch {
+      throw new Error("persist-failed");
+    }
+  }
+
+  if (!config.formspreeId) {
+    if (!config.allowLocalStore) throw new Error("no-persist-channel");
+    return;
+  }
+
+  const mailOrder =
+    order ??
+    (config.allowLocalStore ? await findLocalOrder(claim.orderRef) : null);
+  if (!mailOrder) {
+    throw new Error("missing-order");
+  }
+
+  try {
+    await notifyFormspree(
+      config.formspreeId,
+      buildOrderFormspreePayload(mailOrder, config, claim),
+    );
+  } catch {
+    throw new Error("formspree-failed");
   }
 }
 
@@ -1018,7 +1167,7 @@ export async function handleErbjudandenRequest(req: NodeReq, res: NodeRes) {
       ok: true,
       ...result.payment,
       message:
-        "Beställningen är sparad med status Inväntar betalning. Ange referensen som meddelande när du betalar. Caselo kontrollerar betalningen manuellt och skickar underlagen inom 24 timmar efter att betalningen är bekräftad.",
+        "Ange referensen som meddelande när du betalar. När du klickat Jag har betalat får Caselo beställningen och kontrollerar inbetalningen manuellt.",
     });
     return;
   }
@@ -1584,7 +1733,7 @@ export async function runOfferOrderChecks() {
     );
     if (badClaim.ok) failures.push("accepted unknown ref prefix");
 
-    // Publicerat läge: Jag har betalat ska bekräftas utan något inskick till Formspree.
+    // Publicerat läge: Formspree skickas först vid Jag har betalat, inte vid kassan.
     const publishedConfig = loadServerConfig(
       {
         OFFERS_SWISH_NUMBER: "1232593654",
@@ -1603,7 +1752,6 @@ export async function runOfferOrderChecks() {
       return new Response("{}");
     }) as typeof fetch;
     try {
-      // En beställning ska ge exakt ett inskick, med kundens valda betalsätt.
       const publishedOrder = await createOfferOrder(
         {
           productId: "snabbhet",
@@ -1617,33 +1765,51 @@ export async function runOfferOrderChecks() {
       );
       if (!publishedOrder.ok) {
         failures.push(`published order failed: ${publishedOrder.message}`);
-      } else if (sentPayloads.length !== 1) {
-        failures.push(`order sent ${sentPayloads.length} Formspree submission(s)`);
-      } else {
-        const mail = sentPayloads[0];
-        if (
-          mail._subject !==
-          `Ny beställning ${publishedOrder.order.orderRef} – Inväntar betalning (Bankgiro)`
-        ) {
-          failures.push(`order mail subject ${String(mail._subject)}`);
-        }
-        if (!String(mail.betalsatt_enligt_kund).startsWith("Bankgiro")) {
-          failures.push(`order mail method ${String(mail.betalsatt_enligt_kund)}`);
-        }
+      } else if (sentPayloads.length !== 0) {
+        failures.push(
+          `order sent ${sentPayloads.length} Formspree submission(s) before claim`,
+        );
       }
       claimFetchCalls = 0;
+      sentPayloads.length = 0;
       const publishedClaim = await claimOfferPayment(
-        { orderRef: passOrder.orderRef, paymentMethod: "swish" },
+        {
+          orderRef: publishedOrder.ok
+            ? publishedOrder.order.orderRef
+            : passOrder.orderRef,
+          paymentMethod: "swish",
+          orderSnapshot: publishedOrder.ok
+            ? publishedOrder.payment.orderSnapshot
+            : undefined,
+        },
         publishedConfig,
       );
       if (publishedConfig.allowLocalStore) {
         failures.push("published config unexpectedly allows local store");
       }
       if (!publishedClaim.ok) {
-        failures.push("published claim failed without a notification channel");
-      }
-      if (claimFetchCalls !== 0) {
-        failures.push(`payment claim sent ${claimFetchCalls} Formspree submission(s)`);
+        failures.push(`published claim failed: ${publishedClaim.message}`);
+      } else if (claimFetchCalls !== 1) {
+        failures.push(
+          `payment claim sent ${claimFetchCalls} Formspree submission(s)`,
+        );
+      } else {
+        const mail = sentPayloads[0];
+        if (
+          !String(mail._subject).startsWith(
+            `Kunden uppger betalning ${publishedClaim.payment.orderRef}`,
+          )
+        ) {
+          failures.push(`claim mail subject ${String(mail._subject)}`);
+        }
+        if (!String(mail.betalsatt_enligt_kund).startsWith("Bankgiro")) {
+          failures.push(`claim mail method ${String(mail.betalsatt_enligt_kund)}`);
+        }
+        if (mail.rapporterat_betalsatt !== "Swish") {
+          failures.push(
+            `claim reported method ${String(mail.rapporterat_betalsatt)}`,
+          );
+        }
       }
     } finally {
       globalThis.fetch = realFetch;
