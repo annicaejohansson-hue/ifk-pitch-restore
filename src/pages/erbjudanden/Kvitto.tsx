@@ -52,6 +52,10 @@ const Kvitto = () => {
   const [paymentMethodLabel, setPaymentMethodLabel] = useState(
     searchParams.get("betalsatt") === "bankgiro" ? "Bankgiro" : "Swish",
   );
+  const prefilledFromOrder =
+    Boolean(searchParams.get("ref")) &&
+    Boolean(searchParams.get("produkt")) &&
+    Boolean(searchParams.get("belopp"));
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -110,8 +114,9 @@ const Kvitto = () => {
                 Skapa friskvårdskvitto
               </h1>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground md:text-base">
-                Fyll i uppgifterna från beställningen när betalningen syns.
-                Kontrollera kvittot, spara som PDF och mejla till kunden.
+                {prefilledFromOrder
+                  ? "Uppgifterna är förifyllda från beställningen. När betalningen syns: kontrollera förhandsgranskningen, sätt betalningsdatum, spara som PDF och mejla till kunden."
+                  : "Fyll i uppgifterna från beställningen när betalningen syns. Kontrollera kvittot, spara som PDF och mejla till kunden."}
               </p>
               <p className="mt-2 text-sm text-muted-foreground">
                 Avsändare på kvittot: {CASELO_LEGAL_NAME}, org.nr{" "}

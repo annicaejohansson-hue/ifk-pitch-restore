@@ -25,116 +25,125 @@ type WellnessReceiptDocumentProps = {
   data: WellnessReceiptData;
 };
 
+const Row = ({
+  label,
+  value,
+  strong = false,
+}: {
+  label: string;
+  value: string;
+  strong?: boolean;
+}) => (
+  <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-0.5">
+    <dt className="text-neutral-600">{label}</dt>
+    <dd
+      className={`min-w-0 text-right ${strong ? "font-semibold text-neutral-900" : "text-neutral-900"}`}
+    >
+      {value}
+    </dd>
+  </div>
+);
+
 const WellnessReceiptDocument = ({ data }: WellnessReceiptDocumentProps) => {
   const { netSek, vatSek, grossSek } = splitInclusiveVat(data.amountSek);
 
   return (
     <article
-      className="mx-auto w-full max-w-[28rem] border border-border bg-white px-5 py-6 text-[13px] leading-snug text-foreground shadow-sm print:max-w-none print:border-0 print:shadow-none sm:px-6 sm:py-7 sm:text-sm"
+      className="mx-auto w-full max-w-[36rem] border border-neutral-300 bg-white px-5 py-7 text-[13px] leading-relaxed text-neutral-900 shadow-sm print:max-w-none print:border-0 print:px-0 print:py-0 print:shadow-none sm:px-8 sm:py-9 sm:text-sm"
       aria-label="Kvitto för friskvårdsbidrag"
     >
-      <header className="space-y-1 text-center">
-        <p className="text-base font-bold tracking-tight sm:text-lg">
-          {CASELO_LEGAL_NAME}
-        </p>
-        <p className="text-muted-foreground">{CASELO_TRADE_NAME}</p>
-        <p className="pt-1 text-xs text-muted-foreground sm:text-sm">
-          Kundens kopia, spara kvittot
+      <header className="border-b border-neutral-900 pb-5 text-center">
+        <img
+          src="/caselo-logo-blue.png"
+          alt={CASELO_TRADE_NAME}
+          width={1200}
+          height={479}
+          className="mx-auto h-10 w-auto max-w-[12rem] object-contain sm:h-12 sm:max-w-[14rem]"
+        />
+        <h1 className="mt-5 text-2xl font-bold tracking-[0.18em] text-neutral-900 uppercase sm:text-3xl">
+          Kvitto
+        </h1>
+        <p className="mt-1.5 text-xs tracking-wide text-neutral-600 sm:text-sm">
+          För friskvårdsbidrag · Kundens kopia
         </p>
       </header>
 
-      <dl className="mt-5 space-y-1">
-        <div className="flex flex-wrap justify-between gap-x-3">
-          <dt className="text-muted-foreground">Telefon</dt>
-          <dd className="tabular-nums">{CASELO_PHONE}</dd>
-        </div>
-        <div className="flex flex-wrap justify-between gap-x-3">
-          <dt className="text-muted-foreground">Adress</dt>
-          <dd className="text-right">
-            {CASELO_ADDRESS_LINE_1}
-            <br />
-            {CASELO_ADDRESS_LINE_2}
-          </dd>
-        </div>
-        <div className="flex flex-wrap justify-between gap-x-3">
-          <dt className="text-muted-foreground">Organisationsnummer</dt>
-          <dd className="tabular-nums">{CASELO_ORG_NUMBER}</dd>
-        </div>
-        <div className="flex flex-wrap justify-between gap-x-3">
-          <dt className="text-muted-foreground">E-post</dt>
-          <dd className="break-all text-right">{CASELO_EMAIL}</dd>
-        </div>
-      </dl>
-
-      <div className="my-5 border-t border-dashed border-border" />
-
-      <div className="flex items-start justify-between gap-3">
-        <p className="min-w-0 flex-1 font-medium">{data.productName}</p>
-        <p className="shrink-0 whitespace-nowrap tabular-nums font-semibold">
-          {formatSekAmount(grossSek)}
+      <section className="mt-5 grid gap-1 text-center sm:mt-6">
+        <p className="font-semibold">{CASELO_LEGAL_NAME}</p>
+        <p className="text-neutral-700">{CASELO_TRADE_NAME}</p>
+        <p className="text-neutral-700">
+          {CASELO_ADDRESS_LINE_1}, {CASELO_ADDRESS_LINE_2}
         </p>
-      </div>
+        <p className="text-neutral-700">
+          Org.nr {CASELO_ORG_NUMBER} · Tel {CASELO_PHONE}
+        </p>
+        <p className="break-all text-neutral-700">{CASELO_EMAIL}</p>
+        <p className="text-neutral-700">www.caseloidrottsmedicin.se</p>
+      </section>
 
-      <div className="my-5 border-t border-dashed border-border" />
+      <section className="mt-6 border-y border-neutral-300 py-4">
+        <dl className="space-y-1.5">
+          <Row label="Kvittonr" value={data.orderRef} strong />
+          <Row label="Datum" value={data.paidAtLabel} />
+          <Row label="Betalsätt" value={data.paymentMethodLabel} />
+        </dl>
+      </section>
 
-      <table className="w-full text-left">
-        <caption className="sr-only">Momsspecifikation</caption>
-        <thead>
-          <tr className="text-muted-foreground">
-            <th className="pb-1 font-normal">Moms %</th>
-            <th className="pb-1 text-right font-normal">Netto</th>
-            <th className="pb-1 text-right font-normal">Moms</th>
-            <th className="pb-1 text-right font-normal">Brutto</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr className="tabular-nums">
-            <td>{CASELO_VAT_PERCENT}</td>
-            <td className="text-right">{formatSekAmount(netSek)}</td>
-            <td className="text-right">{formatSekAmount(vatSek)}</td>
-            <td className="text-right">{formatSekAmount(grossSek)}</td>
-          </tr>
-        </tbody>
-      </table>
+      <section className="mt-5">
+        <h2 className="text-[11px] font-semibold tracking-[0.14em] text-neutral-600 uppercase">
+          Kund
+        </h2>
+        <dl className="mt-2 space-y-1.5">
+          <Row label="Namn" value={data.customerName} strong />
+          <Row label="Personnummer" value={data.personalId} />
+        </dl>
+      </section>
 
-      <p className="mt-5 flex items-baseline justify-between gap-3 text-base font-bold sm:text-lg">
-        <span>Att betala</span>
-        <span className="whitespace-nowrap tabular-nums">
-          {formatSekAmount(grossSek)}
-        </span>
-      </p>
-
-      <div className="mt-3 flex flex-wrap justify-between gap-x-3">
-        <span className="text-muted-foreground">{data.paymentMethodLabel}</span>
-        <span className="tabular-nums font-medium">
-          {formatSekAmount(grossSek)}
-        </span>
-      </div>
-
-      <div className="my-5 border-t border-dashed border-border" />
-
-      <dl className="space-y-1">
-        <div className="flex flex-wrap justify-between gap-x-3">
-          <dt className="text-muted-foreground">Kvittonr</dt>
-          <dd className="font-medium tabular-nums">{data.orderRef}</dd>
+      <section className="mt-6">
+        <h2 className="text-[11px] font-semibold tracking-[0.14em] text-neutral-600 uppercase">
+          Specifikation
+        </h2>
+        <div className="mt-2 flex items-start justify-between gap-4 border-b border-neutral-200 pb-3">
+          <p className="min-w-0 flex-1 font-medium">{data.productName}</p>
+          <p className="shrink-0 whitespace-nowrap tabular-nums font-semibold">
+            {formatSekAmount(grossSek)}
+          </p>
         </div>
-        <div className="flex flex-wrap justify-between gap-x-3">
-          <dt className="text-muted-foreground">Datum</dt>
-          <dd className="tabular-nums">{data.paidAtLabel}</dd>
-        </div>
-        <div className="flex flex-wrap justify-between gap-x-3">
-          <dt className="text-muted-foreground">Kund</dt>
-          <dd className="text-right font-medium">{data.customerName}</dd>
-        </div>
-        <div className="flex flex-wrap justify-between gap-x-3">
-          <dt className="text-muted-foreground">Personnummer</dt>
-          <dd className="tabular-nums">{data.personalId}</dd>
-        </div>
-      </dl>
 
-      <p className="mt-6 text-center text-xs text-muted-foreground">
-        Kvitto för friskvårdsbidrag från {CASELO_LEGAL_NAME}
-      </p>
+        <table className="mt-4 w-full text-left">
+          <caption className="sr-only">Momsspecifikation</caption>
+          <thead>
+            <tr className="border-b border-neutral-200 text-[11px] tracking-wide text-neutral-600 uppercase">
+              <th className="pb-1.5 font-semibold">Moms %</th>
+              <th className="pb-1.5 text-right font-semibold">Netto</th>
+              <th className="pb-1.5 text-right font-semibold">Moms</th>
+              <th className="pb-1.5 text-right font-semibold">Brutto</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr className="tabular-nums">
+              <td className="pt-2">{CASELO_VAT_PERCENT}</td>
+              <td className="pt-2 text-right">{formatSekAmount(netSek)}</td>
+              <td className="pt-2 text-right">{formatSekAmount(vatSek)}</td>
+              <td className="pt-2 text-right">{formatSekAmount(grossSek)}</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p className="mt-5 flex items-baseline justify-between gap-3 border-t-2 border-neutral-900 pt-3 text-base font-bold sm:text-lg">
+          <span>Totalt</span>
+          <span className="whitespace-nowrap tabular-nums">
+            {formatSekAmount(grossSek)}
+          </span>
+        </p>
+      </section>
+
+      <footer className="mt-8 border-t border-neutral-300 pt-4 text-center text-xs leading-relaxed text-neutral-600">
+        <p>
+          Kvitto utfärdat av {CASELO_LEGAL_NAME} ({CASELO_TRADE_NAME}).
+        </p>
+        <p className="mt-1">Spara kvittot för redovisning av friskvårdsbidrag.</p>
+      </footer>
     </article>
   );
 };

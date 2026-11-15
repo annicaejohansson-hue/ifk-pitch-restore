@@ -47,19 +47,67 @@ export type FulfillmentContext = {
   receiptCustomerName?: string;
   personalId?: string;
   receiptName?: string;
+  /** Kundens valda betalsätt i kassan; används i förifylld kvitto-länk. */
+  chosenPaymentMethod?: "swish" | "bankgiro";
 };
 
 export { getFocusLabel };
+
+function specifiedReceiptName(ctx: FulfillmentContext): string {
+  return (
+    ctx.receiptName ||
+    (ctx.quantity
+      ? formatPtReceiptName(ctx.quantity)
+      : OFFER_PRODUCTS[ctx.productId].receiptName)
+  );
+}
+
+/**
+ * Förifylld intern länk till kvittosidan. Datum lämnas tomt så Caselo sätter
+ * betalningsdatum när pengarna syns. Personnummer ingår – länken är avsedd
+ * för Caselos inkorg, inte för kunden.
+ */
+export function buildWellnessReceiptPreviewUrl(
+  ctx: Pick<
+    FulfillmentContext,
+    | "orderRef"
+    | "amountSek"
+    | "receiptCustomerName"
+    | "personalId"
+    | "receiptName"
+    | "quantity"
+    | "productId"
+    | "chosenPaymentMethod"
+    | "paidAtLabel"
+  >,
+): string {
+  const params = new URLSearchParams();
+  params.set("ref", ctx.orderRef);
+  params.set("produkt", specifiedReceiptName(ctx));
+  params.set("belopp", String(ctx.amountSek));
+  if (ctx.receiptCustomerName?.trim()) {
+    params.set("namn", ctx.receiptCustomerName.trim());
+  }
+  if (ctx.personalId?.trim()) {
+    params.set("personnummer", ctx.personalId.trim());
+  }
+  if (ctx.chosenPaymentMethod === "bankgiro") {
+    params.set("betalsatt", "bankgiro");
+  } else if (ctx.chosenPaymentMethod === "swish") {
+    params.set("betalsatt", "swish");
+  }
+  if (ctx.paidAtLabel?.trim()) {
+    params.set("datum", ctx.paidAtLabel.trim());
+  }
+  return `${RECEIPT_PAGE}?${params.toString()}`;
+}
 
 function wellnessChecklistLines(ctx: FulfillmentContext): string[] {
   if (!ctx.wellnessReceipt) {
     return ["Kunden har inte begärt särskilt kvitto för friskvårdsbidrag."];
   }
-  const specified =
-    ctx.receiptName ||
-    (ctx.quantity
-      ? formatPtReceiptName(ctx.quantity)
-      : OFFER_PRODUCTS[ctx.productId].receiptName);
+  const specified = specifiedReceiptName(ctx);
+  const previewUrl = buildWellnessReceiptPreviewUrl(ctx);
   const lines = [
     `Kunden har begärt kvitto för friskvårdsbidrag. Kund på kvitto: ${ctx.receiptCustomerName || "ej angiven"}.`,
   ];
@@ -71,7 +119,10 @@ function wellnessChecklistLines(ctx: FulfillmentContext): string[] {
     );
   }
   lines.push(
-    `Skapa kvittot via ${RECEIPT_PAGE} med produkt (${specified}), belopp ${formatOfferPriceWithVat(ctx.amountSek)}, kund ${ctx.receiptCustomerName || "ej angiven"} och personnummer.`,
+    `När betalningen syns: öppna förifylld förhandsgranskning, kontrollera uppgifterna, sätt betalningsdatum och skriv ut/spara PDF: ${previewUrl}`,
+  );
+  lines.push(
+    `Produkt på kvitto: ${specified}. Belopp: ${formatOfferPriceWithVat(ctx.amountSek)}.`,
   );
   return lines;
 }
@@ -86,7 +137,9 @@ export function buildFulfillmentChecklist(ctx: FulfillmentContext): string {
     `Plats: ${OFFER_PLACE}. Bokningsbara tider: ${OFFER_BOOKABLE_HOURS}.`,
     OFFER_NO_TIME_LINE,
     `Företagsuppgifter på kvitto: ${CASELO_LEGAL_NAME}, org.nr ${CASELO_ORG_NUMBER}, moms ${CASELO_VAT_PERCENT} %.`,
-    `Skapa friskvårdskvitto: ${RECEIPT_PAGE}`,
+    ctx.wellnessReceipt
+      ? `Förifylld kvittoförhandsgranskning: ${buildWellnessReceiptPreviewUrl(ctx)}`
+      : `Skapa friskvårdskvitto (tom mall): ${RECEIPT_PAGE}`,
   ];
 
   if (ctx.productId === "snabbhet") {

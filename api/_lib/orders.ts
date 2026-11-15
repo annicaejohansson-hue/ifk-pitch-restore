@@ -38,7 +38,10 @@ import {
   type GiftLayoutId,
   type OfferProductId,
 } from "../../src/data/erbjudanden.js";
-import { buildFulfillmentChecklist } from "../../src/data/erbjudanden-fulfillment.js";
+import {
+  buildFulfillmentChecklist,
+  buildWellnessReceiptPreviewUrl,
+} from "../../src/data/erbjudanden-fulfillment.js";
 
 export type OrderStatus = "awaiting_payment";
 
@@ -824,6 +827,7 @@ async function persistOrder(order: OfferOrder, config: ServerConfig) {
     receiptCustomerName: order.receiptCustomerName,
     personalId: order.personalId,
     receiptName: order.receiptName,
+    chosenPaymentMethod: order.chosenPaymentMethod ?? undefined,
   });
 
   const hasFormspree = Boolean(config.formspreeId);
@@ -873,6 +877,18 @@ async function persistOrder(order: OfferOrder, config: ServerConfig) {
         friskvardskvitto: order.wellnessReceipt ? "Ja" : "Nej",
         kvittoNamn: order.receiptCustomerName || "",
         personnummer: order.personalId || "",
+        kvitto_forhandsgranskning: order.wellnessReceipt
+          ? buildWellnessReceiptPreviewUrl({
+              orderRef: order.orderRef,
+              amountSek: order.amountSek,
+              receiptCustomerName: order.receiptCustomerName,
+              personalId: order.personalId,
+              receiptName: order.receiptName,
+              quantity: order.quantity || undefined,
+              productId: order.productId,
+              chosenPaymentMethod: order.chosenPaymentMethod ?? undefined,
+            })
+          : "",
         skapad: formatMailTime(order.createdAt),
         betalning: config.bankgiroNumber
           ? `Swish eller bankgiro ${formatBankgiroNumber(config.bankgiroNumber)}. Caselo kontrollerar betalningen manuellt.`
