@@ -30,9 +30,9 @@ const Tjanster = () => {
             eyebrow="Tjänster"
             title="Bedömning, behandling och träning"
           >
-            Hos Caselo Idrottsmedicin får du evidensbaserad vård anpassad efter
-            dig – oavsett om målet är att bli av med smärta, återgå till idrott
-            eller utveckla din fysiska kapacitet.
+            Hos Caselo Idrottsmedicin får du hjälp med smärta och skador,
+            hälkoppsinlägg vid ont i hälen och personlig träning – anpassat
+            efter dig och dina mål.
           </PageIntro>
 
           <div className="grid grid-cols-1 items-stretch gap-6 sm:gap-8 md:grid-cols-3">
