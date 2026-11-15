@@ -1569,16 +1569,16 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
                                         <FormLabel>
                                           Vilken idrott/motionsform?
                                         </FormLabel>
+                                        <FormDescription>
+                                          Så att passen kan anpassas efter
+                                          idrotten.
+                                        </FormDescription>
                                         <FormControl>
                                           <Input
                                             className={fieldClass}
                                             {...sportField}
                                           />
                                         </FormControl>
-                                        <FormDescription>
-                                          Så att passen kan anpassas efter
-                                          idrotten.
-                                        </FormDescription>
                                         <FormMessage />
                                       </FormItem>
                                     )}
