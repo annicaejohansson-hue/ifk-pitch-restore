@@ -2,6 +2,7 @@ import { useState } from "react";
 import {
   DEFAULT_GIFT_LAYOUT,
   GIFT_LAYOUT_OPTIONS,
+  type GiftDecorationId,
   type GiftLayoutId,
 } from "@/data/erbjudanden";
 import { cn } from "@/lib/utils";
@@ -27,6 +28,7 @@ type GiftLayoutPickerProps = {
   productName?: string;
   inscription?: string;
   quantity?: number;
+  decoration?: GiftDecorationId;
 };
 
 const GiftLayoutPicker = ({
@@ -39,6 +41,7 @@ const GiftLayoutPicker = ({
   productName,
   inscription,
   quantity,
+  decoration,
 }: GiftLayoutPickerProps) => {
   const [previewId, setPreviewId] = useState<GiftLayoutId | null>(null);
   const preview = GIFT_LAYOUT_OPTIONS.find((item) => item.id === previewId);
@@ -82,6 +85,7 @@ const GiftLayoutPicker = ({
               productName={productName}
               inscription={inscription}
               quantity={quantity}
+              decoration={decoration}
             />
             <Button
               type="button"
@@ -108,6 +112,7 @@ const GiftLayoutPicker = ({
                 productName={productName}
                 inscription={inscription}
                 quantity={quantity}
+                decoration={decoration}
               />
             ) : null}
           </DialogContent>
@@ -157,6 +162,7 @@ const GiftLayoutPicker = ({
                     layout={option.id}
                     productName={productName}
                     quantity={quantity}
+                    decoration={decoration}
                   />
                 </div>
                 <div className="mt-3">
@@ -189,6 +195,7 @@ const GiftLayoutPicker = ({
               productName={productName}
               inscription={inscription}
               quantity={quantity}
+              decoration={decoration}
             />
           ) : null}
           {selectable && previewId ? (

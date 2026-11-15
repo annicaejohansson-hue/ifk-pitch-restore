@@ -24,9 +24,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
+  DEFAULT_GIFT_DECORATION,
   DEFAULT_GIFT_LAYOUT,
   defaultGiftInscription,
   FRISKVARD_FOCUS_OPTIONS,
+  GIFT_DECORATION_OPTIONS,
   GIFT_PRODUCT_LABEL,
   OFFER_CONTACT_EMAIL,
   OFFER_PATHS,
@@ -47,6 +49,7 @@ import {
   parseFullPersonalId,
   PERSONAL_ID_FORMAT_LABEL,
   formatPersonalIdInput,
+  type GiftDecorationId,
   type GiftLayoutId,
   type OfferProductId,
 } from "@/data/erbjudanden";
@@ -179,6 +182,11 @@ const giftLayoutSchema = z.enum(
   { required_error: "Välj utformning." },
 );
 
+const giftDecorationSchema = z.enum(
+  ["none", "gran", "stjarna", "hjarta", "snoflinga", "boll"],
+  { required_error: "Välj dekoration." },
+);
+
 const emailMatch = (values: { buyerEmail: string; buyerEmailConfirm: string }) =>
   values.buyerEmail.toLowerCase() === values.buyerEmailConfirm.toLowerCase();
 
@@ -234,6 +242,7 @@ const snabbhetSchema = z
     ...wellnessFieldsSchema,
     recipient: z.enum(["self", "gift"]),
     giftLayout: giftLayoutSchema,
+    giftDecoration: giftDecorationSchema,
     giftRecipientName: z.string().trim(),
     giftInscription: z.string().trim(),
   })
@@ -252,6 +261,7 @@ const friskvardSchema = z
     ...wellnessFieldsSchema,
     recipient: z.enum(["self", "gift"]),
     giftLayout: giftLayoutSchema,
+    giftDecoration: giftDecorationSchema,
     giftRecipientName: z.string().trim(),
     giftInscription: z.string().trim(),
     quantity: z
@@ -347,7 +357,7 @@ const PT_CHECKOUT_STEPS = [
   },
   {
     title: "Presentkort",
-    fields: ["recipient", "giftLayout", "giftInscription"],
+    fields: ["recipient", "giftLayout", "giftDecoration", "giftInscription"],
   },
   {
     title: "Friskvård",
@@ -368,7 +378,7 @@ const PT_CHECKOUT_STEPS = [
 const SNABBHET_CHECKOUT_STEPS = [
   {
     title: "Presentkort",
-    fields: ["recipient", "giftLayout", "giftInscription"],
+    fields: ["recipient", "giftLayout", "giftDecoration", "giftInscription"],
   },
   {
     title: "Friskvård",
@@ -527,6 +537,7 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
       privacyConsent: false,
       recipient: "self",
       giftLayout: layoutFromUrl,
+      giftDecoration: DEFAULT_GIFT_DECORATION,
       giftRecipientName: "",
       giftInscription: defaultGiftInscription("snabbhet"),
       wellnessReceipt: "no",
@@ -546,6 +557,7 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
       privacyConsent: false,
       recipient: "self",
       giftLayout: layoutFromUrl,
+      giftDecoration: DEFAULT_GIFT_DECORATION,
       giftRecipientName: "",
       giftInscription: defaultGiftInscription("friskvard"),
       quantity: quantityFromUrl
@@ -568,10 +580,12 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
 
   const snabbhetRecipient = snabbhetForm.watch("recipient");
   const snabbhetGiftLayout = snabbhetForm.watch("giftLayout");
+  const snabbhetGiftDecoration = snabbhetForm.watch("giftDecoration");
   const snabbhetGiftInscription = snabbhetForm.watch("giftInscription");
   const snabbhetWellnessReceipt = snabbhetForm.watch("wellnessReceipt");
   const friskvardRecipient = friskvardForm.watch("recipient");
   const friskvardGiftLayout = friskvardForm.watch("giftLayout");
+  const friskvardGiftDecoration = friskvardForm.watch("giftDecoration");
   const friskvardGiftInscription = friskvardForm.watch("giftInscription");
   const friskvardWellnessReceipt = friskvardForm.watch("wellnessReceipt");
   const selectedQuantityRaw = friskvardForm.watch("quantity");
@@ -728,6 +742,7 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
         buyerEmailConfirm: values.buyerEmailConfirm,
         paymentMethod: values.paymentMethod,
         giftLayout: values.giftLayout,
+        giftDecoration: values.giftDecoration,
         recipient: values.recipient,
         giftRecipientName: values.giftRecipientName,
         giftInscription:
@@ -785,6 +800,7 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
         quantity,
         recipient: values.recipient,
         giftLayout: values.giftLayout,
+        giftDecoration: values.giftDecoration,
         giftRecipientName: values.giftRecipientName,
         giftInscription:
           values.recipient === "gift"
@@ -1106,6 +1122,7 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
     form: typeof snabbhetForm | typeof friskvardForm,
     recipient: "self" | "gift",
     layout: GiftLayoutId,
+    decoration: GiftDecorationId,
     inscription: string,
     quantity?: number | null,
   ) => (
@@ -1155,6 +1172,7 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
             productName={giftProductLabel}
             inscription={inscription || giftDefaultInscription}
             quantity={quantity ?? undefined}
+            decoration={decoration}
           />
         </div>
         <FormField
@@ -1176,7 +1194,40 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
                   productName={giftProductLabel}
                   inscription={inscription || giftDefaultInscription}
                   quantity={quantity ?? undefined}
+                  decoration={decoration}
                 />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="giftDecoration"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Dekoration</FormLabel>
+              <FormDescription>
+                Valfritt. Visas uppe till höger på presentkortet.
+              </FormDescription>
+              <FormControl>
+                <RadioGroup
+                  onValueChange={field.onChange}
+                  value={field.value}
+                  className="grid grid-cols-1 gap-1 sm:grid-cols-2"
+                >
+                  {GIFT_DECORATION_OPTIONS.map((option) => (
+                    <label key={option.id} className={radioItemClass}>
+                      <RadioGroupItem
+                        value={option.id}
+                        id={`${productId}-gift-decoration-${option.id}`}
+                      />
+                      <span className="min-w-0 pt-0.5 text-base leading-snug">
+                        {option.label}
+                      </span>
+                    </label>
+                  ))}
+                </RadioGroup>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -1448,6 +1499,7 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
                   snabbhetForm,
                   snabbhetRecipient,
                   snabbhetGiftLayout,
+                  snabbhetGiftDecoration,
                   snabbhetGiftInscription,
                 )}
               </div>
@@ -1733,6 +1785,7 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
                   friskvardForm,
                   friskvardRecipient,
                   friskvardGiftLayout,
+                  friskvardGiftDecoration,
                   friskvardGiftInscription,
                   selectedQuantity,
                 )}

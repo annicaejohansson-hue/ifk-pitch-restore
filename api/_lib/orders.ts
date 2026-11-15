@@ -4,6 +4,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { IncomingMessage, ServerResponse } from "node:http";
 import {
+  DEFAULT_GIFT_DECORATION,
   DEFAULT_GIFT_LAYOUT,
   defaultGiftInscription,
   OFFER_BANKGIRO_NUMBER,
@@ -16,6 +17,7 @@ import {
   formatPtProductName,
   formatPtReceiptName,
   getFocusLabel,
+  getGiftDecoration,
   getGiftLayout,
   getOfferProduct,
   getPtSessionQuote,
@@ -24,6 +26,7 @@ import {
   isOfferSalesOpen,
   needsFriskvardPersonalId,
   parseFriskvardFocusIds,
+  parseGiftDecorationId,
   parseGiftLayoutId,
   formatFocusLabels,
   parsePtQuantity,
@@ -31,6 +34,7 @@ import {
   PT_SESSION_MAX_QUANTITY,
   PT_SESSION_MIN_QUANTITY,
   type FriskvardFocusId,
+  type GiftDecorationId,
   type GiftLayoutId,
   type OfferProductId,
 } from "../../src/data/erbjudanden.js";
@@ -59,6 +63,7 @@ export type OfferOrder = {
   buyerEmail: string;
   gift: boolean;
   giftLayout: GiftLayoutId;
+  giftDecoration: GiftDecorationId;
   giftRecipientName: string;
   giftInscription: string;
   participantName: string;
@@ -303,6 +308,7 @@ type CreateInput = {
   buyerEmailConfirm?: unknown;
   recipient?: unknown;
   giftLayout?: unknown;
+  giftDecoration?: unknown;
   giftRecipientName?: unknown;
   giftInscription?: unknown;
   participantName?: unknown;
@@ -480,6 +486,7 @@ export async function createOfferOrder(
 
   let gift = false;
   let giftLayout: GiftLayoutId = DEFAULT_GIFT_LAYOUT;
+  let giftDecoration: GiftDecorationId = DEFAULT_GIFT_DECORATION;
   let giftRecipientName = "";
   let giftInscription = "";
   let participantName = "";
@@ -500,6 +507,8 @@ export async function createOfferOrder(
     } else {
       fields.giftLayout = "Välj utformning.";
     }
+    const parsedDecoration = parseGiftDecorationId(clip(input.giftDecoration, 32));
+    giftDecoration = parsedDecoration ?? DEFAULT_GIFT_DECORATION;
     giftRecipientName = clip(input.giftRecipientName, 120);
     giftInscription =
       clip(input.giftInscription, 80) ||
@@ -594,6 +603,7 @@ export async function createOfferOrder(
     buyerEmail,
     gift,
     giftLayout,
+    giftDecoration,
     giftRecipientName,
     giftInscription,
     participantName,
@@ -804,6 +814,7 @@ async function persistOrder(order: OfferOrder, config: ServerConfig) {
     quantity: order.quantity || undefined,
     gift: order.gift,
     giftLayout: order.giftLayout,
+    giftDecoration: order.giftDecoration,
     giftRecipientName: order.giftRecipientName,
     giftInscription: order.giftInscription,
     participantName: order.participantName,
@@ -851,6 +862,9 @@ async function persistOrder(order: OfferOrder, config: ServerConfig) {
         epost: order.buyerEmail,
         gava: order.gift ? "Ja" : "Nej",
         presentkortslayout: giftLayoutMailLabel(order),
+        presentkortsdekoration: order.gift
+          ? getGiftDecoration(order.giftDecoration).label
+          : "",
         mottagare: order.giftRecipientName || "",
         presentkortstext: order.giftInscription || "",
         deltagare: order.participantName || "",

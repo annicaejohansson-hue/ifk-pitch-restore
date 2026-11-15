@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 import {
   giftCardLandingUrl,
   OFFER_PLACE,
+  type GiftDecorationId,
   type GiftLayoutId,
 } from "@/data/erbjudanden";
 import logoNavy from "@/assets/caselo-logo-navy.png";
@@ -15,6 +16,8 @@ type GiftCardPreviewProps = {
   inscription?: string;
   /** Antal träningspass – visas på personlig träning-kort. */
   quantity?: number;
+  /** Dekoration uppe till höger – oberoende av färgval. */
+  decoration?: GiftDecorationId;
   className?: string;
 };
 
@@ -62,7 +65,62 @@ const GoldSparkle = ({ className }: { className?: string }) => (
   </svg>
 );
 
-const TREE_LAYOUTS: GiftLayoutId[] = ["julklapp-gron", "julklapp-rod"];
+const GoldHeart = ({ className }: { className?: string }) => (
+  <svg
+    viewBox="0 0 24 24"
+    className={className}
+    aria-hidden="true"
+    fill="currentColor"
+  >
+    <path d="M12 21.2 10.4 19.7C5.4 15.2 2 12.1 2 8.3 2 5.2 4.4 2.8 7.5 2.8c1.7 0 3.4.8 4.5 2.1C13.1 3.6 14.8 2.8 16.5 2.8 19.6 2.8 22 5.2 22 8.3c0 3.8-3.4 6.9-8.4 11.4L12 21.2Z" />
+  </svg>
+);
+
+const GoldSnowflake = ({ className }: { className?: string }) => (
+  <svg
+    viewBox="0 0 24 24"
+    className={className}
+    aria-hidden="true"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.6"
+    strokeLinecap="round"
+  >
+    <path d="M12 2v20M4.5 6.5 19.5 17.5M19.5 6.5 4.5 17.5" />
+    <path d="M12 6.2 9.8 4.8M12 6.2l2.2-1.4M12 17.8l-2.2 1.4M12 17.8l2.2 1.4" />
+    <path d="M7.2 8.2 4.8 8.8M7.2 8.2 6 5.8M16.8 15.8l2.4-.6M16.8 15.8 18 18.2" />
+    <path d="M16.8 8.2l2.4.6M16.8 8.2 18 5.8M7.2 15.8l-2.4-.6M7.2 15.8 6 18.2" />
+  </svg>
+);
+
+const GoldBall = ({ className }: { className?: string }) => (
+  <svg
+    viewBox="0 0 24 24"
+    className={className}
+    aria-hidden="true"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.5"
+  >
+    <circle cx="12" cy="12" r="9" />
+    <path d="M12 3c1.8 2.2 2.7 5 2.7 9s-.9 6.8-2.7 9c-1.8-2.2-2.7-5-2.7-9S10.2 5.2 12 3Z" />
+    <path d="M3.6 9.2h16.8M3.6 14.8h16.8" />
+  </svg>
+);
+
+const DecorationIcon = ({
+  id,
+  className,
+}: {
+  id: Exclude<GiftDecorationId, "none">;
+  className?: string;
+}) => {
+  if (id === "gran") return <GoldTree className={className} />;
+  if (id === "stjarna") return <GoldSparkle className={className} />;
+  if (id === "hjarta") return <GoldHeart className={className} />;
+  if (id === "snoflinga") return <GoldSnowflake className={className} />;
+  return <GoldBall className={className} />;
+};
 
 const GiftCardPreview = ({
   layout,
@@ -70,6 +128,7 @@ const GiftCardPreview = ({
   productName = "Snabbhetspaket",
   inscription,
   quantity,
+  decoration = "none",
   className,
 }: GiftCardPreviewProps) => {
   const large = size === "large";
@@ -77,9 +136,8 @@ const GiftCardPreview = ({
   const customInscription = inscription?.trim() ?? "";
   const titleText = customInscription || copy.title || productName;
   const showProduct = copy.showProduct && !customInscription;
-  const isChristmas = TREE_LAYOUTS.includes(layout);
-  const isBirthday = layout === "fodelsedag";
   const isLight = layout === "fodelsedag";
+  const showDecoration = decoration !== "none";
   const qrUrl = giftCardLandingUrl();
   const sessionLine =
     typeof quantity === "number" && quantity > 0
@@ -107,7 +165,7 @@ const GiftCardPreview = ({
   );
 
   const kickerColor = isLight ? "text-[#8a7040]" : "text-[#c6b07a]";
-  const ruleColor = isLight ? "bg-[#c6b07a]" : "bg-[#c6b07a]";
+  const ruleColor = "bg-[#c6b07a]";
   const productColor = isLight
     ? "text-[#4a5160]"
     : layout === "julklapp-gron"
@@ -121,7 +179,7 @@ const GiftCardPreview = ({
 
   return (
     <article className={shell}>
-      {isChristmas || isBirthday ? (
+      {showDecoration ? (
         <div
           className={cn(
             "pointer-events-none absolute inset-1.5 rounded-[0.65rem] border",
@@ -130,7 +188,7 @@ const GiftCardPreview = ({
           aria-hidden="true"
         />
       ) : null}
-      {isChristmas ? (
+      {showDecoration ? (
         <div
           className={cn(
             "pointer-events-none absolute right-3 top-3 sm:right-4 sm:top-4",
@@ -138,21 +196,17 @@ const GiftCardPreview = ({
           )}
           aria-hidden="true"
         >
-          <GoldTree className={large ? "h-9 w-7" : "h-7 w-5"} />
+          <DecorationIcon
+            id={decoration}
+            className={large ? "h-8 w-8 sm:h-9 sm:w-9" : "h-6 w-6"}
+          />
         </div>
-      ) : null}
-      {isBirthday ? (
-        <GoldSparkle
-          className={cn(
-            "pointer-events-none absolute right-3 top-3 sm:right-4 sm:top-4",
-            iconColor,
-            large ? "h-6 w-6" : "h-5 w-5",
-          )}
-        />
       ) : null}
 
       <p className={cn(kicker, kickerColor)}>{copy.kicker}</p>
-      <p className={cn(title, "mt-1 min-h-[2.4em] hyphens-none")}>{titleText}</p>
+      <p className={cn(title, "mt-1 min-h-[2.4em] hyphens-none pr-10")}>
+        {titleText}
+      </p>
       <p
         className={cn(
           body,
@@ -165,7 +219,6 @@ const GiftCardPreview = ({
       </p>
       <div className={cn("mt-2 h-px w-10", ruleColor)} aria-hidden="true" />
 
-      {/* Fakta så att gåvomottagaren förstår vad presentkortet gäller. */}
       <ul className={cn(body, "mt-3 space-y-0.5", productColor)}>
         {sessionLine ? <li>{sessionLine}</li> : null}
         <li>Hos leg. fysioterapeut Henrik Nilsson</li>

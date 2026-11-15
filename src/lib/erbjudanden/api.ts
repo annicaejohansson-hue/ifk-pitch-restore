@@ -1,4 +1,8 @@
-import type { GiftLayoutId, OfferProductId } from "@/data/erbjudanden";
+import type {
+  GiftDecorationId,
+  GiftLayoutId,
+  OfferProductId,
+} from "@/data/erbjudanden";
 
 export type CheckoutState = {
   ok: boolean;
@@ -50,6 +54,7 @@ export type OrderPayload = {
   buyerEmailConfirm: string;
   recipient?: "self" | "gift";
   giftLayout?: GiftLayoutId;
+  giftDecoration?: GiftDecorationId;
   giftRecipientName?: string;
   giftInscription?: string;
   participantName?: string;

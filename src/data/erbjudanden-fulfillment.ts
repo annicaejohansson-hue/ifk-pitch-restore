@@ -3,6 +3,7 @@ import {
   formatPtProductName,
   formatPtReceiptName,
   getFocusLabel,
+  getGiftDecoration,
   getGiftLayout,
   OFFER_BOOKABLE_HOURS,
   OFFER_CONTACT_EMAIL,
@@ -12,6 +13,7 @@ import {
   OFFER_PLACE,
   OFFER_PRODUCTS,
   type FriskvardFocusId,
+  type GiftDecorationId,
   type GiftLayoutId,
   type OfferProductId,
 } from "./erbjudanden.js";
@@ -28,6 +30,7 @@ export type FulfillmentContext = {
   quantity?: number;
   gift?: boolean;
   giftLayout?: GiftLayoutId;
+  giftDecoration?: GiftDecorationId;
   giftRecipientName?: string;
   giftInscription?: string;
   participantName?: string;
@@ -80,8 +83,11 @@ export function buildFulfillmentChecklist(ctx: FulfillmentContext): string {
 
   if (ctx.productId === "snabbhet") {
     const layout = ctx.giftLayout ? getGiftLayout(ctx.giftLayout) : null;
+    const decoration = ctx.giftDecoration
+      ? getGiftDecoration(ctx.giftDecoration).label
+      : "Ingen dekoration";
     const recipient = ctx.gift
-      ? `Presentkortet mejlas till köparen. Utformning: ${layout?.label || "ej angiven"}. Text på kortet: ${ctx.giftInscription || ctx.giftRecipientName || "ej angiven"}.`
+      ? `Presentkortet mejlas till köparen. Utformning: ${layout?.label || "ej angiven"}. Dekoration: ${decoration}. Text på kortet: ${ctx.giftInscription || ctx.giftRecipientName || "ej angiven"}.`
       : "Paketet är köpt till köparen själv. Ej presentkort.";
     return [
       ...common,
@@ -98,8 +104,11 @@ export function buildFulfillmentChecklist(ctx: FulfillmentContext): string {
       ? formatPtProductName(ctx.quantity)
       : product.name;
   const layout = ctx.giftLayout ? getGiftLayout(ctx.giftLayout) : null;
+  const decoration = ctx.giftDecoration
+    ? getGiftDecoration(ctx.giftDecoration).label
+    : "Ingen dekoration";
   const giftLine = ctx.gift
-    ? `Presentkort. Utformning: ${layout?.label || "ej angiven"}. Text på kortet: ${ctx.giftInscription || ctx.giftRecipientName || "ej angiven"}.`
+    ? `Presentkort. Utformning: ${layout?.label || "ej angiven"}. Dekoration: ${decoration}. Text på kortet: ${ctx.giftInscription || ctx.giftRecipientName || "ej angiven"}.`
     : "Köpt till deltagaren, inte som presentkort.";
   const focusLine = `Deltagare: ${ctx.participantName || "ej angiven"}. Fokus: ${ctx.focusLabel || getFocusLabel(ctx.focusId) || "ej angiven"}. Upplägg: ${quantityLabel}.`;
   const specified = ctx.quantity

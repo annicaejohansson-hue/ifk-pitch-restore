@@ -412,6 +412,79 @@ export type GiftLayoutId =
 
 export const DEFAULT_GIFT_LAYOUT: GiftLayoutId = "neutral";
 
+export type GiftDecorationId =
+  | "none"
+  | "gran"
+  | "stjarna"
+  | "hjarta"
+  | "snoflinga"
+  | "boll";
+
+export const DEFAULT_GIFT_DECORATION: GiftDecorationId = "none";
+
+export const GIFT_DECORATION_OPTIONS: {
+  id: GiftDecorationId;
+  label: string;
+}[] = [
+  { id: "none", label: "Ingen dekoration" },
+  { id: "gran", label: "Gran" },
+  { id: "stjarna", label: "Stjärna" },
+  { id: "hjarta", label: "Hjärta" },
+  { id: "snoflinga", label: "Snöflinga" },
+  { id: "boll", label: "Fotboll" },
+];
+
+const GIFT_DECORATION_IDS = new Set(
+  GIFT_DECORATION_OPTIONS.map((item) => item.id),
+);
+
+export function isGiftDecorationId(
+  value: string | null | undefined,
+): value is GiftDecorationId {
+  return Boolean(value && GIFT_DECORATION_IDS.has(value as GiftDecorationId));
+}
+
+export function parseGiftDecorationId(
+  value: string | null | undefined,
+): GiftDecorationId | null {
+  if (!value) return null;
+  const normalized = value
+    .trim()
+    .toLowerCase()
+    .replaceAll("ö", "o")
+    .replaceAll("ä", "a")
+    .replaceAll("å", "a");
+  if (normalized === "none" || normalized === "ingen") return "none";
+  if (normalized === "gran" || normalized === "tree") return "gran";
+  if (
+    normalized === "stjarna" ||
+    normalized === "star" ||
+    normalized === "sparkle"
+  ) {
+    return "stjarna";
+  }
+  if (normalized === "hjarta" || normalized === "heart") return "hjarta";
+  if (
+    normalized === "snoflinga" ||
+    normalized === "snowflake" ||
+    normalized === "sno"
+  ) {
+    return "snoflinga";
+  }
+  if (normalized === "boll" || normalized === "ball" || normalized === "fotboll") {
+    return "boll";
+  }
+  return isGiftDecorationId(normalized) ? normalized : null;
+}
+
+export function getGiftDecoration(id: GiftDecorationId | string) {
+  const parsed = parseGiftDecorationId(String(id));
+  return (
+    GIFT_DECORATION_OPTIONS.find((item) => item.id === parsed) ??
+    GIFT_DECORATION_OPTIONS.find((item) => item.id === DEFAULT_GIFT_DECORATION)!
+  );
+}
+
 export const GIFT_PRODUCT_LABEL = {
   snabbhet: "Snabbhetsträning",
   friskvard: "Personlig träning",
