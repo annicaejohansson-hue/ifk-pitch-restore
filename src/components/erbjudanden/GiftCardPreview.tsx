@@ -83,7 +83,7 @@ const GiftCardPreview = ({
   const qrUrl = giftCardLandingUrl();
   const sessionLine =
     typeof quantity === "number" && quantity > 0
-      ? `${quantity} träningspass`
+      ? `${quantity} träningspass à 60 min`
       : null;
 
   const kicker = large
