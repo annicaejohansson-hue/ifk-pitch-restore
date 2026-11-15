@@ -64,6 +64,7 @@ import { cn } from "@/lib/utils";
 import { offerGoldCtaClass, offerOutlineCtaClass } from "./offerUi";
 import PaymentPanel from "./PaymentPanel";
 import UnsavedCheckoutGuard from "./UnsavedCheckoutGuard";
+import { PRIVACY_PATH } from "@/pages/Personuppgifter";
 
 const storageKey = (productId: OfferProductId) =>
   `caselo-offer-order:${productId}`;
@@ -138,6 +139,10 @@ const baseSchema = {
     .refine((value) => value === "swish" || value === "bankgiro", {
       message: "Välj hur du vill betala.",
     }),
+  // Godkännande av personuppgiftspolicyn krävs innan beställningen skickas.
+  privacyConsent: z.boolean().refine((value) => value === true, {
+    message: "Godkänn Caselos hantering av personuppgifter för att fortsätta.",
+  }),
   website: z.string().optional(),
 };
 
@@ -330,6 +335,7 @@ const PT_CHECKOUT_STEPS = [
       "buyerEmail",
       "buyerEmailConfirm",
       "paymentMethod",
+      "privacyConsent",
     ],
   },
 ] as const;
@@ -345,7 +351,13 @@ const SNABBHET_CHECKOUT_STEPS = [
   },
   {
     title: "Betalning",
-    fields: ["buyerName", "buyerEmail", "buyerEmailConfirm", "paymentMethod"],
+    fields: [
+      "buyerName",
+      "buyerEmail",
+      "buyerEmailConfirm",
+      "paymentMethod",
+      "privacyConsent",
+    ],
   },
 ] as const;
 
@@ -487,6 +499,7 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
       buyerName: "",
       buyerEmail: "",
       buyerEmailConfirm: "",
+      privacyConsent: false,
       recipient: "self",
       giftLayout: layoutFromUrl,
       giftRecipientName: "",
@@ -505,6 +518,7 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
       buyerName: "",
       buyerEmail: "",
       buyerEmailConfirm: "",
+      privacyConsent: false,
       recipient: "self",
       giftLayout: layoutFromUrl,
       giftRecipientName: "",
@@ -1311,18 +1325,42 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
     </h3>
   );
 
-  const personalDataNote = (
-    <p className="text-sm leading-relaxed text-muted-foreground">
-      Uppgifterna används för att hantera beställningen. Frågor om
-      personuppgifter? Mejla{" "}
-      <a
-        className="font-medium text-primary underline underline-offset-4 hover:text-primary/80"
-        href={`mailto:${OFFER_CONTACT_EMAIL}`}
-      >
-        {OFFER_CONTACT_EMAIL}
-      </a>
-      .
-    </p>
+  // Sist i betalningssteget, precis före knappen – stör inte namn, mejl
+  // eller valet av betalsätt.
+  const privacyConsentField = (
+    form: typeof snabbhetForm | typeof friskvardForm,
+  ) => (
+    <FormField
+      control={form.control}
+      name="privacyConsent"
+      render={({ field }) => (
+        <FormItem>
+          <label className="flex min-h-11 items-start gap-3">
+            <FormControl>
+              <Checkbox
+                className="mt-1 h-5 w-5"
+                checked={field.value === true}
+                onCheckedChange={(checked) => field.onChange(checked === true)}
+              />
+            </FormControl>
+            <span className="min-w-0 text-sm leading-relaxed text-foreground md:text-base">
+              Jag godkänner att Caselo Idrottsmedicin behandlar mina
+              personuppgifter enligt{" "}
+              <Link
+                to={PRIVACY_PATH}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium text-primary underline underline-offset-4 hover:text-primary/80"
+              >
+                personuppgiftspolicyn
+              </Link>
+              .
+            </span>
+          </label>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
   );
 
   const submitErrorNote = submitError ? (
@@ -1415,7 +1453,7 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
                   </ul>
                 </div>
                 {sharedFields(snabbhetForm)}
-                {personalDataNote}
+                {privacyConsentField(snabbhetForm)}
                 {submitErrorNote}
                 {paymentInstructions}
               </div>
@@ -1676,7 +1714,7 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
                   </div>
                 ) : null}
                 {sharedFields(friskvardForm)}
-                {personalDataNote}
+                {privacyConsentField(friskvardForm)}
                 {submitErrorNote}
                 {paymentInstructions}
               </div>

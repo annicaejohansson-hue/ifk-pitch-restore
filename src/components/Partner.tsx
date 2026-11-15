@@ -1,3 +1,6 @@
+import { Link } from "react-router-dom";
+import { PRIVACY_PATH } from "@/pages/Personuppgifter";
+
 const PARTNER_LOGOS = [
   {
     src: "https://irp.cdn-website.com/e6471f24/dms3rep/multi/g10.png",
@@ -69,6 +72,14 @@ const Partner = ({ variant = "footer" }: PartnerProps) => {
             <PartnerLogos variant="footer" />
           </div>
         </div>
+        <p className="mx-auto mt-4 max-w-4xl text-center text-sm text-primary-foreground/70">
+          <Link
+            to={PRIVACY_PATH}
+            className="underline underline-offset-4 hover:text-primary-foreground"
+          >
+            Personuppgiftspolicy
+          </Link>
+        </p>
       </div>
     </footer>
   );

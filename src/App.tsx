@@ -27,6 +27,7 @@ import HalkopparBarn from "@/pages/HalkopparBarn";
 import ErbjudandenFriskvard from "@/pages/erbjudanden/Friskvard";
 import ErbjudandenKassa from "@/pages/erbjudanden/Kassa";
 import ErbjudandenBoka from "@/pages/erbjudanden/Boka";
+import Personuppgifter, { PRIVACY_PATH } from "@/pages/Personuppgifter";
 import PermanentRedirect from "@/components/PermanentRedirect";
 import {
   HEEL_CUP_LEGACY_PATHS,
@@ -87,6 +88,7 @@ const router = createBrowserRouter(
       <Route path="/tjanster/:slug" element={<TjansterDetail />} />
       <Route path="/om" element={<Om />} />
       <Route path="/kontakt" element={<Kontakt />} />
+      <Route path={PRIVACY_PATH} element={<Personuppgifter />} />
       <Route path="/forening" element={<Forening />} />
       <Route path="/forening/tranare" element={<ForeningTranare />} />
       <Route path="/forening/spelare" element={<ForeningSpelare />} />
