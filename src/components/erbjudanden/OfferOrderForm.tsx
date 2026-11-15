@@ -1653,8 +1653,8 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
                                           <FormLabel>
                                             Vilken idrott/motionsform?{" "}
                                             <span className="font-normal text-muted-foreground">
-                                              (Så att passen kan anpassas efter
-                                              idrotten.)
+                                              (så att passen kan anpassas
+                                              därefter)
                                             </span>
                                           </FormLabel>
                                           <FormControl>
