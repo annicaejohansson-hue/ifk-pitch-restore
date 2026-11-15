@@ -1166,7 +1166,10 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
           </FormItem>
         )}
       />
-      <div className={cn(recipient !== "gift" && "hidden")}>
+      <div className={cn("space-y-5", recipient !== "gift" && "hidden")}>
+        <h3 className="text-base font-semibold leading-snug text-foreground md:text-lg">
+          Välj hur presentkortet ska se ut
+        </h3>
         {/* Förhandsgranskningen sticky så man ser ändringar medan man väljer. */}
         <div className="grid items-start gap-5 lg:grid-cols-2 lg:gap-8">
           <div className="sticky top-[5.5rem] z-10 -mx-1 space-y-2 bg-background/95 px-1 py-2 backdrop-blur-sm supports-[backdrop-filter]:bg-background/85 sm:top-24 lg:top-28">
@@ -1190,7 +1193,7 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
               name="giftLayout"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Färg</FormLabel>
+                  <FormLabel>1. Välj färg</FormLabel>
                   <FormDescription>
                     Mörkblå används om du inte väljer något annat.
                   </FormDescription>
