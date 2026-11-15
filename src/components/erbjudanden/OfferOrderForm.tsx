@@ -1485,7 +1485,8 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
     giftRecipientSelected &&
     checkoutStep === giftStepIndex ? (
       <p className="text-sm leading-relaxed text-muted-foreground md:text-base">
-        Presentkortet mejlas till din e-postadress.
+        Presentkortet mejlas till din e-postadress, som du uppger i Steg{" "}
+        {lastCheckoutStep + 1}.
       </p>
     ) : null;
 
