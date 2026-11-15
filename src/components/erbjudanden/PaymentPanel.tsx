@@ -212,7 +212,7 @@ const PaymentPanel = ({
         onClick={() => setManualSwishOpen((open) => !open)}
       >
         <span className="underline underline-offset-4">
-          Fungerar det inte? Swisha{" "}
+          Eller swisha{" "}
         </span>
         {/* Pilen hålls ihop med sista ordet när texten radbryts. */}
         <span className="whitespace-nowrap">
