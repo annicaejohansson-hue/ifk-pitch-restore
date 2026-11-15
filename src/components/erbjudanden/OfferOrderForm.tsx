@@ -1219,7 +1219,7 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
               name="giftDecoration"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Dekoration</FormLabel>
+                  <FormLabel>2. Välj dekoration</FormLabel>
                   <FormDescription>
                     Visas uppe till höger på presentkortet.
                   </FormDescription>
@@ -1251,7 +1251,7 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
               name="giftInscription"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Text på kortet</FormLabel>
+                  <FormLabel>3. Välj text på kortet</FormLabel>
                   <FormControl>
                     <Textarea
                       rows={2}
@@ -1261,8 +1261,7 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
                     />
                   </FormControl>
                   <FormDescription>
-                    Ändra om du vill att det ska stå något annat. Presentkortet
-                    mejlas till din e-postadress.
+                    Ändra om du vill att det ska stå något annat.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -1475,6 +1474,20 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
     ) : null;
 
   const showStepButtons = !(checkoutStep === lastCheckoutStep && orderCurrent);
+  // Presentkort-steget: snabbhet = steg 0, personlig träning = steg 1.
+  const giftStepIndex = productId === "snabbhet" ? 0 : 1;
+  const giftRecipientSelected =
+    productId === "snabbhet"
+      ? snabbhetRecipient === "gift"
+      : friskvardRecipient === "gift";
+  const giftMailNote =
+    showStepButtons &&
+    giftRecipientSelected &&
+    checkoutStep === giftStepIndex ? (
+      <p className="text-sm leading-relaxed text-muted-foreground md:text-base">
+        Presentkortet mejlas till din e-postadress.
+      </p>
+    ) : null;
 
   return (
     <div id="bestall" className="scroll-mt-28">
@@ -1549,43 +1562,43 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
               </div>
 
               <div
-                className={cn(
-                  "flex flex-col gap-3 sm:flex-row sm:flex-wrap",
-                  !showStepButtons && "hidden",
-                )}
+                className={cn("space-y-3", !showStepButtons && "hidden")}
               >
-                {checkoutStep > 0 ? (
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className={offerOutlineCtaClass}
-                    onClick={() => goToCheckoutStep(checkoutStep - 1)}
-                  >
-                    Föregående
-                  </Button>
-                ) : null}
-                {checkoutStep < SNABBHET_CHECKOUT_STEPS.length - 1 ? (
-                  <Button
-                    type="button"
-                    variant="secondary"
-                    className={offerGoldCtaClass}
-                    onClick={() => void goNextCheckoutStep()}
-                  >
-                    Nästa
-                  </Button>
-                ) : (
-                  <Button
-                    type="submit"
-                    variant="secondary"
-                    className={offerGoldCtaClass}
-                    disabled={submitting || !checkout}
-                  >
-                    {submitting ? (
-                      <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
-                    ) : null}
-                    Visa betalningsuppgifter
-                  </Button>
-                )}
+                {giftMailNote}
+                <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                  {checkoutStep > 0 ? (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className={offerOutlineCtaClass}
+                      onClick={() => goToCheckoutStep(checkoutStep - 1)}
+                    >
+                      Föregående
+                    </Button>
+                  ) : null}
+                  {checkoutStep < SNABBHET_CHECKOUT_STEPS.length - 1 ? (
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      className={offerGoldCtaClass}
+                      onClick={() => void goNextCheckoutStep()}
+                    >
+                      Nästa
+                    </Button>
+                  ) : (
+                    <Button
+                      type="submit"
+                      variant="secondary"
+                      className={offerGoldCtaClass}
+                      disabled={submitting || !checkout}
+                    >
+                      {submitting ? (
+                        <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+                      ) : null}
+                      Visa betalningsuppgifter
+                    </Button>
+                  )}
+                </div>
               </div>
             </form>
           </Form>
@@ -1849,43 +1862,43 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
               </div>
 
               <div
-                className={cn(
-                  "flex flex-col gap-3 sm:flex-row sm:flex-wrap",
-                  !showStepButtons && "hidden",
-                )}
+                className={cn("space-y-3", !showStepButtons && "hidden")}
               >
-                {checkoutStep > 0 ? (
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className={offerOutlineCtaClass}
-                    onClick={() => goToCheckoutStep(checkoutStep - 1)}
-                  >
-                    Föregående
-                  </Button>
-                ) : null}
-                {checkoutStep < PT_CHECKOUT_STEPS.length - 1 ? (
-                  <Button
-                    type="button"
-                    variant="secondary"
-                    className={offerGoldCtaClass}
-                    onClick={() => void goNextCheckoutStep()}
-                  >
-                    Nästa
-                  </Button>
-                ) : (
-                  <Button
-                    type="submit"
-                    variant="secondary"
-                    className={offerGoldCtaClass}
-                    disabled={submitting || !checkout}
-                  >
-                    {submitting ? (
-                      <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
-                    ) : null}
-                    Visa betalningsuppgifter
-                  </Button>
-                )}
+                {giftMailNote}
+                <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                  {checkoutStep > 0 ? (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className={offerOutlineCtaClass}
+                      onClick={() => goToCheckoutStep(checkoutStep - 1)}
+                    >
+                      Föregående
+                    </Button>
+                  ) : null}
+                  {checkoutStep < PT_CHECKOUT_STEPS.length - 1 ? (
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      className={offerGoldCtaClass}
+                      onClick={() => void goNextCheckoutStep()}
+                    >
+                      Nästa
+                    </Button>
+                  ) : (
+                    <Button
+                      type="submit"
+                      variant="secondary"
+                      className={offerGoldCtaClass}
+                      disabled={submitting || !checkout}
+                    >
+                      {submitting ? (
+                        <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+                      ) : null}
+                      Visa betalningsuppgifter
+                    </Button>
+                  )}
+                </div>
               </div>
             </form>
           </Form>
