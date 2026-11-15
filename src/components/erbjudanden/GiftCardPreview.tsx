@@ -2,6 +2,7 @@ import { QRCodeSVG } from "qrcode.react";
 import { cn } from "@/lib/utils";
 import {
   giftCardLandingUrl,
+  isLightGiftLayout,
   OFFER_PLACE,
   type GiftDecorationId,
   type GiftLayoutId,
@@ -28,6 +29,26 @@ const COPY: Record<
   neutral: {
     kicker: "Presentkort",
     title: "Grattis på födelsedagen",
+    showProduct: false,
+  },
+  "caselo-ljusbla": {
+    kicker: "Presentkort",
+    title: "Grattis",
+    showProduct: false,
+  },
+  ljusgra: {
+    kicker: "Presentkort",
+    title: "Grattis",
+    showProduct: false,
+  },
+  mint: {
+    kicker: "Presentkort",
+    title: "Grattis",
+    showProduct: false,
+  },
+  pappersvit: {
+    kicker: "Presentkort",
+    title: "Grattis",
     showProduct: false,
   },
   "julklapp-gron": { kicker: "Presentkort", title: "God jul", showProduct: true },
@@ -155,7 +176,7 @@ const GiftCardPreview = ({
   const customInscription = inscription?.trim() ?? "";
   const titleText = customInscription || copy.title || productName;
   const showProduct = copy.showProduct && !customInscription;
-  const isLight = layout === "fodelsedag";
+  const isLight = isLightGiftLayout(layout);
   const showDecoration = decoration !== "none";
   const qrUrl = giftCardLandingUrl();
   const sessionLine =
@@ -180,11 +201,21 @@ const GiftCardPreview = ({
     layout === "julklapp-gron" && "bg-[#1c2621] text-[#f3ead7]",
     layout === "julklapp-rod" && "bg-[#3a1c24] text-[#f6ead8]",
     layout === "fodelsedag" && "bg-[#ebe0cc] text-[#1b2430]",
+    // Caselo secondary / ljusblå – sparsam med bläck.
+    layout === "caselo-ljusbla" && "bg-[#b9c9e3] text-[#1b2430]",
+    layout === "ljusgra" && "bg-[#e5e7eb] text-[#1b2430]",
+    layout === "mint" && "bg-[#d8e6df] text-[#1b2430]",
+    layout === "pappersvit" &&
+      "border border-[#d7d7d4] bg-[#f7f7f5] text-[#1b2430]",
     className,
   );
 
-  const kickerColor = isLight ? "text-[#8a7040]" : "text-[#c6b07a]";
-  const ruleColor = "bg-[#c6b07a]";
+  const lightAccent =
+    layout === "caselo-ljusbla" ? "text-[#3a5080]" : "text-[#8a7040]";
+  const lightRule =
+    layout === "caselo-ljusbla" ? "bg-[#3a5080]" : "bg-[#c6b07a]";
+  const kickerColor = isLight ? lightAccent : "text-[#c6b07a]";
+  const ruleColor = isLight ? lightRule : "bg-[#c6b07a]";
   const productColor = isLight
     ? "text-[#4a5160]"
     : layout === "julklapp-gron"
@@ -192,9 +223,9 @@ const GiftCardPreview = ({
       : layout === "julklapp-rod"
         ? "text-[#f6ead8]/75"
         : "text-[#f5f2ea]/80";
-  const iconColor = isLight ? "text-[#8a7040]" : "text-[#c6b07a]";
-  const qrFg = isLight ? "#1b2430" : "#0e1627";
-  const qrBg = isLight ? "#ebe0cc" : "#ffffff";
+  const iconColor = isLight ? lightAccent : "text-[#c6b07a]";
+  const qrFg = "#0e1627";
+  const qrBg = "#ffffff";
 
   return (
     <article className={shell}>
@@ -202,7 +233,11 @@ const GiftCardPreview = ({
         <div
           className={cn(
             "pointer-events-none absolute inset-1.5 rounded-[0.65rem] border",
-            isLight ? "border-[#c6b07a]/70" : "border-[#c6b07a]/40",
+            layout === "caselo-ljusbla"
+              ? "border-[#3a5080]/45"
+              : isLight
+                ? "border-[#c6b07a]/70"
+                : "border-[#c6b07a]/40",
           )}
           aria-hidden="true"
         />

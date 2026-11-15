@@ -408,9 +408,26 @@ export type GiftLayoutId =
   | "neutral"
   | "julklapp-gron"
   | "julklapp-rod"
-  | "fodelsedag";
+  | "fodelsedag"
+  | "caselo-ljusbla"
+  | "ljusgra"
+  | "mint"
+  | "pappersvit";
 
 export const DEFAULT_GIFT_LAYOUT: GiftLayoutId = "neutral";
+
+/** Ljusa färger – mörk text och ljus bakgrund (bra för utskrift). */
+export const LIGHT_GIFT_LAYOUTS: readonly GiftLayoutId[] = [
+  "fodelsedag",
+  "caselo-ljusbla",
+  "ljusgra",
+  "mint",
+  "pappersvit",
+] as const;
+
+export function isLightGiftLayout(id: GiftLayoutId): boolean {
+  return (LIGHT_GIFT_LAYOUTS as readonly string[]).includes(id);
+}
 
 export type GiftDecorationId =
   | "none"
@@ -525,31 +542,59 @@ export const GIFT_LAYOUT_OPTIONS: {
   isGift: boolean;
 }[] = [
   {
+    id: "neutral",
+    label: "Mörkblå",
+    shortLabel: "Mörkblå",
+    description: "Stilren mörkblå – Caselos grundfärg.",
+    isGift: true,
+  },
+  {
+    id: "caselo-ljusbla",
+    label: "Caselo ljusblå",
+    shortLabel: "Ljusblå",
+    description: "Caselos ljusblå – sparsam med bläck och tydlig i utskrift.",
+    isGift: true,
+  },
+  {
+    id: "ljusgra",
+    label: "Ljusgrå",
+    shortLabel: "Ljusgrå",
+    description: "Neutral ljusgrå som är snäll mot skrivaren.",
+    isGift: true,
+  },
+  {
+    id: "mint",
+    label: "Mint",
+    shortLabel: "Mint",
+    description: "Ljus mintgrön med lugn, professionell känsla.",
+    isGift: true,
+  },
+  {
+    id: "pappersvit",
+    label: "Pappersvit",
+    shortLabel: "Vit",
+    description: "Nästan vit – minimal bläckförbrukning vid utskrift.",
+    isGift: true,
+  },
+  {
     id: "julklapp-gron",
     label: "Grön",
     shortLabel: "Grön",
-    description: "En återhållen julhälsning i mörk grön och guld.",
+    description: "Mörk grön med guldton.",
     isGift: true,
   },
   {
     id: "julklapp-rod",
     label: "Röd",
     shortLabel: "Röd",
-    description: "En återhållen julhälsning i mörk röd och guld.",
+    description: "Mörk röd med guldton.",
     isGift: true,
   },
   {
     id: "fodelsedag",
     label: "Beige",
     shortLabel: "Beige",
-    description: "En lugn födelsedagshälsning i champagne och guld.",
-    isGift: true,
-  },
-  {
-    id: "neutral",
-    label: "Mörkblå",
-    shortLabel: "Mörkblå",
-    description: "En stilren utformning i mörkblått.",
+    description: "Ljus champagnebeige.",
     isGift: true,
   },
 ];
@@ -589,11 +634,39 @@ export function parseGiftLayoutId(value: string | null | undefined): GiftLayoutI
   }
   if (
     normalized === "fodelsedag" ||
-    normalized === "birthday"
+    normalized === "birthday" ||
+    normalized === "beige"
   ) {
     return "fodelsedag";
   }
-  return null;
+  if (
+    normalized === "caselo-ljusbla" ||
+    normalized === "caseloljusbla" ||
+    normalized === "ljusbla" ||
+    normalized === "lightblue"
+  ) {
+    return "caselo-ljusbla";
+  }
+  if (
+    normalized === "ljusgra" ||
+    normalized === "lightgray" ||
+    normalized === "lightgrey" ||
+    normalized === "gra"
+  ) {
+    return "ljusgra";
+  }
+  if (normalized === "mint" || normalized === "mintgron") {
+    return "mint";
+  }
+  if (
+    normalized === "pappersvit" ||
+    normalized === "vit" ||
+    normalized === "white" ||
+    normalized === "offwhite"
+  ) {
+    return "pappersvit";
+  }
+  return isGiftLayoutId(normalized) ? normalized : null;
 }
 
 export function getGiftLayout(id: GiftLayoutId | string) {

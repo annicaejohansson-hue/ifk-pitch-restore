@@ -387,8 +387,8 @@ const Friskvard = () => {
                 Både personlig träning och snabbhetspaketet kan köpas som
                 presentkort att ge bort. Presentkortet skickas till din e-post
                 inom 24 timmar efter betalning, tillsammans med information om
-                hur mottagaren bokar. Presentkorten finns i fyra utformningar –
-                se nedan. Du väljer utformning och text på kortet i kassan.
+                hur mottagaren bokar. Presentkorten finns i flera färger –
+                se nedan. Du väljer färg och text på kortet i kassan.
               </p>
             <GiftLayoutPicker
               value="neutral"

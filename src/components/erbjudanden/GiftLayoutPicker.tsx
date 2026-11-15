@@ -71,7 +71,7 @@ const GiftLayoutPicker = ({
                 onChange={() => onChange?.(option.id)}
                 className="h-5 w-5 shrink-0 accent-[hsl(var(--primary))]"
               />
-              <span className="min-w-0 text-xs leading-snug sm:text-sm">
+              <span className="min-w-0 text-[0.7rem] leading-snug sm:text-xs md:text-sm">
                 {option.label}
               </span>
             </label>

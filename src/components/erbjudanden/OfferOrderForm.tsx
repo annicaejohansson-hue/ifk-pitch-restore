@@ -178,8 +178,17 @@ const baseSchema = {
 };
 
 const giftLayoutSchema = z.enum(
-  ["neutral", "julklapp-gron", "julklapp-rod", "fodelsedag"],
-  { required_error: "Välj utformning." },
+  [
+    "neutral",
+    "caselo-ljusbla",
+    "ljusgra",
+    "mint",
+    "pappersvit",
+    "julklapp-gron",
+    "julklapp-rod",
+    "fodelsedag",
+  ],
+  { required_error: "Välj färg." },
 );
 
 const giftDecorationSchema = z.enum(
@@ -198,7 +207,7 @@ const requireGiftLayout = (
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
       path: ["giftLayout"],
-      message: "Välj utformning.",
+      message: "Välj färg.",
     });
   }
 };
@@ -1178,7 +1187,7 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
           <div className="min-w-0 space-y-5">
             <p className="text-sm leading-relaxed text-muted-foreground">
               Standard är mörkblått med texten {giftDefaultInscription}. Byt
-              utformning, dekoration och text här – förhandsgranskningen
+              färg, dekoration och text här – förhandsgranskningen
               uppdateras direkt.
             </p>
             <FormField
@@ -1186,7 +1195,7 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
               name="giftLayout"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Utformning</FormLabel>
+                  <FormLabel>Färg</FormLabel>
                   <FormDescription>
                     Mörkblå används om du inte väljer något annat.
                   </FormDescription>

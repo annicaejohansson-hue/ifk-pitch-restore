@@ -95,7 +95,7 @@ export function buildFulfillmentChecklist(ctx: FulfillmentContext): string {
       ? getGiftDecoration(ctx.giftDecoration).label
       : "Ingen dekoration";
     const recipient = ctx.gift
-      ? `Presentkortet mejlas till köparen. Utformning: ${layout?.label || "ej angiven"}. Dekoration: ${decoration}. Text på kortet: ${ctx.giftInscription || ctx.giftRecipientName || "ej angiven"}.`
+      ? `Presentkortet mejlas till köparen. Färg: ${layout?.label || "ej angiven"}. Dekoration: ${decoration}. Text på kortet: ${ctx.giftInscription || ctx.giftRecipientName || "ej angiven"}.`
       : "Paketet är köpt till köparen själv. Ej presentkort.";
     return [
       ...common,
@@ -116,7 +116,7 @@ export function buildFulfillmentChecklist(ctx: FulfillmentContext): string {
     ? getGiftDecoration(ctx.giftDecoration).label
     : "Ingen dekoration";
   const giftLine = ctx.gift
-    ? `Presentkort. Utformning: ${layout?.label || "ej angiven"}. Dekoration: ${decoration}. Text på kortet: ${ctx.giftInscription || ctx.giftRecipientName || "ej angiven"}.`
+    ? `Presentkort. Färg: ${layout?.label || "ej angiven"}. Dekoration: ${decoration}. Text på kortet: ${ctx.giftInscription || ctx.giftRecipientName || "ej angiven"}.`
     : "Köpt till deltagaren, inte som presentkort.";
   const focusLine = `Deltagare: ${ctx.participantName || "ej angiven"}. Fokus: ${ctx.focusLabel || getFocusLabel(ctx.focusId) || "ej angiven"}. Upplägg: ${quantityLabel}.`;
   const specified = ctx.quantity
@@ -144,7 +144,7 @@ export function buildCustomerFulfillmentDraft(ctx: FulfillmentContext): string {
   if (ctx.productId === "snabbhet") {
     const layout = ctx.giftLayout ? getGiftLayout(ctx.giftLayout) : null;
     const giftLine = ctx.gift
-      ? `Detta är ett presentkort för snabbhetspaketet${ctx.giftInscription ? `, med texten “${ctx.giftInscription}”` : ctx.giftRecipientName ? ` till ${ctx.giftRecipientName}` : ""}${layout ? `, utformning ${layout.label.toLowerCase()}` : ""}. Presentkortet skickas till köparens e-postadress.`
+      ? `Detta är ett presentkort för snabbhetspaketet${ctx.giftInscription ? `, med texten “${ctx.giftInscription}”` : ctx.giftRecipientName ? ` till ${ctx.giftRecipientName}` : ""}${layout ? `, färg ${layout.label.toLowerCase()}` : ""}. Presentkortet skickas till köparens e-postadress.`
       : "Detta bekräftar ditt snabbhetspaket.";
     return [
       `Hej ${ctx.buyerName},`,

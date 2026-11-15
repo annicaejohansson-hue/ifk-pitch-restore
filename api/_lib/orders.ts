@@ -505,7 +505,7 @@ export async function createOfferOrder(
     if (parsedLayout) {
       giftLayout = parsedLayout;
     } else {
-      fields.giftLayout = "Välj utformning.";
+      fields.giftLayout = "Välj färg.";
     }
     const parsedDecoration = parseGiftDecorationId(clip(input.giftDecoration, 32));
     giftDecoration = parsedDecoration ?? DEFAULT_GIFT_DECORATION;
