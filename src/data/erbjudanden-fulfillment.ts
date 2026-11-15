@@ -17,8 +17,15 @@ import {
   type GiftLayoutId,
   type OfferProductId,
 } from "./erbjudanden.js";
+import {
+  CASELO_LEGAL_NAME,
+  CASELO_ORG_NUMBER,
+  CASELO_VAT_PERCENT,
+  WELLNESS_RECEIPT_PATH,
+} from "./caseloCompany.js";
 
 const BOOKING_PAGE = "https://www.caseloidrottsmedicin.se/erbjudanden/boka";
+const RECEIPT_PAGE = `https://www.caseloidrottsmedicin.se${WELLNESS_RECEIPT_PATH}`;
 
 export type FulfillmentContext = {
   productId: OfferProductId;
@@ -64,7 +71,7 @@ function wellnessChecklistLines(ctx: FulfillmentContext): string[] {
     );
   }
   lines.push(
-    `Kvittot ska innehålla: företagsnamn, organisationsnummer, produktnamn (${specified})${ctx.amountSek > 1000 ? ", antal tillfällen eller period" : ""}, moms, belopp inklusive moms, datum och kund.`,
+    `Skapa kvittot via ${RECEIPT_PAGE} med produkt (${specified}), belopp ${formatOfferPriceWithVat(ctx.amountSek)}, kund ${ctx.receiptCustomerName || "ej angiven"} och personnummer.`,
   );
   return lines;
 }
@@ -78,7 +85,8 @@ export function buildFulfillmentChecklist(ctx: FulfillmentContext): string {
     `Bokningsinformation: ${BOOKING_PAGE}`,
     `Plats: ${OFFER_PLACE}. Bokningsbara tider: ${OFFER_BOOKABLE_HOURS}.`,
     OFFER_NO_TIME_LINE,
-    `Företagsuppgifter på kvitto: komplettera med Caselos officiella uppgifter. Hitta inte på organisationsnummer eller momssats.`,
+    `Företagsuppgifter på kvitto: ${CASELO_LEGAL_NAME}, org.nr ${CASELO_ORG_NUMBER}, moms ${CASELO_VAT_PERCENT} %.`,
+    `Skapa friskvårdskvitto: ${RECEIPT_PAGE}`,
   ];
 
   if (ctx.productId === "snabbhet") {

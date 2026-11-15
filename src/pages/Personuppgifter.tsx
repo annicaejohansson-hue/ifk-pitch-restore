@@ -4,13 +4,17 @@ import { Link } from "react-router-dom";
 import PageIntro from "@/components/PageIntro";
 import Partner from "@/components/Partner";
 import { OFFER_CONTACT_EMAIL } from "@/data/erbjudanden";
+import {
+  CASELO_ADDRESS_LINE_1,
+  CASELO_ADDRESS_LINE_2,
+  CASELO_LEGAL_NAME,
+  CASELO_ORG_NUMBER,
+  CASELO_TRADE_NAME,
+} from "@/data/caseloCompany";
 import { SITE_ORIGIN } from "@/lib/booking";
 
 export const PRIVACY_PATH = "/personuppgifter";
 const PAGE_URL = `${SITE_ORIGIN}${PRIVACY_PATH}`;
-
-const ADDRESS_LINE_1 = "Rinkebyvägen 4";
-const ADDRESS_LINE_2 = "182 36 Danderyd";
 
 const sectionClass = "space-y-3";
 const h2Class =
@@ -19,11 +23,7 @@ const bodyClass =
   "break-words text-base leading-relaxed text-muted-foreground md:text-lg";
 const listClass = `${bodyClass} list-disc space-y-2 pl-5`;
 
-/**
- * Personuppgiftspolicy enligt GDPR (EU 2016/679). Uppgifterna bygger på
- * kontaktuppgifter som redan syns på sajten; organisationsnummer anges inte
- * här förrän det finns verifierat.
- */
+/** Personuppgiftspolicy enligt GDPR (EU 2016/679). */
 const Personuppgifter = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -58,9 +58,10 @@ const Personuppgifter = () => {
               <section className={sectionClass}>
                 <h2 className={h2Class}>1. Personuppgiftsansvarig</h2>
                 <p className={bodyClass}>
-                  Personuppgiftsansvarig är Caselo Idrottsmedicin, med
-                  mottagning på {ADDRESS_LINE_1}, {ADDRESS_LINE_2}. Kontakt:
-                  mejla{" "}
+                  Personuppgiftsansvarig är {CASELO_LEGAL_NAME} (
+                  {CASELO_TRADE_NAME}), organisationsnummer {CASELO_ORG_NUMBER},
+                  med mottagning på {CASELO_ADDRESS_LINE_1},{" "}
+                  {CASELO_ADDRESS_LINE_2}. Kontakt: mejla{" "}
                   <a
                     className="font-medium text-primary underline underline-offset-4 hover:text-primary/80"
                     href={`mailto:${OFFER_CONTACT_EMAIL}`}

@@ -27,7 +27,9 @@ import HalkopparBarn from "@/pages/HalkopparBarn";
 import ErbjudandenFriskvard from "@/pages/erbjudanden/Friskvard";
 import ErbjudandenKassa from "@/pages/erbjudanden/Kassa";
 import ErbjudandenBoka from "@/pages/erbjudanden/Boka";
+import ErbjudandenKvitto from "@/pages/erbjudanden/Kvitto";
 import Personuppgifter, { PRIVACY_PATH } from "@/pages/Personuppgifter";
+import { WELLNESS_RECEIPT_PATH } from "@/data/caseloCompany";
 import PermanentRedirect from "@/components/PermanentRedirect";
 import {
   HEEL_CUP_LEGACY_PATHS,
@@ -97,6 +99,7 @@ const router = createBrowserRouter(
       <Route path="/erbjudanden/friskvard" element={<PersonalTrainingRedirect />} />
       <Route path="/erbjudanden/kassa" element={<ErbjudandenKassa />} />
       <Route path="/erbjudanden/boka" element={<ErbjudandenBoka />} />
+      <Route path={WELLNESS_RECEIPT_PATH} element={<ErbjudandenKvitto />} />
       <Route path="*" element={<NotFound />} />
     </Route>,
   ),
