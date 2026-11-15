@@ -131,8 +131,8 @@ const GoldSnowflake = ({ className }: { className?: string }) => (
 );
 
 /**
- * Klassisk Telstar-fotboll efter inspobild: ifyllda svarta pentagoner
- * och hexagoner med tydliga sömmar.
+ * Enkel fotbollssymbol: cirkel + mittpentagon. Läses som boll utan
+ * plottriga sömmar i liten storlek.
  */
 const GoldBall = ({ className }: { className?: string }) => (
   <svg
@@ -144,25 +144,12 @@ const GoldBall = ({ className }: { className?: string }) => (
     <circle
       cx="12"
       cy="12"
-      r="9.2"
+      r="8.5"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.15"
+      strokeWidth="1.4"
     />
-    {/* Övre pentagon */}
-    <path d="M12 3.9 14.55 5.7 13.6 8.55 10.4 8.55 9.45 5.7Z" />
-    {/* Vänster pentagon */}
-    <path d="M4.85 10.6 7.35 9.05 9.55 10.55 8.85 13.2 5.95 13.55Z" />
-    {/* Höger pentagon */}
-    <path d="M19.15 10.6 16.65 9.05 14.45 10.55 15.15 13.2 18.05 13.55Z" />
-    {/* Nedre vänster / höger fragment + mitt-hexagon */}
-    <path
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.05"
-      strokeLinejoin="round"
-      d="M10.4 8.55 12 10.85 13.6 8.55M12 10.85 9.55 10.55 8.85 13.2 12 15.35 15.15 13.2 14.45 10.55 12 10.85M8.85 13.2 7.2 16.1 9.4 18.35 12 17.55M15.15 13.2 16.8 16.1 14.6 18.35 12 17.55M9.45 5.7 6.55 6.85 7.35 9.05M14.55 5.7 17.45 6.85 16.65 9.05M5.95 13.55 4.7 16.4 7.2 16.1M18.05 13.55 19.3 16.4 16.8 16.1M9.4 18.35 12 20.35 14.6 18.35"
-    />
+    <path d="M12 8.2 14.6 10.1 13.6 13.2 10.4 13.2 9.4 10.1Z" />
   </svg>
 );
 
