@@ -176,7 +176,7 @@ const Friskvard = () => {
               className="mb-8 md:mb-10"
               eyebrow="Tjänster"
               eyebrowHref="/tjanster"
-              title="Personlig träning"
+              title="Personlig träning efter dina mål"
             >
               Träna med leg. fysioterapeut Henrik Nilsson i Danderyd – i din
               takt, efter din idrott eller motionsform.
