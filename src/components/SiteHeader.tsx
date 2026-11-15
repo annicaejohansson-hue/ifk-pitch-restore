@@ -40,7 +40,7 @@ const SiteHeader = () => {
   const showHeaderBooking = location.pathname !== "/boka";
 
   return (
-    <header className="overflow-x-hidden border-b-2 border-primary bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="no-print overflow-x-hidden border-b-2 border-primary bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div
         className={[
           "container min-w-0 px-8 md:px-4 py-2.5 sm:py-3 md:flex md:min-h-28 md:items-center md:gap-4 md:py-2 lg:gap-6",

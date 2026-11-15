@@ -61,7 +61,7 @@ const Partner = ({ variant = "footer" }: PartnerProps) => {
   }
 
   return (
-    <footer className="bg-[#0e1627] py-6 md:py-8">
+    <footer className="no-print bg-[#0e1627] py-6 md:py-8">
       <div className="container px-8 md:px-4">
         <div className="mx-auto flex max-w-4xl flex-col items-center justify-center gap-3 text-center text-primary-foreground sm:flex-row sm:flex-wrap sm:gap-4 sm:text-left md:gap-6">
           <p className="text-base md:text-lg">Samarbetspartner till</p>

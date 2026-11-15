@@ -94,20 +94,55 @@ const Kvitto = () => {
   return (
     <main className="min-h-[calc(100vh-7rem)] bg-gradient-to-b from-muted/40 to-background">
       <Helmet>
-        <title>Kvitto för friskvårdsbidrag – Caselo</title>
+        <title>Kvitto – Caselo Idrottsmedicin</title>
         <meta name="robots" content="noindex,nofollow" />
       </Helmet>
 
       <style>{`
         @media print {
-          header, .no-print { display: none !important; }
-          main { min-height: 0 !important; background: white !important; }
-          body { background: white !important; }
+          @page {
+            margin: 12mm;
+            size: A4;
+          }
+          .no-print { display: none !important; }
+          html, body {
+            background: white !important;
+            color: #171717 !important;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+          }
+          main {
+            min-height: 0 !important;
+            background: white !important;
+          }
+          .receipt-print-shell {
+            display: block !important;
+            max-width: none !important;
+            padding: 0 !important;
+            margin: 0 !important;
+          }
+          .receipt-print-frame {
+            display: block !important;
+            max-width: 36rem !important;
+            margin: 0 auto !important;
+            padding: 0 !important;
+          }
+          .receipt-document {
+            max-width: 36rem !important;
+            width: 100% !important;
+            margin: 0 auto !important;
+            break-inside: avoid;
+          }
+          .receipt-document img {
+            display: block !important;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+          }
         }
       `}</style>
 
-      <section className="container px-4 py-8 md:px-4 md:py-12">
-        <div className="mx-auto grid max-w-5xl gap-8 lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] lg:items-start lg:gap-10">
+      <section className="receipt-print-shell container px-4 py-8 md:px-4 md:py-12">
+        <div className="receipt-print-frame mx-auto grid max-w-5xl gap-8 lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] lg:items-start lg:gap-10">
           <div className="no-print space-y-5 rounded-2xl border border-border/60 bg-card/90 p-5 shadow-[var(--shadow-card)] sm:p-6">
             <div>
               <h1 className="text-xl font-bold text-foreground md:text-2xl">

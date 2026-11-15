@@ -49,36 +49,38 @@ const WellnessReceiptDocument = ({ data }: WellnessReceiptDocumentProps) => {
 
   return (
     <article
-      className="mx-auto w-full max-w-[36rem] border border-neutral-300 bg-white px-5 py-7 text-[13px] leading-relaxed text-neutral-900 shadow-sm print:max-w-none print:border-0 print:px-0 print:py-0 print:shadow-none sm:px-8 sm:py-9 sm:text-sm"
+      className="receipt-document mx-auto w-full max-w-[36rem] border border-neutral-300 bg-white px-5 py-7 text-[13px] leading-relaxed text-neutral-900 shadow-sm print:border print:border-neutral-300 print:px-8 print:py-9 print:shadow-none sm:px-8 sm:py-9 sm:text-sm"
       aria-label="Kvitto för friskvårdsbidrag"
     >
-      <header className="border-b border-neutral-900 pb-5 text-center">
+      <div className="border-b border-neutral-900 pb-5 text-center">
         <img
           src="/caselo-logo-blue.png"
           alt={CASELO_TRADE_NAME}
           width={1200}
           height={479}
-          className="mx-auto h-10 w-auto max-w-[12rem] object-contain sm:h-12 sm:max-w-[14rem]"
+          className="mx-auto h-10 w-auto max-w-[12rem] object-contain print:h-12 print:max-w-[14rem] sm:h-12 sm:max-w-[14rem]"
         />
         <h1 className="mt-5 text-2xl font-bold tracking-[0.18em] text-neutral-900 uppercase sm:text-3xl">
           Kvitto
         </h1>
         <p className="mt-1.5 text-xs tracking-wide text-neutral-600 sm:text-sm">
-          För friskvårdsbidrag · Kundens kopia
+          Kundens kopia
         </p>
-      </header>
+      </div>
 
-      <section className="mt-5 grid gap-1 text-center sm:mt-6">
-        <p className="font-semibold">{CASELO_LEGAL_NAME}</p>
-        <p className="text-neutral-700">{CASELO_TRADE_NAME}</p>
-        <p className="text-neutral-700">
-          {CASELO_ADDRESS_LINE_1}, {CASELO_ADDRESS_LINE_2}
-        </p>
-        <p className="text-neutral-700">
-          Org.nr {CASELO_ORG_NUMBER} · Tel {CASELO_PHONE}
-        </p>
-        <p className="break-all text-neutral-700">{CASELO_EMAIL}</p>
-        <p className="text-neutral-700">www.caseloidrottsmedicin.se</p>
+      <section className="mt-5 grid grid-cols-2 gap-x-4 gap-y-1 text-left sm:mt-6 sm:gap-x-8">
+        <div className="min-w-0 space-y-1">
+          <p className="font-semibold">{CASELO_LEGAL_NAME}</p>
+          <p className="text-neutral-700">{CASELO_TRADE_NAME}</p>
+          <p className="text-neutral-700">{CASELO_ADDRESS_LINE_1}</p>
+          <p className="text-neutral-700">{CASELO_ADDRESS_LINE_2}</p>
+        </div>
+        <div className="min-w-0 space-y-1">
+          <p className="text-neutral-700">Org.nr {CASELO_ORG_NUMBER}</p>
+          <p className="text-neutral-700">Tel {CASELO_PHONE}</p>
+          <p className="break-all text-neutral-700">{CASELO_EMAIL}</p>
+          <p className="text-neutral-700">www.caseloidrottsmedicin.se</p>
+        </div>
       </section>
 
       <section className="mt-6 border-y border-neutral-300 py-4">
@@ -142,7 +144,6 @@ const WellnessReceiptDocument = ({ data }: WellnessReceiptDocumentProps) => {
         <p>
           Kvitto utfärdat av {CASELO_LEGAL_NAME} ({CASELO_TRADE_NAME}).
         </p>
-        <p className="mt-1">Spara kvittot för redovisning av friskvårdsbidrag.</p>
       </footer>
     </article>
   );
