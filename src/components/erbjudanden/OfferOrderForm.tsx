@@ -1157,104 +1157,112 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
           </FormItem>
         )}
       />
-      <div className={cn("space-y-5", recipient !== "gift" && "hidden")}>
-        <div className="min-w-0">
-          <p className="mb-1.5 text-sm font-medium leading-snug text-foreground md:text-base">
-            Förvalt presentkort
-          </p>
-          <p className="mb-3 text-sm leading-relaxed text-muted-foreground">
-            Mörkblått, med texten {giftDefaultInscription}. Du kan byta
-            utformning och text nedan.
-          </p>
-          <GiftCardPreview
-            layout={layout}
-            size="large"
-            productName={giftProductLabel}
-            inscription={inscription || giftDefaultInscription}
-            quantity={quantity ?? undefined}
-            decoration={decoration}
-          />
+      <div className={cn(recipient !== "gift" && "hidden")}>
+        {/* Förhandsgranskningen sticky så man ser ändringar medan man väljer. */}
+        <div className="grid items-start gap-5 lg:grid-cols-2 lg:gap-8">
+          <div className="sticky top-[5.5rem] z-10 -mx-1 space-y-2 bg-background/95 px-1 py-2 backdrop-blur-sm supports-[backdrop-filter]:bg-background/85 sm:top-24 lg:top-28">
+            <p className="text-sm font-medium leading-snug text-foreground md:text-base">
+              Förhandsgranskning
+            </p>
+            <GiftCardPreview
+              layout={layout}
+              size="large"
+              productName={giftProductLabel}
+              inscription={inscription || giftDefaultInscription}
+              quantity={quantity ?? undefined}
+              decoration={decoration}
+              className="max-sm:min-h-[16.5rem] max-sm:p-4 sm:min-h-[20rem]"
+            />
+          </div>
+
+          <div className="min-w-0 space-y-5">
+            <p className="text-sm leading-relaxed text-muted-foreground">
+              Standard är mörkblått med texten {giftDefaultInscription}. Byt
+              utformning, dekoration och text här – förhandsgranskningen
+              uppdateras direkt.
+            </p>
+            <FormField
+              control={form.control}
+              name="giftLayout"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Utformning</FormLabel>
+                  <FormDescription>
+                    Mörkblå används om du inte väljer något annat.
+                  </FormDescription>
+                  <FormControl>
+                    <GiftLayoutPicker
+                      compact
+                      hidePreview
+                      name={`${productId}-checkout-gift-layout`}
+                      value={field.value}
+                      onChange={field.onChange}
+                      productName={giftProductLabel}
+                      inscription={inscription || giftDefaultInscription}
+                      quantity={quantity ?? undefined}
+                      decoration={decoration}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="giftDecoration"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Dekoration</FormLabel>
+                  <FormDescription>
+                    Valfritt. Visas uppe till höger på presentkortet.
+                  </FormDescription>
+                  <FormControl>
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      value={field.value}
+                      className="grid grid-cols-1 gap-1 sm:grid-cols-2"
+                    >
+                      {GIFT_DECORATION_OPTIONS.map((option) => (
+                        <label key={option.id} className={radioItemClass}>
+                          <RadioGroupItem
+                            value={option.id}
+                            id={`${productId}-gift-decoration-${option.id}`}
+                          />
+                          <span className="min-w-0 pt-0.5 text-base leading-snug">
+                            {option.label}
+                          </span>
+                        </label>
+                      ))}
+                    </RadioGroup>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="giftInscription"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Text på kortet</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      rows={2}
+                      maxLength={80}
+                      className="min-h-11 whitespace-normal text-base"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    Ändra om du vill att det ska stå något annat. Presentkortet
+                    mejlas till din e-postadress.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
         </div>
-        <FormField
-          control={form.control}
-          name="giftLayout"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Utformning</FormLabel>
-              <FormDescription>
-                Mörkblå används om du inte väljer något annat.
-              </FormDescription>
-              <FormControl>
-                <GiftLayoutPicker
-                  compact
-                  hidePreview
-                  name={`${productId}-checkout-gift-layout`}
-                  value={field.value}
-                  onChange={field.onChange}
-                  productName={giftProductLabel}
-                  inscription={inscription || giftDefaultInscription}
-                  quantity={quantity ?? undefined}
-                  decoration={decoration}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="giftDecoration"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Dekoration</FormLabel>
-              <FormDescription>
-                Valfritt. Visas uppe till höger på presentkortet.
-              </FormDescription>
-              <FormControl>
-                <RadioGroup
-                  onValueChange={field.onChange}
-                  value={field.value}
-                  className="grid grid-cols-1 gap-1 sm:grid-cols-2"
-                >
-                  {GIFT_DECORATION_OPTIONS.map((option) => (
-                    <label key={option.id} className={radioItemClass}>
-                      <RadioGroupItem
-                        value={option.id}
-                        id={`${productId}-gift-decoration-${option.id}`}
-                      />
-                      <span className="min-w-0 pt-0.5 text-base leading-snug">
-                        {option.label}
-                      </span>
-                    </label>
-                  ))}
-                </RadioGroup>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="giftInscription"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Text på kortet</FormLabel>
-              <FormControl>
-                <Textarea
-                  rows={2}
-                  maxLength={80}
-                  className="min-h-11 whitespace-normal text-base"
-                  {...field}
-                />
-              </FormControl>
-              <FormDescription>
-                Ändra om du vill att det ska stå något annat. Presentkortet
-                mejlas till din e-postadress.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
       </div>
     </>
   );

@@ -65,14 +65,19 @@ const GoldSparkle = ({ className }: { className?: string }) => (
   </svg>
 );
 
+/** Konturhjärta med lite ojämn linje – handwriting-känsla, ej ifyllt. */
 const GoldHeart = ({ className }: { className?: string }) => (
   <svg
     viewBox="0 0 24 24"
     className={className}
     aria-hidden="true"
-    fill="currentColor"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.35"
+    strokeLinecap="round"
+    strokeLinejoin="round"
   >
-    <path d="M12 21.2 10.4 19.7C5.4 15.2 2 12.1 2 8.3 2 5.2 4.4 2.8 7.5 2.8c1.7 0 3.4.8 4.5 2.1C13.1 3.6 14.8 2.8 16.5 2.8 19.6 2.8 22 5.2 22 8.3c0 3.8-3.4 6.9-8.4 11.4L12 21.2Z" />
+    <path d="M12.1 19.6c-.3-.2-1.4-1.1-2.9-2.4C6.2 14.7 4.2 12.6 3.6 10.7 2.8 8.3 3.9 5.7 6.3 5.1c1.5-.4 3 .2 3.9 1.4.3.4.6.5.9.4.3.1.5 0 .8-.4.9-1.2 2.4-1.8 3.9-1.4 2.4.6 3.5 3.2 2.7 5.6-.6 1.9-2.6 4-5.6 6.5-1.5 1.3-2.6 2.2-2.8 2.4Z" />
   </svg>
 );
 
@@ -93,6 +98,7 @@ const GoldSnowflake = ({ className }: { className?: string }) => (
   </svg>
 );
 
+/** Klassisk fotboll: yttercirkel, svart mittpentagon och sömmar. */
 const GoldBall = ({ className }: { className?: string }) => (
   <svg
     viewBox="0 0 24 24"
@@ -100,11 +106,24 @@ const GoldBall = ({ className }: { className?: string }) => (
     aria-hidden="true"
     fill="none"
     stroke="currentColor"
-    strokeWidth="1.5"
+    strokeWidth="1.35"
+    strokeLinejoin="round"
   >
     <circle cx="12" cy="12" r="9" />
-    <path d="M12 3c1.8 2.2 2.7 5 2.7 9s-.9 6.8-2.7 9c-1.8-2.2-2.7-5-2.7-9S10.2 5.2 12 3Z" />
-    <path d="M3.6 9.2h16.8M3.6 14.8h16.8" />
+    <path
+      fill="currentColor"
+      stroke="none"
+      d="M12 8.4 14.35 10.1 13.45 12.9 10.55 12.9 9.65 10.1Z"
+    />
+    <path d="M12 8.4 14.1 5.2M12 8.4 9.9 5.2" />
+    <path d="M14.35 10.1 18.2 9.1M13.45 12.9 17.4 15.3" />
+    <path d="M10.55 12.9 6.6 15.3M9.65 10.1 5.8 9.1" />
+    <path d="M14.1 5.2 17.2 6.4 18.2 9.1" />
+    <path d="M9.9 5.2 6.8 6.4 5.8 9.1" />
+    <path d="M18.2 9.1 19.3 12.2 17.4 15.3" />
+    <path d="M5.8 9.1 4.7 12.2 6.6 15.3" />
+    <path d="M17.4 15.3 15.2 18.4 12 19.2" />
+    <path d="M6.6 15.3 8.8 18.4 12 19.2" />
   </svg>
 );
 
@@ -221,7 +240,7 @@ const GiftCardPreview = ({
 
       <ul className={cn(body, "mt-3 space-y-0.5", productColor)}>
         {sessionLine ? <li>{sessionLine}</li> : null}
-        <li>Hos leg. fysioterapeut Henrik Nilsson</li>
+        <li>Med leg. fysioterapeut Henrik Nilsson</li>
         <li>{OFFER_PLACE}</li>
       </ul>
 
