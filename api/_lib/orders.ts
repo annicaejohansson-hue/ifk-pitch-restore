@@ -38,10 +38,13 @@ import {
   type GiftLayoutId,
   type OfferProductId,
 } from "../../src/data/erbjudanden.js";
+import { buildWellnessReceiptPreviewUrl } from "../../src/data/erbjudanden-fulfillment.js";
 import {
-  buildFulfillmentChecklist,
-  buildWellnessReceiptPreviewUrl,
-} from "../../src/data/erbjudanden-fulfillment.js";
+  buildPtPrepaidBookingUrl,
+  claimsFromPtOrder,
+  prepaidSigningSecret,
+  verifyPrepaidRequest,
+} from "./prepaid.js";
 
 export type OrderStatus = "awaiting_payment";
 
@@ -365,6 +368,11 @@ export type PaymentView = {
   paymentVerifiedAutomatically: false;
   /** Skickas tillbaka vid Jag har betalat så Formspree kan få hela beställningen. */
   orderSnapshot?: OrderClaimSnapshot;
+  /**
+   * Signerad bokningslänk för förbetalda PT-pass (/boka med pris per pass).
+   * Saknas för snabbhet och när antal pass saknas.
+   */
+  prepaidBookingUrl?: string;
 };
 
 const bankgiroView = (config: Pick<ServerConfig, "bankgiroNumber">) => ({
@@ -467,6 +475,16 @@ export function toPaymentView(
   config: Pick<ServerConfig, "swishNumber" | "bankgiroNumber">,
 ): PaymentView {
   const { swishNumber } = config;
+  const prepaidClaims =
+    order.productId === "friskvard-pass" && order.quantity
+      ? claimsFromPtOrder({
+          orderRef: order.orderRef,
+          quantity: order.quantity,
+        })
+      : null;
+  const prepaidBookingUrl = prepaidClaims
+    ? buildPtPrepaidBookingUrl(prepaidClaims, prepaidSigningSecret())
+    : undefined;
   return {
     orderRef: order.orderRef,
     status: order.status,
@@ -485,6 +503,7 @@ export function toPaymentView(
     chosenPaymentMethod: order.chosenPaymentMethod ?? undefined,
     paymentVerifiedAutomatically: false,
     orderSnapshot: toClaimSnapshot(order),
+    prepaidBookingUrl,
   };
 }
 
@@ -935,32 +954,20 @@ async function notifyFormspree(
   }
 }
 
+function compactFormspreePayload(payload: Record<string, unknown>) {
+  const next: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(payload)) {
+    if (value === "" || value === null || value === undefined) continue;
+    next[key] = value;
+  }
+  return next;
+}
+
 function buildOrderFormspreePayload(
   order: OfferOrder,
   config: ServerConfig,
   claim?: PaymentClaim,
 ) {
-  const checklist = buildFulfillmentChecklist({
-    productId: order.productId,
-    orderRef: order.orderRef,
-    buyerName: order.buyerName,
-    buyerEmail: order.buyerEmail,
-    amountSek: order.amountSek,
-    quantity: order.quantity || undefined,
-    gift: order.gift,
-    giftLayout: order.giftLayout,
-    giftDecoration: order.giftDecoration,
-    giftRecipientName: order.giftRecipientName,
-    giftInscription: order.giftInscription,
-    participantName: order.participantName,
-    focusId: order.focusId || undefined,
-    focusLabel: order.focusLabel,
-    wellnessReceipt: order.wellnessReceipt,
-    receiptCustomerName: order.receiptCustomerName,
-    personalId: order.personalId,
-    receiptName: order.receiptName,
-    chosenPaymentMethod: order.chosenPaymentMethod ?? undefined,
-  });
   const paymentInfo = chosenPaymentMailInfo(order, config);
   const reported =
     claim?.customerReportedPaymentMethod === "bankgiro"
@@ -968,55 +975,76 @@ function buildOrderFormspreePayload(
       : claim?.customerReportedPaymentMethod === "swish"
         ? "Swish"
         : "";
-  return {
+  const amountLabel = formatOfferPriceWithVat(order.amountSek);
+  const receiptUrl = order.wellnessReceipt
+    ? buildWellnessReceiptPreviewUrl({
+        orderRef: order.orderRef,
+        amountSek: order.amountSek,
+        receiptCustomerName: order.receiptCustomerName,
+        personalId: order.personalId,
+        receiptName: order.receiptName,
+        quantity: order.quantity || undefined,
+        productId: order.productId,
+        chosenPaymentMethod: order.chosenPaymentMethod ?? undefined,
+      })
+    : "";
+  const prepaidClaims =
+    order.productId === "friskvard-pass" && order.quantity
+      ? claimsFromPtOrder({
+          orderRef: order.orderRef,
+          quantity: order.quantity,
+        })
+      : null;
+  const bookingPage = prepaidClaims
+    ? buildPtPrepaidBookingUrl(prepaidClaims, prepaidSigningSecret())
+    : "https://www.caseloidrottsmedicin.se/erbjudanden/boka";
+
+  const nextSteps = [
+    `1. Kontrollera inbetalning: referens ${order.orderRef}, belopp ${amountLabel}.`,
+    reported
+      ? `2. Kunden uppger ${reported}. Markera som betald först när pengarna syns hos Caselo.`
+      : "2. Markera som betald först när pengarna syns hos Caselo.",
+    order.wellnessReceipt
+      ? "3. När betalningen syns: öppna kvittoförhandsgranskningen (länk nedan), sätt datum, spara PDF och mejla kunden."
+      : "3. När betalningen syns: skicka bekräftelse, kvitto och bokningsinfo till kunden.",
+    order.gift
+      ? "4. Mejla presentkortet till köparen tillsammans med bokningslänk."
+      : `4. Mejla bokningslänk: ${bookingPage}`,
+  ].join("\n");
+
+  return compactFormspreePayload({
     _subject: `Kunden uppger betalning ${order.orderRef} – kontrollera inbetalning${paymentInfo.subjectSuffix}`,
     _replyto: order.buyerEmail,
-    status: "Kunden uppger att hen har betalat",
-    orderRef: order.orderRef,
-    paket: order.productName,
-    specificerat: order.receiptName,
-    belopp: formatOfferPriceWithVat(order.amountSek),
-    beloppSek: order.amountSek,
-    betalsatt_enligt_kund: paymentInfo.field,
-    rapporterat_betalsatt: reported || "Ej angivet",
-    rapporterat_tid: claim?.customerReportedPaymentAt
+    "1_nasta_steg": nextSteps,
+    "2_referens": order.orderRef,
+    "3_belopp": amountLabel,
+    "4_rapporterat_betalsatt": reported || "Ej angivet",
+    "5_rapporterat_tid": claim?.customerReportedPaymentAt
       ? formatMailTime(claim.customerReportedPaymentAt)
       : "",
-    antalPass: order.quantity || "",
-    kopare: order.buyerName,
-    epost: order.buyerEmail,
-    gava: order.gift ? "Ja" : "Nej",
-    presentkortslayout: giftLayoutMailLabel(order),
-    presentkortsdekoration: order.gift
-      ? getGiftDecoration(order.giftDecoration).label
-      : "",
-    mottagare: order.giftRecipientName || "",
-    presentkortstext: order.giftInscription || "",
+    "6_kopare": order.buyerName,
+    "7_epost": order.buyerEmail,
+    "8_produkt": order.productName,
+    "9_specificerat": order.receiptName,
+    antal_pass: order.quantity || "",
     deltagare: order.participantName || "",
     inriktning: order.focusLabel || "",
     idrott: order.sportName || "",
-    friskvardskvitto: order.wellnessReceipt ? "Ja" : "Nej",
-    kvittoNamn: order.receiptCustomerName || "",
-    personnummer: order.personalId || "",
-    kvitto_forhandsgranskning: order.wellnessReceipt
-      ? buildWellnessReceiptPreviewUrl({
-          orderRef: order.orderRef,
-          amountSek: order.amountSek,
-          receiptCustomerName: order.receiptCustomerName,
-          personalId: order.personalId,
-          receiptName: order.receiptName,
-          quantity: order.quantity || undefined,
-          productId: order.productId,
-          chosenPaymentMethod: order.chosenPaymentMethod ?? undefined,
-        })
+    presentkort: order.gift ? "Ja" : "Nej",
+    presentkort_farg: order.gift ? giftLayoutMailLabel(order) : "",
+    presentkort_dekoration: order.gift
+      ? getGiftDecoration(order.giftDecoration).label
       : "",
+    presentkort_text: order.gift ? order.giftInscription || "" : "",
+    friskvardskvitto: order.wellnessReceipt ? "Ja" : "Nej",
+    kvitto_namn: order.wellnessReceipt ? order.receiptCustomerName || "" : "",
+    personnummer: order.wellnessReceipt ? order.personalId || "" : "",
+    kvitto_lank: receiptUrl,
+    bokningssida: bookingPage,
+    betalsatt_i_kassan: paymentInfo.field,
     skapad: formatMailTime(order.createdAt),
-    betalning: config.bankgiroNumber
-      ? `Swish eller bankgiro ${formatBankgiroNumber(config.bankgiroNumber)}. Caselo kontrollerar betalningen manuellt.`
-      : "Swish. Caselo kontrollerar betalningen manuellt.",
-    intern_checklista: checklist,
-    varning: paymentInfo.warning,
-  };
+    viktig_info: paymentInfo.warning,
+  });
 }
 
 /**
@@ -1198,6 +1226,31 @@ export async function handleErbjudandenRequest(req: NodeReq, res: NodeRes) {
       ...result.payment,
       message:
         "Tack. Caselo kontrollerar betalningen manuellt och skickar underlagen inom 24 timmar efter att betalningen syns hos oss. Detta är inte ett kvitto.",
+    });
+    return;
+  }
+
+  if (path.endsWith("/erbjudanden-prepaid") && method === "GET") {
+    const url = new URL(req.url ?? "/", "http://localhost");
+    const result = verifyPrepaidRequest({
+      token: url.searchParams.get("token") ?? url.searchParams.get("forbetalt"),
+      secret: prepaidSigningSecret(),
+    });
+    if (!result.ok) {
+      json(res, 400, {
+        ok: false,
+        error: result.error,
+        message: result.message,
+      });
+      return;
+    }
+    json(res, 200, {
+      ok: true,
+      verified: true,
+      orderRef: result.claims.orderRef,
+      quantity: result.claims.quantity,
+      unitPriceSek: result.claims.unitPriceSek,
+      listUnitPriceSek: getPtSessionQuote(result.claims.quantity).listUnitPriceSek,
     });
     return;
   }
@@ -1802,13 +1855,16 @@ export async function runOfferOrderChecks() {
         ) {
           failures.push(`claim mail subject ${String(mail._subject)}`);
         }
-        if (!String(mail.betalsatt_enligt_kund).startsWith("Bankgiro")) {
-          failures.push(`claim mail method ${String(mail.betalsatt_enligt_kund)}`);
+        if (!String(mail.betalsatt_i_kassan).startsWith("Bankgiro")) {
+          failures.push(`claim mail method ${String(mail.betalsatt_i_kassan)}`);
         }
-        if (mail.rapporterat_betalsatt !== "Swish") {
+        if (mail["4_rapporterat_betalsatt"] !== "Swish") {
           failures.push(
-            `claim reported method ${String(mail.rapporterat_betalsatt)}`,
+            `claim reported method ${String(mail["4_rapporterat_betalsatt"])}`,
           );
+        }
+        if (!String(mail["1_nasta_steg"] || "").includes("Kontrollera inbetalning")) {
+          failures.push("claim mail missing next steps");
         }
       }
     } finally {

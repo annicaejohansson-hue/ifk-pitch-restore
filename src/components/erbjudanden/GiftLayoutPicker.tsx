@@ -54,13 +54,15 @@ const GiftLayoutPicker = ({
     const selectedOption = GIFT_LAYOUT_OPTIONS.find((item) => item.id === value);
     return (
       <div className="min-w-0 max-w-full">
-        <div className="grid grid-cols-2 gap-1 sm:grid-cols-4">
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-2.5">
           {compactOptions.map((option) => (
             <label
               key={option.id}
               className={cn(
-                "flex min-h-11 cursor-pointer flex-col items-center justify-center gap-1 rounded-lg px-1 py-2 text-center",
-                value === option.id ? "bg-muted" : "",
+                "flex min-h-11 cursor-pointer flex-col items-center justify-center gap-1.5 rounded-lg border border-transparent px-1.5 py-2.5 text-center transition-colors",
+                value === option.id
+                  ? "border-primary/40 bg-background shadow-sm"
+                  : "hover:bg-background/70",
               )}
             >
               <input
@@ -71,7 +73,7 @@ const GiftLayoutPicker = ({
                 onChange={() => onChange?.(option.id)}
                 className="h-5 w-5 shrink-0 accent-[hsl(var(--primary))]"
               />
-              <span className="min-w-0 text-[0.7rem] leading-snug sm:text-xs md:text-sm">
+              <span className="min-w-0 text-xs leading-snug sm:text-sm">
                 {option.label}
               </span>
             </label>

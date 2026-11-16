@@ -4,8 +4,11 @@ import { useSearchParams } from "react-router-dom";
 import { ChevronDown } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useVisitor } from "@/context/VisitorContext";
+import PtPrepaidPricePanel from "@/components/booking/PtPrepaidPricePanel";
 import { TRAINING_BOOKING_CATEGORY_ID } from "@/lib/booking";
 import { getPartner, isPartnerId, type PartnerConfig } from "@/lib/partners";
+import type { PtPrepaidDisplay } from "@/data/erbjudanden-prepaid";
+import { PT_SESSION_LIST_PRICE_SEK } from "@/data/erbjudanden";
 
 const KADDIO_BOOKING_URL = "https://caseloidrottsmedicin.kaddio.com";
 const KADDIO_IFRAME_BASE = `${KADDIO_BOOKING_URL}/iframe/booking`;
@@ -25,11 +28,17 @@ type BookingService = {
   variant?: "package";
   /** Shown above the calendar when this service is selected */
   bookingNotice?: string;
-  /** IFK Stocksund overrides — same card, partner price / Kaddio type */
+  /**
+   * Partnerpris (IFK Stocksund / Enebybergs IF).
+   * Om `name` saknas visas bara partnerpriset; bokningen går i ordinarie Kaddio-kalender.
+   * Om `sharedAcrossPartners` är true används samma Kaddio-typ för alla partnerföreningar
+   * (t.ex. "… - Partner"), annars IFK-namn respektive `name + kaddioNameSuffix`.
+   */
   ifk?: {
     priceSek: number;
     ordinaryPriceSek?: number;
-    name: string;
+    name?: string;
+    sharedAcrossPartners?: boolean;
   };
 };
 
@@ -152,8 +161,7 @@ const BOOKING_CATEGORIES: BookingCategory[] = [
     id: TRAINING_BOOKING_CATEGORY_ID,
     name: "Personlig träning",
     // `name` must match live Kaddio booking type names exactly.
-    // These types have no partner variants: partner visitors get the
-    // ordinary calendar and price (see calendarPartner below).
+    // PT: gemensam partnertyp i Kaddio. Snabbhet: ingen partnervariant.
     services: [
       {
         id: "pt-pass",
@@ -161,6 +169,11 @@ const BOOKING_CATEGORIES: BookingCategory[] = [
         label: "PT-pass",
         durationMin: 60,
         priceSek: 990,
+        ifk: {
+          priceSek: 840,
+          name: "Personlig Träning (PT-pass) - Partner",
+          sharedAcrossPartners: true,
+        },
         description:
           "Individuellt träningspass à 60 minuter med personlig återkoppling och övningar att fortsätta med. Passet anpassas efter dig, till exempel fotbollsfys, löpteknik och snabbhet eller fys för din idrott eller motionsform.",
       },
@@ -170,6 +183,7 @@ const BOOKING_CATEGORIES: BookingCategory[] = [
         label: "Snabbhetspaketet",
         durationMin: 75,
         priceSek: 1000,
+        ordinaryPriceSek: 2685,
         description: `Du testar din snabbhet med laserportar på 10, 20 och 30 meter, får ett träningsprogram anpassat efter dig och kommer tillbaka efter cirka 8 veckor för ett uppföljande test. Första besöket tar ca 75 min och återbesöket ca 45 min.\n\n${SNABBHET_BOOKING_NOTICE}`,
         bookingNotice: SNABBHET_BOOKING_NOTICE,
       },
@@ -181,9 +195,11 @@ const partnerServiceName = (
   service: BookingService,
   partner: PartnerConfig,
 ): string => {
-  if (partner.id === "ifk-stocksund" && service.ifk?.name) {
-    return service.ifk.name;
-  }
+  // Enbart prisoverride – behåll ordinarie Kaddio-namn.
+  if (!service.ifk?.name) return service.name;
+  // Gemensam Kaddio-typ för alla partnerföreningar (t.ex. PT - Partner).
+  if (service.ifk.sharedAcrossPartners) return service.ifk.name;
+  if (partner.id === "ifk-stocksund") return service.ifk.name;
   return `${service.name}${partner.kaddioNameSuffix}`;
 };
 
@@ -457,6 +473,10 @@ const Boka = () => {
   const [iframeEpoch, setIframeEpoch] = useState(0);
   const [searchParams] = useSearchParams();
   const kategoriParam = searchParams.get("kategori");
+  const prepaidToken = searchParams.get("forbetalt");
+  const prepaidRef = searchParams.get("ref");
+  const prepaidAntal = searchParams.get("antal");
+  const [ptPrepaid, setPtPrepaid] = useState<PtPrepaidDisplay | null>(null);
   const [openCategoryId, setOpenCategoryId] = useState<string | undefined>(() =>
     categoryIdFromParam(kategoriParam),
   );
@@ -481,7 +501,9 @@ const Boka = () => {
   const activePartner = partner ?? getPartner(searchParams.get("partner"));
 
   useEffect(() => {
-    const tjanst = searchParams.get("tjanst");
+    const tjanst =
+      searchParams.get("tjanst") ||
+      (prepaidToken || prepaidRef ? "pt-pass" : null);
     if (!tjanst || appliedTjanstRef.current === tjanst) return;
     const exists = allBookingEntries(activePartner).some(
       ({ service }) => service.id === tjanst,
@@ -489,7 +511,10 @@ const Boka = () => {
     if (!exists) return;
     appliedTjanstRef.current = tjanst;
     setSelectedServiceId(tjanst);
-  }, [searchParams, activePartner]);
+    if (tjanst === "pt-pass") {
+      setOpenCategoryId(TRAINING_BOOKING_CATEGORY_ID);
+    }
+  }, [searchParams, activePartner, prepaidToken, prepaidRef]);
 
   // Om adressen byter kategori medan sidan redan är öppen.
   useEffect(() => {
@@ -508,16 +533,26 @@ const Boka = () => {
     ({ service }) => service.id === selectedServiceId,
   );
 
-  const selectedServiceName = selected?.service.name;
+  const selectedService =
+    selected?.service.id === "pt-pass" && ptPrepaid
+      ? {
+          ...selected.service,
+          priceSek: ptPrepaid.unitPriceSek,
+          ordinaryPriceSek:
+            ptPrepaid.listUnitPriceSek || PT_SESSION_LIST_PRICE_SEK,
+        }
+      : selected?.service;
+
+  const selectedServiceName = selectedService?.name;
   const selectedDisplayName = selected
     ? selected.subgroupName
       ? `${selected.categoryName} (${selected.subgroupName}) – ${selected.service.label}`
       : `${selected.categoryName} – ${selected.service.label}`
     : undefined;
 
-  // Tjänster utan partnervariant finns bara i den ordinarie kalendern; under
-  // partnerns kalenderfilter visar Kaddio inga lediga tider för dem.
-  const calendarPartner = selected?.service.ifk ? activePartner : null;
+  // Tjänster utan Kaddio-partnervariant (saknar ifk.name) bokas i ordinarie
+  // kalender; under partnerns kalenderfilter finns inga lediga tider för dem.
+  const calendarPartner = selectedService?.ifk?.name ? activePartner : null;
 
   const iframeSrc = selectedServiceName
     ? iframeUrlForService(selectedServiceName, calendarPartner)
@@ -583,6 +618,7 @@ const Boka = () => {
 
   const selectService = (serviceId: string) => {
     setSelectedServiceId(serviceId);
+    if (serviceId !== "pt-pass") setPtPrepaid(null);
     requestAnimationFrame(() => {
       document.getElementById("kaddio-bokning")?.scrollIntoView({
         behavior: "smooth",
@@ -593,6 +629,7 @@ const Boka = () => {
 
   const clearSelectedService = () => {
     setSelectedServiceId(undefined);
+    setPtPrepaid(null);
     requestAnimationFrame(() => {
       window.scrollTo({ top: 0, behavior: "smooth" });
     });
@@ -642,9 +679,19 @@ const Boka = () => {
                       : index
                   ] ?? SECTION_TONES[0];
                 const services = selected
-                  ? servicesInCategory(category).filter(
-                      (service) => service.id === selectedServiceId,
-                    )
+                  ? servicesInCategory(category)
+                      .filter((service) => service.id === selectedServiceId)
+                      .map((service) =>
+                        service.id === "pt-pass" && ptPrepaid
+                          ? {
+                              ...service,
+                              priceSek: ptPrepaid.unitPriceSek,
+                              ordinaryPriceSek:
+                                ptPrepaid.listUnitPriceSek ||
+                                PT_SESSION_LIST_PRICE_SEK,
+                            }
+                          : service,
+                      )
                   : servicesInCategory(category);
 
                 const expanded = isCategoryExpanded(category.id);
@@ -706,15 +753,15 @@ const Boka = () => {
               })}
             </div>
 
-            {selectedServiceName ? (
+            {selectedServiceName && selectedService ? (
               <div id="kaddio-bokning" className="min-w-0 scroll-mt-20">
                 <div className="mb-4 space-y-3">
                   <StepLabel step={2}>
                     Välj en tid i kalendern för ditt besök.
                   </StepLabel>
-                  {selected?.service.bookingNotice ? (
+                  {selectedService.bookingNotice ? (
                     <p className="rounded-md border border-primary/25 bg-primary/5 px-3 py-2.5 text-sm font-semibold leading-snug text-foreground sm:ml-9 md:text-base">
-                      {selected.service.bookingNotice}
+                      {selectedService.bookingNotice}
                     </p>
                   ) : null}
                   <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-3 sm:pl-9">
@@ -732,13 +779,23 @@ const Boka = () => {
                       Byt tjänst
                     </button>
                   </div>
+                  {selectedServiceId === "pt-pass" ? (
+                    <div className="sm:pl-9">
+                      <PtPrepaidPricePanel
+                        initialToken={prepaidToken}
+                        initialRef={prepaidRef}
+                        initialQuantity={prepaidAntal}
+                        onPrepaidChange={setPtPrepaid}
+                      />
+                    </div>
+                  ) : null}
                 </div>
 
                 <div className="w-full max-w-full overflow-x-hidden">
                   <iframe
                     key={`${selectedServiceId}:${iframeSrc}:${iframeEpoch}`}
                     src={iframeSrc}
-                    title={`Boka tid: ${selected.service.label}`}
+                    title={`Boka tid: ${selectedService.label}`}
                     onLoad={handleIframeLoad}
                     className="w-full max-w-full min-h-[640px] border-0 sm:min-h-[800px] md:min-h-[1000px]"
                     style={{ overflowY: "auto", overflowX: "hidden" }}

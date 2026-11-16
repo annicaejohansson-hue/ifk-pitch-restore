@@ -33,11 +33,13 @@ import {
   OFFER_CONTACT_EMAIL,
   OFFER_PATHS,
   OFFER_PRODUCTS,
+  SNABBHET_OVERVIEW_POINTS,
   PT_SESSION_DEFAULT_QUANTITY,
   PT_SESSION_LIST_PRICE_SEK,
   PT_SESSION_MAX_QUANTITY,
   PT_SESSION_MIN_QUANTITY,
   formatFocusLabels,
+  formatOfferPrice,
   formatOfferPriceWithVat,
   formatPtProductName,
   getPtSessionQuote,
@@ -55,6 +57,7 @@ import {
 import GiftCardPreview from "./GiftCardPreview";
 import GiftLayoutPicker from "./GiftLayoutPicker";
 import PtQuantityPicker from "./PtQuantityPicker";
+import SnabbhetCampaignPrice from "./SnabbhetCampaignPrice";
 import {
   fetchCheckoutState,
   submitOfferOrder,
@@ -285,22 +288,48 @@ const fieldClass =
   "h-11 min-h-11 w-full whitespace-normal text-base";
 
 /**
+ * `trigger` på utvalda fält kör ändå hela zod-schemat, så fel på senare steg
+ * (t.ex. betalning) kan sättas i förväg. Rensa dem tills det steget kontrolleras.
+ */
+function clearErrorsAfterStep<T extends FieldValues>(
+  form: UseFormReturn<T>,
+  steps: readonly { fields: readonly string[] }[],
+  stepIndex: number,
+) {
+  const keep = new Set<string>();
+  for (let i = 0; i <= stepIndex; i += 1) {
+    for (const field of steps[i]?.fields ?? []) keep.add(field);
+  }
+  const extra = (Object.keys(form.getValues()) as Path<T>[]).filter(
+    (name) => !keep.has(name) && form.getFieldState(name).error,
+  );
+  if (extra.length > 0) form.clearErrors(...extra);
+}
+
+/**
  * Kassan kontrollerar ett steg i taget med `trigger`, och sådana fel ligger
  * annars kvar tills man trycker på Nästa igen. Här kontrolleras de fält som
  * redan visar ett fel om så fort något ändras, så att felet försvinner när
  * fältet är rätt ifyllt. Fält utan fel berörs inte.
  */
-function useRecheckShownErrors<T extends FieldValues>(form: UseFormReturn<T>) {
+function useRecheckShownErrors<T extends FieldValues>(
+  form: UseFormReturn<T>,
+  steps: readonly { fields: readonly string[] }[],
+  stepIndex: number,
+) {
   useEffect(() => {
     const subscription = form.watch((_values, info) => {
       if (!info.name) return;
       const shown = (Object.keys(form.getValues()) as Path<T>[]).filter(
         (name) => form.getFieldState(name).error,
       );
-      if (shown.length > 0) void form.trigger(shown);
+      if (shown.length === 0) return;
+      void form.trigger(shown).then(() => {
+        clearErrorsAfterStep(form, steps, stepIndex);
+      });
     });
     return () => subscription.unsubscribe();
-  }, [form]);
+  }, [form, steps, stepIndex]);
 }
 
 const radioItemClass =
@@ -343,6 +372,11 @@ const PT_CHECKOUT_STEPS = [
 ] as const;
 
 const SNABBHET_CHECKOUT_STEPS = [
+  {
+    title: "Tjänst",
+    // Bekräftelse av paketet – inga obligatoriska fält.
+    fields: [] as const,
+  },
   {
     title: "Presentkort",
     fields: ["recipient", "giftLayout", "giftDecoration", "giftInscription"],
@@ -542,8 +576,8 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
     },
   });
 
-  useRecheckShownErrors(snabbhetForm);
-  useRecheckShownErrors(friskvardForm);
+  useRecheckShownErrors(snabbhetForm, SNABBHET_CHECKOUT_STEPS, checkoutStep);
+  useRecheckShownErrors(friskvardForm, PT_CHECKOUT_STEPS, checkoutStep);
 
   const snabbhetRecipient = snabbhetForm.watch("recipient");
   const snabbhetGiftLayout = snabbhetForm.watch("giftLayout");
@@ -654,6 +688,11 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
           : prev?.swishAppUrl && prev.productId === next.productId
             ? prev.swishAppUrl
             : next.swishAppUrl,
+        prepaidBookingUrl:
+          next.prepaidBookingUrl ??
+          (prev?.orderRef === next.orderRef
+            ? prev.prepaidBookingUrl
+            : undefined),
       };
       return merged;
     });
@@ -831,20 +870,24 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
     errors: Partial<Record<keyof SnabbhetValues, unknown>>,
   ) => {
     if (errors.recipient || errors.giftLayout || errors.giftInscription) {
-      goToCheckoutStep(0);
-      return;
-    }
-    if (errors.wellnessReceipt || errors.receiptCustomerName || errors.personalId) {
       goToCheckoutStep(1);
       return;
     }
-    goToCheckoutStep(2);
+    if (errors.wellnessReceipt || errors.receiptCustomerName || errors.personalId) {
+      goToCheckoutStep(2);
+      return;
+    }
+    goToCheckoutStep(3);
   };
 
   const goNextCheckoutStep = async () => {
     if (productId === "snabbhet") {
       const fields = [...SNABBHET_CHECKOUT_STEPS[checkoutStep].fields];
-      const valid = await snabbhetForm.trigger(fields, { shouldFocus: true });
+      const valid =
+        fields.length === 0
+          ? true
+          : await snabbhetForm.trigger(fields, { shouldFocus: true });
+      clearErrorsAfterStep(snabbhetForm, SNABBHET_CHECKOUT_STEPS, checkoutStep);
       if (!valid) return;
       goToCheckoutStep(
         Math.min(checkoutStep + 1, SNABBHET_CHECKOUT_STEPS.length - 1),
@@ -853,6 +896,7 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
     }
     const fields = [...PT_CHECKOUT_STEPS[checkoutStep].fields];
     const valid = await friskvardForm.trigger(fields, { shouldFocus: true });
+    clearErrorsAfterStep(friskvardForm, PT_CHECKOUT_STEPS, checkoutStep);
     if (!valid) return;
     goToCheckoutStep(Math.min(checkoutStep + 1, PT_CHECKOUT_STEPS.length - 1));
   };
@@ -934,7 +978,36 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
     );
   }
 
-  const sharedFields = (form: typeof snabbhetForm | typeof friskvardForm) => (
+  const revealPaymentInstructions = (
+    form: typeof snabbhetForm | typeof friskvardForm,
+  ) => {
+    if (form === snabbhetForm) {
+      void snabbhetForm.handleSubmit(
+        onSnabbhetSubmit,
+        goToSnabbhetStepWithError,
+      )();
+      return;
+    }
+    void friskvardForm.handleSubmit(
+      onFriskvardSubmit,
+      goToPtStepWithError,
+    )();
+  };
+
+  const switchPaymentMethodOnly = (
+    form: typeof snabbhetForm | typeof friskvardForm,
+    next: "swish" | "bankgiro",
+  ) => {
+    if (form === snabbhetForm) {
+      snabbhetForm.resetField("paymentMethod", { defaultValue: next });
+      writeFormDraft("snabbhet", snabbhetForm.getValues(), checkoutStep);
+      return;
+    }
+    friskvardForm.resetField("paymentMethod", { defaultValue: next });
+    writeFormDraft("friskvard", friskvardForm.getValues(), checkoutStep);
+  };
+
+  const contactFields = (form: typeof snabbhetForm | typeof friskvardForm) => (
     <>
       <FormField
         control={form.control}
@@ -987,76 +1060,6 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
           </FormItem>
         )}
       />
-      {bankgiroAvailable ? (
-        <FormField
-          control={form.control}
-          name="paymentMethod"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Hur vill du betala?</FormLabel>
-              <FormControl>
-                <RadioGroup
-                  onValueChange={(value) => {
-                    const next = value === "bankgiro" ? "bankgiro" : "swish";
-                    if (!orderCurrent) {
-                      field.onChange(next);
-                      return;
-                    }
-                    // Beställningen är redan skickad: byt bara vilka
-                    // betalningsuppgifter som visas, utan ny beställning.
-                    if (form === snabbhetForm) {
-                      snabbhetForm.resetField("paymentMethod", {
-                        defaultValue: next,
-                      });
-                      writeFormDraft(
-                        "snabbhet",
-                        snabbhetForm.getValues(),
-                        checkoutStep,
-                      );
-                    } else {
-                      friskvardForm.resetField("paymentMethod", {
-                        defaultValue: next,
-                      });
-                      writeFormDraft(
-                        "friskvard",
-                        friskvardForm.getValues(),
-                        checkoutStep,
-                      );
-                    }
-                  }}
-                  value={field.value ?? ""}
-                  className="gap-1"
-                >
-                  <label className={radioItemClass}>
-                    <RadioGroupItem
-                      value="swish"
-                      id={`${productId}-payment-swish`}
-                    />
-                    <span className="min-w-0 pt-0.5 text-base leading-snug">
-                      Swish
-                    </span>
-                  </label>
-                  <label className={radioItemClass}>
-                    <RadioGroupItem
-                      value="bankgiro"
-                      id={`${productId}-payment-bankgiro`}
-                    />
-                    <span className="min-w-0 pt-0.5">
-                      <span className="block text-base leading-snug">
-                        Bankgiro
-                      </span>
-                      <span className="mt-0.5 block text-sm leading-snug text-muted-foreground">
-                        Betalningen når normalt Caselo efter 1–2 bankdagar.
-                      </span>
-                    </span>
-                  </label>
-                </RadioGroup>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      ) : null}
       <FormField
         control={form.control}
         name="website"
@@ -1071,6 +1074,99 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
       />
     </>
   );
+
+  const paymentMethodFields = (
+    form: typeof snabbhetForm | typeof friskvardForm,
+  ) => {
+    const formDirtyNow = form === snabbhetForm ? snabbhetDirty : friskvardDirty;
+    return (
+      <>
+        {bankgiroAvailable ? (
+          <FormField
+            control={form.control}
+            name="paymentMethod"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Hur vill du betala?</FormLabel>
+                <FormDescription>
+                  Instruktionerna fälls ut när du väljer Swish eller bankgiro.
+                </FormDescription>
+                <FormControl>
+                  <RadioGroup
+                    onValueChange={(value) => {
+                      const next = value === "bankgiro" ? "bankgiro" : "swish";
+                      // Oförändrad beställning: byt bara vilken instruktion som visas.
+                      if (orderCurrent && !formDirtyNow) {
+                        switchPaymentMethodOnly(form, next);
+                        return;
+                      }
+                      field.onChange(next);
+                      revealPaymentInstructions(form);
+                    }}
+                    value={field.value ?? ""}
+                    className="gap-1"
+                  >
+                    <label className={radioItemClass}>
+                      <RadioGroupItem
+                        value="swish"
+                        id={`${productId}-payment-swish`}
+                      />
+                      <span className="min-w-0 pt-0.5 text-base leading-snug">
+                        Swish
+                      </span>
+                    </label>
+                    <label className={radioItemClass}>
+                      <RadioGroupItem
+                        value="bankgiro"
+                        id={`${productId}-payment-bankgiro`}
+                      />
+                      <span className="min-w-0 pt-0.5">
+                        <span className="block text-base leading-snug">
+                          Bankgiro
+                        </span>
+                        <span className="mt-0.5 block text-sm leading-snug text-muted-foreground">
+                          Betalningen når normalt Caselo efter 1–2 bankdagar.
+                        </span>
+                      </span>
+                    </label>
+                  </RadioGroup>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        ) : (
+          <div className="space-y-3">
+            <p className="text-sm leading-relaxed text-muted-foreground md:text-base">
+              Du betalar med Swish. När uppgifterna ovan är ifyllda visas
+              instruktionerna här under.
+            </p>
+            {!orderCurrent || formDirtyNow ? (
+              <Button
+                type="button"
+                variant="secondary"
+                className={offerGoldCtaClass}
+                disabled={submitting || !checkout}
+                onClick={() => revealPaymentInstructions(form)}
+              >
+                {submitting ? (
+                  <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+                ) : null}
+                {orderCurrent && formDirtyNow
+                  ? "Uppdatera Swish-uppgifter"
+                  : "Visa Swish-uppgifter"}
+              </Button>
+            ) : null}
+          </div>
+        )}
+        {submitting ? (
+          <p className="text-sm text-muted-foreground" aria-live="polite">
+            Hämtar betalningsuppgifter…
+          </p>
+        ) : null}
+      </>
+    );
+  };
 
   const giftProductKey = productId === "snabbhet" ? "snabbhet" : "friskvard";
   const giftProductLabel = GIFT_PRODUCT_LABEL[giftProductKey];
@@ -1106,7 +1202,7 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
                 <label className={radioItemClass}>
                   <RadioGroupItem value="gift" id={`${productId}-recipient-gift`} />
                   <span className="min-w-0 pt-0.5 text-base leading-snug">
-                    Ja, jag vill få ett presentkort mailat till mig
+                    Ja, jag vill även få ett presentkort mailat till mig
                   </span>
                 </label>
               </RadioGroup>
@@ -1115,33 +1211,24 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
           </FormItem>
         )}
       />
-      <div className={cn("space-y-5", recipient !== "gift" && "hidden")}>
-        <h3 className="text-base font-semibold leading-snug text-foreground md:text-lg">
-          Välj hur presentkortet ska se ut
-        </h3>
-        {/* Förhandsgranskningen sticky så man ser ändringar medan man väljer. */}
-        <div className="grid items-start gap-5 lg:grid-cols-2 lg:gap-8">
-          <div className="sticky top-[5.5rem] z-10 -mx-1 space-y-2 bg-background/95 px-1 py-2 backdrop-blur-sm supports-[backdrop-filter]:bg-background/85 sm:top-24 lg:top-28">
-            <p className="text-sm font-medium leading-snug text-foreground md:text-base">
-              Förhandsgranskning
-            </p>
-            <GiftCardPreview
-              layout={layout}
-              size="large"
-              productName={giftProductLabel}
-              inscription={inscription || giftDefaultInscription}
-              quantity={quantity ?? undefined}
-              decoration={decoration}
-              className="max-sm:min-h-[16.5rem] max-sm:p-4 sm:min-h-[20rem]"
-            />
-          </div>
-
-          <div className="min-w-0 space-y-5">
+      <div className={cn("space-y-6", recipient !== "gift" && "hidden")}>
+        <div>
+          <h3 className="text-base font-semibold leading-snug text-foreground md:text-lg">
+            Välj hur presentkortet ska se ut
+          </h3>
+          <p className="mt-1 text-sm leading-relaxed text-muted-foreground md:text-base">
+            Ändra färg, dekoration och text – förhandsgranskningen uppdateras
+            direkt.
+          </p>
+        </div>
+        {/* Mobil: förhandsgranskning överst (sticky). Desktop: val till vänster, förhandsgranskning till höger. */}
+        <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(17rem,22rem)] lg:gap-8 xl:grid-cols-[minmax(0,1fr)_minmax(18rem,24rem)]">
+          <div className="order-2 min-w-0 space-y-4 lg:order-1">
             <FormField
               control={form.control}
               name="giftLayout"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="rounded-xl border border-border/60 bg-muted/30 p-4 sm:p-5">
                   <FormLabel>1. Välj färg</FormLabel>
                   <FormDescription>
                     Mörkblå används om du inte väljer något annat.
@@ -1167,7 +1254,7 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
               control={form.control}
               name="giftDecoration"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="rounded-xl border border-border/60 bg-muted/30 p-4 sm:p-5">
                   <FormLabel>2. Välj dekoration</FormLabel>
                   <FormDescription>
                     Visas uppe till höger på presentkortet.
@@ -1176,10 +1263,17 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
                     <RadioGroup
                       onValueChange={field.onChange}
                       value={field.value}
-                      className="grid grid-cols-1 gap-1 sm:grid-cols-2"
+                      className="grid grid-cols-1 gap-2 sm:grid-cols-2"
                     >
                       {GIFT_DECORATION_OPTIONS.map((option) => (
-                        <label key={option.id} className={radioItemClass}>
+                        <label
+                          key={option.id}
+                          className={cn(
+                            radioItemClass,
+                            field.value === option.id &&
+                              "border-primary/40 bg-background shadow-sm",
+                          )}
+                        >
                           <RadioGroupItem
                             value={option.id}
                             id={`${productId}-gift-decoration-${option.id}`}
@@ -1199,7 +1293,7 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
               control={form.control}
               name="giftInscription"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="rounded-xl border border-border/60 bg-muted/30 p-4 sm:p-5">
                   <FormLabel>3. Välj text på kortet</FormLabel>
                   <FormControl>
                     <Textarea
@@ -1216,6 +1310,25 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
                 </FormItem>
               )}
             />
+          </div>
+
+          <div className="order-1 space-y-2 lg:sticky lg:top-28 lg:order-2">
+            <p className="text-sm font-medium leading-snug text-foreground md:text-base">
+              Förhandsgranskning
+            </p>
+            <GiftCardPreview
+              layout={layout}
+              size="large"
+              productName={giftProductLabel}
+              inscription={inscription || giftDefaultInscription}
+              quantity={quantity ?? undefined}
+              decoration={decoration}
+              className="max-sm:min-h-[16.5rem] max-sm:p-4 sm:min-h-[20rem]"
+            />
+            <p className="text-sm leading-relaxed text-muted-foreground md:text-base">
+              Presentkortet mejlas till din e-postadress, som du uppger i Steg{" "}
+              {lastCheckoutStep + 1}.
+            </p>
           </div>
         </div>
       </div>
@@ -1236,11 +1349,6 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Behöver du kvitto för friskvårdsbidrag?</FormLabel>
-              <FormDescription>
-                {productId === "snabbhet"
-                  ? "Kontrollera med din arbetsgivare om bidraget kan användas. Vi tar med uppgifterna på kvittot om du vill."
-                  : "Kvittot kan lämnas till arbetsgivaren. Caselo fyller i företagsnamn, organisationsnummer, produkt, moms, belopp och datum."}
-              </FormDescription>
               <FormControl>
                 <RadioGroup
                   onValueChange={(value) => {
@@ -1362,8 +1470,7 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
     </h3>
   );
 
-  // Sist i betalningssteget, precis före knappen – stör inte namn, mejl
-  // eller valet av betalsätt.
+  // Före betalsättet, så att Swish/bankgiro kan fällas ut direkt vid valet.
   const privacyConsentField = (
     form: typeof snabbhetForm | typeof friskvardForm,
   ) => (
@@ -1423,21 +1530,6 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
     ) : null;
 
   const showStepButtons = !(checkoutStep === lastCheckoutStep && orderCurrent);
-  // Presentkort-steget: snabbhet = steg 0, personlig träning = steg 1.
-  const giftStepIndex = productId === "snabbhet" ? 0 : 1;
-  const giftRecipientSelected =
-    productId === "snabbhet"
-      ? snabbhetRecipient === "gift"
-      : friskvardRecipient === "gift";
-  const giftMailNote =
-    showStepButtons &&
-    giftRecipientSelected &&
-    checkoutStep === giftStepIndex ? (
-      <p className="text-sm leading-relaxed text-muted-foreground md:text-base">
-        Presentkortet mejlas till din e-postadress, som du uppger i Steg{" "}
-        {lastCheckoutStep + 1}.
-      </p>
-    ) : null;
 
   return (
     <div id="bestall" className="scroll-mt-28">
@@ -1473,6 +1565,44 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
               />
 
               <div className={cn("space-y-5", checkoutStep !== 0 && "hidden")}>
+                <div>
+                  <h3 className="text-base font-semibold leading-snug text-foreground md:text-lg">
+                    Snabbhetspaketet
+                  </h3>
+                  <p className="mt-1 text-sm leading-relaxed text-muted-foreground md:text-base">
+                    {OFFER_PRODUCTS.snabbhet.durationNote}.
+                  </p>
+                  <div className="mt-3">
+                    <SnabbhetCampaignPrice size="detail" />
+                  </div>
+                </div>
+                <div className={orderSummaryClass}>
+                  <p className="text-sm font-semibold text-foreground md:text-base">
+                    I paketet ingår två tillfällen
+                  </p>
+                  <ol className="mt-2 list-decimal space-y-2 pl-5 text-sm leading-relaxed text-foreground md:text-base">
+                    {SNABBHET_OVERVIEW_POINTS.map((point) => (
+                      <li key={point.text}>
+                        {point.text}
+                        {"afterNote" in point && point.afterNote ? (
+                          <p className="mt-1 text-sm italic leading-relaxed text-muted-foreground md:text-base">
+                            {point.afterNote}
+                          </p>
+                        ) : null}
+                      </li>
+                    ))}
+                  </ol>
+                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground md:text-base">
+                    Totalt {formatOfferPriceWithVat(OFFER_PRODUCTS.snabbhet.priceSek)}
+                    {OFFER_PRODUCTS.snabbhet.ordinaryPriceSek
+                      ? ` (ord. pris ${formatOfferPrice(OFFER_PRODUCTS.snabbhet.ordinaryPriceSek)})`
+                      : ""}
+                    .
+                  </p>
+                </div>
+              </div>
+
+              <div className={cn("space-y-5", checkoutStep !== 1 && "hidden")}>
                 {giftFields(
                   snabbhetForm,
                   snabbhetRecipient,
@@ -1482,7 +1612,7 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
                 )}
               </div>
 
-              <div className={cn("space-y-5", checkoutStep !== 1 && "hidden")}>
+              <div className={cn("space-y-5", checkoutStep !== 2 && "hidden")}>
                 {wellnessFields(
                   snabbhetForm,
                   snabbhetWellnessReceipt === "yes" ? "yes" : "no",
@@ -1491,7 +1621,7 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
                 )}
               </div>
 
-              <div className={cn("space-y-5", checkoutStep !== 2 && "hidden")}>
+              <div className={cn("space-y-5", checkoutStep !== 3 && "hidden")}>
                 {paymentStepHeading}
                 <div className={orderSummaryClass}>
                   <p className="text-sm font-semibold text-foreground md:text-base">
@@ -1505,8 +1635,9 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
                     ) : null}
                   </ul>
                 </div>
-                {sharedFields(snabbhetForm)}
+                {contactFields(snabbhetForm)}
                 {privacyConsentField(snabbhetForm)}
+                {paymentMethodFields(snabbhetForm)}
                 {submitErrorNote}
                 {paymentInstructions}
               </div>
@@ -1514,7 +1645,6 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
               <div
                 className={cn("space-y-3", !showStepButtons && "hidden")}
               >
-                {giftMailNote}
                 <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                   {checkoutStep > 0 ? (
                     <Button
@@ -1535,19 +1665,24 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
                     >
                       Nästa
                     </Button>
-                  ) : (
+                  ) : bankgiroAvailable &&
+                    snabbhetPaymentMethod &&
+                    (!orderCurrent || snabbhetDirty) ? (
                     <Button
-                      type="submit"
+                      type="button"
                       variant="secondary"
                       className={offerGoldCtaClass}
                       disabled={submitting || !checkout}
+                      onClick={() => revealPaymentInstructions(snabbhetForm)}
                     >
                       {submitting ? (
                         <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
                       ) : null}
-                      Gå vidare till betalning
+                      {orderCurrent && snabbhetDirty
+                        ? "Uppdatera betalningsuppgifter"
+                        : "Visa betalningsuppgifter"}
                     </Button>
-                  )}
+                  ) : null}
                 </div>
               </div>
             </form>
@@ -1805,8 +1940,9 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
                     </ul>
                   </div>
                 ) : null}
-                {sharedFields(friskvardForm)}
+                {contactFields(friskvardForm)}
                 {privacyConsentField(friskvardForm)}
+                {paymentMethodFields(friskvardForm)}
                 {submitErrorNote}
                 {paymentInstructions}
               </div>
@@ -1814,7 +1950,6 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
               <div
                 className={cn("space-y-3", !showStepButtons && "hidden")}
               >
-                {giftMailNote}
                 <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                   {checkoutStep > 0 ? (
                     <Button
@@ -1835,19 +1970,24 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
                     >
                       Nästa
                     </Button>
-                  ) : (
+                  ) : bankgiroAvailable &&
+                    friskvardPaymentMethod &&
+                    (!orderCurrent || friskvardDirty) ? (
                     <Button
-                      type="submit"
+                      type="button"
                       variant="secondary"
                       className={offerGoldCtaClass}
                       disabled={submitting || !checkout}
+                      onClick={() => revealPaymentInstructions(friskvardForm)}
                     >
                       {submitting ? (
                         <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
                       ) : null}
-                      Gå vidare till betalning
+                      {orderCurrent && friskvardDirty
+                        ? "Uppdatera betalningsuppgifter"
+                        : "Visa betalningsuppgifter"}
                     </Button>
-                  )}
+                  ) : null}
                 </div>
               </div>
             </form>
@@ -1860,7 +2000,7 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
               {payment.orderRef}
             </span>
             {formDirty
-              ? ". Eftersom du har ändrat något får du en ny betalningsreferens när du klickar på Gå vidare till betalning."
+              ? ". Eftersom du har ändrat något får du en ny betalningsreferens när du väljer betalsätt igen."
               : " – betalningsuppgifterna finns under steget Betalning. Om du ändrar något får du en ny betalningsreferens."}
           </p>
         ) : null}

@@ -68,6 +68,8 @@ export type PaymentState = {
   message: string;
   /** Behövs för Formspree vid Jag har betalat på den publicerade sajten. */
   orderSnapshot?: OrderClaimSnapshot;
+  /** Signerad länk till /boka som visar förbetalt styckpris (PT). */
+  prepaidBookingUrl?: string;
 };
 
 export type OrderPayload = {
@@ -150,4 +152,27 @@ export async function submitPaymentClaim(
     throw new Error(data?.message || "claim-failed");
   }
   return data as PaymentState;
+}
+
+export type PrepaidLookupResult = {
+  ok: true;
+  verified: true;
+  orderRef: string;
+  quantity: number;
+  unitPriceSek: number;
+  listUnitPriceSek: number;
+};
+
+export async function verifyPrepaidBookingToken(
+  token: string,
+): Promise<PrepaidLookupResult> {
+  const params = new URLSearchParams({ token: token.trim() });
+  const response = await fetch(`/api/erbjudanden-prepaid?${params}`, {
+    headers: { Accept: "application/json" },
+  });
+  const data = await parseJson(response);
+  if (!response.ok || !data?.ok || !data?.orderRef) {
+    throw new Error(data?.message || "Ogiltig förbetalningskod.");
+  }
+  return data as PrepaidLookupResult;
 }

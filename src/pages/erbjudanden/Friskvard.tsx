@@ -183,7 +183,7 @@ const Friskvard = () => {
 
             <aside className="mb-8 rounded-2xl bg-secondary/45 px-5 py-4 sm:px-6 sm:py-5">
               <p className="mb-1.5 text-lg font-semibold text-foreground md:text-xl">
-                Träna med möjlighet till friskvårdsbidrag
+                Möjlighet till friskvårdsbidrag
               </p>
               <p className={offerLeadClass}>
                 Betala med Swish eller bankgiro och få ett kvitto att lämna till

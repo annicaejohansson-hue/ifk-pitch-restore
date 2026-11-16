@@ -7,7 +7,8 @@ const isOfferApi = (url = "") => {
   return (
     path === "/api/erbjudanden-checkout" ||
     path === "/api/erbjudanden-order" ||
-    path === "/api/erbjudanden-payment-claim"
+    path === "/api/erbjudanden-payment-claim" ||
+    path === "/api/erbjudanden-prepaid"
   );
 };
 

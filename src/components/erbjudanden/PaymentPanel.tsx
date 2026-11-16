@@ -395,6 +395,19 @@ const PaymentPanel = ({
             {reportedBankgiro
               ? " En bankgirobetalning syns normalt hos Caselo efter 1–2 bankdagar."
               : null}
+            {payment.prepaidBookingUrl ? (
+              <>
+                {" "}
+                Boka dina pass via{" "}
+                <a
+                  className="font-medium text-primary underline underline-offset-4 hover:text-primary/80"
+                  href={payment.prepaidBookingUrl}
+                >
+                  bokningssidan
+                </a>{" "}
+                – där syns ditt pris per pass.
+              </>
+            ) : null}
           </p>
         ) : null}
       </div>

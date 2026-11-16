@@ -49,6 +49,11 @@ export type FulfillmentContext = {
   receiptName?: string;
   /** Kundens valda betalsätt i kassan; används i förifylld kvitto-länk. */
   chosenPaymentMethod?: "swish" | "bankgiro";
+  /**
+   * Signerad bokningslänk för förbetalda PT-pass (visar styckpris på /boka).
+   * Om den saknas används ordinarie erbjudande-bokningssida.
+   */
+  prepaidBookingUrl?: string;
 };
 
 export { getFocusLabel };
@@ -217,10 +222,13 @@ export function buildCustomerFulfillmentDraft(ctx: FulfillmentContext): string {
   const specified = ctx.quantity
     ? formatPtReceiptName(ctx.quantity)
     : product.receiptName;
+  const bookingUrl =
+    ctx.prepaidBookingUrl ||
+    `${BOOKING_PAGE}?typ=friskvard`;
   const bookingCount =
     ctx.quantity && ctx.quantity > 1
-      ? `Boka dina ${ctx.quantity} pass via ${BOOKING_PAGE}?typ=friskvard`
-      : `Boka ditt pass via ${BOOKING_PAGE}?typ=friskvard`;
+      ? `Boka dina ${ctx.quantity} pass via ${bookingUrl}`
+      : `Boka ditt pass via ${bookingUrl}`;
 
   return [
     `Hej ${ctx.buyerName},`,
@@ -233,6 +241,7 @@ export function buildCustomerFulfillmentDraft(ctx: FulfillmentContext): string {
     `Belopp: ${amount}. Referens: ${ctx.orderRef}. ${paid}`.trim(),
     "Träningen är personlig och kan inte överlåtas eller bytas mot andra tjänster.",
     bookingCount,
+    "I bokningslänken ser du ditt pris per pass utifrån din beställning.",
     "",
     "Välkommen,",
     "Caselo Idrottsmedicin",
