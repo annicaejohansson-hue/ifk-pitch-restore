@@ -7,15 +7,14 @@ const Services = () => {
     <section className="bg-gradient-to-b from-background via-muted/30 to-background pb-0 pt-12 sm:pt-16 md:pt-20">
       <div className="container px-8 md:px-4">
         <div className="mx-auto mb-10 max-w-3xl text-center md:mb-16">
-          <h2 className="mb-4 break-words text-[1.75rem] font-bold leading-tight tracking-tight sm:mb-6 sm:text-3xl sm:leading-none md:text-5xl">
-            Trygg återgång och
-            <br />
-            starkare prestation
+          <h2 className="mb-4 break-words text-[1.55rem] font-bold leading-tight tracking-tight sm:mb-6 sm:text-3xl sm:leading-tight md:text-5xl">
+            <span className="block sm:inline">Bedömning, behandling</span>{" "}
+            <span className="block sm:inline">och personlig träning</span>
           </h2>
-          <p className="text-base text-muted-foreground sm:text-lg">
-            Caselo Idrottsmedicin erbjuder professionell idrottsfysioterapi för satsande idrottare.{" "}
-            <br className="hidden sm:inline" />
-            Oavsett sport – vi hjälper dig nå dina mål.
+          <p className="mx-auto max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
+            Hos Caselo Idrottsmedicin möter du en legitimerad fysioterapeut med
+            erfarenhet av idrottens krav. Vi anpassar behandlingen och träningen
+            efter dina behov – oavsett om du är idrottare eller motionär.
           </p>
         </div>
 

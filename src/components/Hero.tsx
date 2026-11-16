@@ -160,12 +160,12 @@ const Hero = () => {
       {/* Content */}
       <div className="container relative z-10 w-full min-w-0 max-w-full px-5 md:px-4 py-14 sm:py-20">
         <div className="mx-auto w-full min-w-0 max-w-4xl text-center">
-          <h1 className="mb-5 w-full max-w-full text-[clamp(1.75rem,9vw,3rem)] font-bold leading-[1.15] tracking-tighter text-primary-foreground animate-in fade-in slide-in-from-bottom-4 duration-1000 sm:mb-6 sm:text-5xl sm:leading-tight sm:tracking-tight md:text-7xl">
-            <span className="block max-sm:whitespace-nowrap">Tillbaka till tävling</span>
-            <span className="block max-sm:whitespace-nowrap">– mer redo än någonsin</span>
+          <h1 className="mb-5 w-full max-w-full text-[clamp(1.65rem,8.2vw,3rem)] font-bold leading-[1.2] tracking-tight text-primary-foreground animate-in fade-in slide-in-from-bottom-4 duration-1000 sm:mb-6 sm:text-5xl sm:leading-tight md:text-7xl">
+            <span className="block">Tillbaka till din idrott.</span>
+            <span className="block">Vidare mot dina mål.</span>
           </h1>
-          <p className="mb-8 w-full max-w-full px-1 text-xl leading-snug text-primary-foreground/90 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-150 break-words sm:mb-10 sm:px-0 sm:text-xl md:text-2xl">
-            Idrottsfysioterapi i Stockholm
+          <p className="mx-auto mb-8 w-full max-w-[22rem] px-1 text-lg leading-snug text-primary-foreground/90 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-150 break-words sm:mb-10 sm:max-w-2xl sm:px-0 sm:text-xl md:text-2xl">
+            Idrottsfysioterapi och personlig träning i Stockholm
           </p>
           
           <div className="flex flex-col items-center sm:flex-row gap-4 justify-center">

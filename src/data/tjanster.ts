@@ -104,7 +104,7 @@ export const services: ServiceContent[] = [
     ],
     cardTitle: "Hälkoppsinlägg vid ont i hälen",
     cardDescription:
-      "Har ditt barn ont i hälen vid fotboll eller annan idrott? Efter fysioterapeutisk bedömning kan individuellt anpassade hälkoppsinlägg användas för att avlasta hälen när det är lämpligt.",
+      "Har du eller ditt barn ont i hälen vid idrott eller i vardagen? Vi bedömer besvären och formar vid behov individuella hälkoppsinlägg efter din fot. Målet är mindre hälsmärta så att du kan fortsätta med din träning och dina aktiviteter.",
     overviewBlurb:
       "Fysioterapeutisk bedömning och, när det är lämpligt, individuellt anpassade hälkoppsinlägg för barn och unga med hälsmärta.",
     metaDescription:
@@ -126,9 +126,8 @@ export const services: ServiceContent[] = [
     title: "Personlig träning efter dina mål",
     titleLines: ["Personlig träning", "efter dina mål"],
     cardTitle: "Personlig träning efter dina mål",
-    // Samma text som på Tjänster-sidans kort.
     cardDescription:
-      "Träna med leg. fysioterapeut – i din takt, efter din idrott. Välj mellan personliga träningspass och snabbhetspaket med laserportar.",
+      "Utveckla din snabbhet, löpteknik eller fysik med legitimerad fysioterapeut. Träningen anpassas efter din nivå och dina mål. Välj personliga träningspass eller snabbhetspaket med laserportar, träningsprogram och återtest.",
     overviewBlurb:
       "Träna med leg. fysioterapeut – i din takt, efter din idrott. Välj mellan personliga träningspass och snabbhetspaket med laserportar.",
     metaDescription:

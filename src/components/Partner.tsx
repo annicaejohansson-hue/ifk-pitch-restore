@@ -2,18 +2,21 @@ const PARTNER_LOGOS = [
   {
     src: "https://irp.cdn-website.com/e6471f24/dms3rep/multi/g10.png",
     alt: "IFK Stocksund",
+    href: "https://www.ifkstocksund.se/",
     width: 350,
     height: 438,
   },
   {
     src: "https://az729104.cdn.laget.se/emblem_4818200.png;width=480;height=480;paddingWidth=16;mode=pad;scale=both;anchor=middlecenter",
     alt: "IFK Mariefred logotyp",
+    href: "https://www.laget.se/ifk_mariefred",
     width: 480,
     height: 480,
   },
   {
     src: "/enebyberglogo.jpeg",
     alt: "Enebybergs IF",
+    href: "https://www.enebybergsif.se/",
     width: 148,
     height: 148,
     rounded: true,
@@ -28,16 +31,24 @@ const logoClass = (variant: "footer" | "inline") =>
 const PartnerLogos = ({ variant }: { variant: "footer" | "inline" }) => (
   <>
     {PARTNER_LOGOS.map((logo) => (
-      <img
+      <a
         key={logo.alt}
-        src={logo.src}
-        alt={logo.alt}
-        className={`${logoClass(variant)}${"rounded" in logo && logo.rounded ? " rounded-full bg-white" : ""}`}
-        width={logo.width}
-        height={logo.height}
-        loading="lazy"
-        decoding="async"
-      />
+        href={logo.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+        aria-label={`${logo.alt} (öppnas i ny flik)`}
+      >
+        <img
+          src={logo.src}
+          alt=""
+          className={`${logoClass(variant)}${"rounded" in logo && logo.rounded ? " rounded-full bg-white" : ""}`}
+          width={logo.width}
+          height={logo.height}
+          loading="lazy"
+          decoding="async"
+        />
+      </a>
     ))}
   </>
 );
