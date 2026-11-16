@@ -13,6 +13,7 @@ const choices = [
     text: "Erbjud föreningens spelare en enkel väg till bedömning och rehab med rabatterade priser, och ett personligt bollplank till era tränare.",
     mobileText:
       "Enkel väg till bedömning och rehab med rabatter, och bollplank till tränarna.",
+    fits: "Ex. Klubbchef, Sportchef, Styrelse",
     image: clubFoto,
     imageAlt: "Caselo Idrottsmedicin vid Danderyd Arena",
     imageClass: "object-[72%_35%]",
@@ -23,6 +24,7 @@ const choices = [
     text: "Få en enkel kontaktväg när en spelare i laget får ont eller skadar sig – med tydlig återkoppling till dig som tränare kring spelarens träning och nästa steg.",
     mobileText:
       "Kontaktväg och återkoppling när en spelare skadar sig.",
+    fits: "Ex. Tränare, Ledare, Fysansvarig",
     image: teamFoto,
     imageAlt: "Tränare med taktikbräda på fotbollsplanen",
     imageClass: "object-[8%_42%]",
@@ -81,6 +83,9 @@ const Forening = () => {
                       aria-hidden="true"
                     />
                   </h2>
+                  <p className="break-words text-xs italic leading-snug text-muted-foreground min-[375px]:text-sm">
+                    {choice.fits}
+                  </p>
                   <p className="break-words text-sm leading-snug text-muted-foreground min-[375px]:text-base min-[375px]:leading-relaxed sm:text-sm sm:leading-relaxed">
                     <span className="sm:hidden">{choice.mobileText}</span>
                     <span className="hidden sm:inline">{choice.text}</span>
