@@ -104,7 +104,7 @@ const ForeningKlubb = () => {
         <title>För föreningsledning – Caselo Idrottsmedicin</title>
         <meta
           name="description"
-          content="För klubbchef, sportchef, styrelse och kansli: lokal idrottsmedicin, rehab och stöd till lagen när spelare får ont eller skadar sig."
+          content="För klubbchef, sportchef, styrelse och kansli: enkel väg till bedömning och rehab, rabatterade priser för medlemmarna och stöd till tränarna när spelare skadar sig."
         />
       </Helmet>
 

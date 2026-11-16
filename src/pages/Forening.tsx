@@ -10,8 +10,9 @@ const choices = [
   {
     to: "/forening/klubb",
     title: "Jag företräder en förening",
-    text: "För klubbchef, sportchef, styrelse och kansli: lokal idrottsmedicin, rehab och ett samarbete som stödjer lagen när spelare får ont eller skadar sig.",
-    mobileText: "Idrottsmedicin och samarbete för föreningsledningen.",
+    text: "Erbjud föreningens spelare en enkel väg till bedömning och rehab med rabatterade priser, och ett personligt bollplank till era tränare.",
+    mobileText:
+      "Enkel väg till bedömning och rehab med rabatter, och bollplank till tränarna.",
     image: clubFoto,
     imageAlt: "Caselo Idrottsmedicin vid Danderyd Arena",
     imageClass: "object-[72%_35%]",
