@@ -207,13 +207,26 @@ const resolveServiceForVisitor = (
   service: BookingService,
   partner: PartnerConfig | null,
 ): BookingService => {
-  if (!partner || !service.ifk) return service;
+  const resolved =
+    partner && service.ifk
+      ? {
+          ...service,
+          name: partnerServiceName(service, partner),
+          priceSek: service.ifk.priceSek,
+          // Show the ordinary Caselo price beside the partner price
+          ordinaryPriceSek: service.priceSek,
+        }
+      : service;
+
+  if (service.id !== "pt-pass" || !service.description) return resolved;
+
+  const discountNote = partner
+    ? "Eventuell ytterligare rabatt visas i nästa steg."
+    : "Eventuell rabatt vidare i nästa steg";
+
   return {
-    ...service,
-    name: partnerServiceName(service, partner),
-    priceSek: service.ifk.priceSek,
-    // Show the ordinary Caselo price beside the partner price
-    ordinaryPriceSek: service.priceSek,
+    ...resolved,
+    description: `${service.description}\n\n${discountNote}`,
   };
 };
 
