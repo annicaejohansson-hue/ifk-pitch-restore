@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import Partner from "@/components/Partner";
 import PageIntro from "@/components/PageIntro";
 import ProcessSteps from "@/components/forening/ProcessSteps";
+import AudienceSwitch from "@/components/forening/AudienceSwitch";
 import SharePlayerLink from "@/components/forening/SharePlayerLink";
 import henrikFoto from "@/assets/IMG_9111-guidance.jpg";
 import rehabFoto from "@/assets/IMG_9118.jpg";
@@ -67,7 +68,7 @@ const ForeningTranare = () => {
   return (
     <main className="min-h-[calc(100vh-7rem)] bg-gradient-to-b from-muted/40 to-background">
       <Helmet>
-        <title>För tränare och ledare – Caselo Idrottsmedicin</title>
+        <title>För lag – Caselo Idrottsmedicin</title>
         <meta
           name="description"
           content="När en spelare skadas: kan hen träna, hur anpassas träningen, när är match okej? Hänvisa till leg. fysioterapeut Henrik Nilsson på Caselo Idrottsmedicin."
@@ -76,23 +77,29 @@ const ForeningTranare = () => {
 
       <section className={`${sectionX} pt-6 pb-8 md:pt-8 md:pb-10`}>
         <div className="mx-auto w-full min-w-0 max-w-5xl">
+          <div className="mb-4 flex justify-end md:mb-5">
+            <AudienceSwitch
+              to="/forening/klubb"
+              label="Företräder du en förening? →"
+            />
+          </div>
           <div className="grid min-w-0 items-start gap-5 md:grid-cols-2 md:gap-10">
             <div className="contents min-w-0 md:flex md:flex-col">
               <PageIntro
                 className="min-w-0 max-md:order-1"
-                eyebrow="För tränare och ledare"
+                eyebrow="För lag"
                 title="En kontaktväg när en spelare får ont eller skadar sig"
                 mobileTitle={"En kontaktväg när en spelare skadar\u00a0sig"}
               >
                 <p>
-                  När en spelare skadar sig kan det vara svårt för tränaren att
-                  veta: Kan spelaren träna? Hur bör träningen anpassas? När är
-                  det okej att spela match igen?
+                  När en spelare skadar sig kan det vara svårt för dig som
+                  tränare eller ledare att veta: Kan spelaren träna? Hur bör
+                  träningen anpassas? När är det okej att spela match igen?
                 </p>
                 <p>
                   Hänvisa spelaren till leg. fysioterapeut Henrik Nilsson för
-                  bedömning och rehabilitering – och få som tränare vägledning
-                  kring återgången till träning och match.
+                  bedömning och rehabilitering – och få vägledning kring
+                  återgången till träning och match.
                 </p>
               </PageIntro>
 
@@ -288,11 +295,11 @@ const ForeningTranare = () => {
 
             <div className="rounded-2xl border border-border/60 bg-card px-5 py-6 shadow-[var(--shadow-card)] sm:px-6 sm:py-7 md:px-8 md:py-8">
               <h2 className="mb-3 text-balance text-xl font-bold tracking-tight text-foreground md:text-2xl">
-                Länk för spelare och föräldrar
+                Länk för att boka tid
               </h2>
               <p className="mb-5 max-w-3xl text-base leading-relaxed text-muted-foreground md:text-lg">
-                Kopiera länken till sidan för spelare och föräldrar. Där bokar de
-                själva tiden för besöket.
+                Kopiera länken till bokningssidan och dela med spelare eller
+                vårdnadshavare. Där bokar de själva tiden för besöket.
               </p>
               <SharePlayerLink />
             </div>

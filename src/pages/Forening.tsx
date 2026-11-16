@@ -3,28 +3,28 @@ import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
 import { ChevronRight } from "lucide-react";
 import PageIntro from "@/components/PageIntro";
-import coachFoto from "@/assets/forening-tranare.jpg";
-import playerFoto from "@/assets/forening-spelare.jpg";
+import clubFoto from "@/assets/caselo-banner-kontakt.jpg";
+import teamFoto from "@/assets/forening-tranare.jpg";
 
 const choices = [
   {
+    to: "/forening/klubb",
+    title: "Jag företräder en förening",
+    text: "För klubbchef, sportchef, styrelse och kansli: lokal idrottsmedicin, rehab och ett samarbete som stödjer lagen när spelare får ont eller skadar sig.",
+    mobileText: "Idrottsmedicin och samarbete för föreningsledningen.",
+    image: clubFoto,
+    imageAlt: "Caselo Idrottsmedicin vid Danderyd Arena",
+    imageClass: "object-[72%_35%]",
+  },
+  {
     to: "/forening/tranare",
-    title: "Jag är tränare eller ledare",
+    title: "Jag företräder ett lag",
     text: "Få en enkel kontaktväg när en spelare i laget får ont eller skadar sig – med tydlig återkoppling till dig som tränare kring spelarens träning och nästa steg.",
     mobileText:
       "Kontaktväg och återkoppling när en spelare skadar sig.",
-    image: coachFoto,
+    image: teamFoto,
     imageAlt: "Tränare med taktikbräda på fotbollsplanen",
     imageClass: "object-[8%_42%]",
-  },
-  {
-    to: "/forening/spelare",
-    title: "Jag är spelare eller förälder",
-    text: "Få hjälp med bedömning, behandling och fotbollsanpassad rehabilitering tillbaka till träning och match – från första undersökning till nästa steg på planen.",
-    mobileText: "Bedömning och rehab tillbaka till träning och match.",
-    image: playerFoto,
-    imageAlt: "Fotbollsspelare med bollen på planen",
-    imageClass: "object-[58%_72%]",
   },
 ] as const;
 
@@ -39,7 +39,7 @@ const Forening = () => {
         <title>För fotbollsföreningar – Caselo Idrottsmedicin</title>
         <meta
           name="description"
-          content="När en spelare i laget får ont kan Caselo hjälpa till med bedömning, rehabilitering och återkoppling till tränaren. För tränare, spelare och föräldrar."
+          content="När spelare får ont kan Caselo hjälpa till med bedömning, rehabilitering och återkoppling. För föreningsledning och lag."
         />
       </Helmet>
 
@@ -48,12 +48,12 @@ const Forening = () => {
           <PageIntro
             className="mb-1 shrink-0 [&_p]:mb-2 min-[375px]:mb-3 min-[375px]:[&_p]:mb-3 sm:mb-4 md:mb-8"
             eyebrow="För fotbollsföreningar"
-            title={"När en spelare i laget får ont eller skadar\u00a0sig"}
+            title={"När spelare får ont eller skadar\u00a0sig"}
           />
           <p className="mb-4 hidden max-w-3xl text-base leading-relaxed text-muted-foreground sm:mb-5 sm:block sm:text-lg md:mb-6 md:text-xl">
-            Caselo kan hjälpa till med bedömning, rehabilitering och
-            återkoppling till tränaren. Välj om du är tränare/ledare, eller
-            spelare/förälder.
+            Caselo hjälper föreningar och lag med bedömning, rehabilitering och
+            återkoppling till tränare. Välj om du företräder föreningen eller
+            ett lag.
           </p>
 
           <div className="grid min-h-0 flex-1 grid-cols-1 grid-rows-2 items-stretch gap-1.5 min-[375px]:gap-3 sm:grid-cols-2 sm:grid-rows-none sm:gap-12 md:gap-16 lg:gap-20">
@@ -63,7 +63,7 @@ const Forening = () => {
                 to={choice.to}
                 className="group flex h-full min-h-0 min-w-0 flex-row overflow-hidden rounded-2xl border border-primary/25 bg-card shadow-[0_8px_28px_-10px_hsl(210_60%_15%/0.28)] transition-[var(--transition-smooth)] hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-[0_12px_32px_-10px_hsl(210_60%_15%/0.35)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
-                <div className="w-[42%] shrink-0 overflow-hidden sm:w-32 md:w-36 lg:w-44">
+                <div className="w-[36%] shrink-0 overflow-hidden sm:w-28 md:w-32 lg:w-40">
                   <img
                     src={choice.image}
                     alt={choice.imageAlt}
@@ -71,10 +71,12 @@ const Forening = () => {
                   />
                 </div>
                 <div className="flex min-w-0 flex-1 flex-col justify-center gap-1 p-2.5 min-[375px]:gap-2 min-[375px]:p-3.5 sm:p-4 md:p-5">
-                  <h2 className="flex items-start gap-1 break-words text-base font-semibold leading-snug tracking-tight text-primary min-[375px]:text-xl sm:text-lg md:text-xl">
-                    <span className="min-w-0">{choice.title}</span>
+                  <h2 className="flex items-center gap-0.5 text-[0.8125rem] font-semibold leading-none tracking-tight text-primary min-[375px]:text-sm sm:text-base md:text-lg lg:text-xl">
+                    <span className="min-w-0 whitespace-nowrap">
+                      {choice.title}
+                    </span>
                     <ChevronRight
-                      className="mt-0.5 h-5 w-5 shrink-0 md:h-6 md:w-6"
+                      className="h-4 w-4 shrink-0 sm:h-5 sm:w-5 md:h-6 md:w-6"
                       aria-hidden="true"
                     />
                   </h2>

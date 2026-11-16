@@ -22,7 +22,7 @@ import Tjanster from "@/pages/Tjanster";
 import TjansterDetail from "@/pages/TjansterDetail";
 import Forening from "@/pages/Forening";
 import ForeningTranare from "@/pages/ForeningTranare";
-import ForeningSpelare from "@/pages/ForeningSpelare";
+import ForeningKlubb from "@/pages/ForeningKlubb";
 import HalkopparBarn from "@/pages/HalkopparBarn";
 import ErbjudandenFriskvard from "@/pages/erbjudanden/Friskvard";
 import ErbjudandenKassa from "@/pages/erbjudanden/Kassa";
@@ -92,8 +92,12 @@ const router = createBrowserRouter(
       <Route path="/kontakt" element={<Kontakt />} />
       <Route path={PRIVACY_PATH} element={<Personuppgifter />} />
       <Route path="/forening" element={<Forening />} />
+      <Route path="/forening/klubb" element={<ForeningKlubb />} />
       <Route path="/forening/tranare" element={<ForeningTranare />} />
-      <Route path="/forening/spelare" element={<ForeningSpelare />} />
+      <Route
+        path="/forening/spelare"
+        element={<PermanentRedirect to="/boka" />}
+      />
       <Route path="/erbjudanden/snabbhet" element={<SnabbhetRedirect />} />
       <Route path={PERSONAL_TRAINING_PATH} element={<ErbjudandenFriskvard />} />
       <Route path="/erbjudanden/friskvard" element={<PersonalTrainingRedirect />} />

@@ -444,13 +444,13 @@ const HalkopparBarn = () => {
               </blockquote>
             </div>
             <p className="mt-6 text-base leading-relaxed text-muted-foreground md:text-lg">
-              För idrottande barn som spelar fotboll finns också{" "}
-              <Link to="/forening/spelare" className={inlineLinkClass}>
-                fotbollsanpassad rehabilitering
-              </Link>{" "}
-              och information för{" "}
+              För idrottande barn som spelar fotboll finns också information för{" "}
               <Link to="/forening" className={inlineLinkClass}>
                 fotbollsföreningar
+              </Link>{" "}
+              och möjlighet att{" "}
+              <Link to="/boka" className={inlineLinkClass}>
+                boka tid
               </Link>
               .
             </p>

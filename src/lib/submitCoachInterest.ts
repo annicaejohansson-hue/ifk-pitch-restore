@@ -26,7 +26,7 @@ export async function submitCoachInterest(payload: CoachInterestPayload) {
     },
     body: JSON.stringify({
       _subject: "Intresseanmälan: Prata med Henrik om upplägget",
-      källa: "För tränare och ledare",
+      källa: "För lag",
       namn: payload.name,
       förening: payload.club,
       lag: payload.team,

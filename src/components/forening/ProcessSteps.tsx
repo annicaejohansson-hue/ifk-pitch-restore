@@ -1,8 +1,12 @@
+import type { ReactNode } from "react";
 import { ChevronRight } from "lucide-react";
 
 export type ProcessStep = {
   title: string;
-  text: string;
+  /** Huvudtext. Med `detail` visas den som större ingress. */
+  text: ReactNode;
+  /** Mindre detaljtext under ingressen. */
+  detail?: ReactNode;
 };
 
 type ProcessStepsProps = {
@@ -30,7 +34,7 @@ const ProcessSteps = ({ steps, compact = false }: ProcessStepsProps) => (
               : "flex min-w-0 flex-1 flex-col rounded-2xl border border-border/60 bg-card p-4 shadow-[var(--shadow-card)] sm:p-5"
           }
         >
-          <div className={compact ? "mb-1 flex items-center gap-2.5" : "mb-2 flex items-center gap-3"}>
+          <div className={compact ? "mb-2 flex items-center gap-2.5" : "mb-2.5 flex items-center gap-3"}>
             <span
               className={
                 compact
@@ -44,22 +48,53 @@ const ProcessSteps = ({ steps, compact = false }: ProcessStepsProps) => (
             <h3
               className={
                 compact
-                  ? "min-w-0 text-base font-semibold leading-snug text-foreground lg:whitespace-nowrap"
-                  : "min-w-0 text-lg font-semibold leading-snug text-foreground md:text-xl"
+                  ? "min-w-0 text-base font-bold leading-snug text-foreground md:text-lg"
+                  : "min-w-0 text-lg font-bold leading-snug text-foreground md:text-xl"
               }
             >
               {step.title}
             </h3>
           </div>
-          <p
-            className={
-              compact
-                ? "text-sm leading-relaxed text-muted-foreground md:text-base"
-                : "text-base leading-relaxed text-muted-foreground"
-            }
-          >
-            {step.text}
-          </p>
+          {step.detail ? (
+            <>
+              <p
+                className={
+                  compact
+                    ? "text-base font-medium leading-snug text-foreground md:text-lg"
+                    : "text-lg font-medium leading-snug text-foreground md:text-xl"
+                }
+              >
+                {step.text}
+              </p>
+              <div
+                className={
+                  compact
+                    ? "my-2.5 h-px w-full bg-border/70"
+                    : "my-3 h-px w-full bg-border/70"
+                }
+                aria-hidden="true"
+              />
+              <p
+                className={
+                  compact
+                    ? "text-sm leading-relaxed text-muted-foreground md:text-base"
+                    : "text-base leading-relaxed text-muted-foreground"
+                }
+              >
+                {step.detail}
+              </p>
+            </>
+          ) : (
+            <p
+              className={
+                compact
+                  ? "text-sm leading-relaxed text-muted-foreground md:text-base"
+                  : "text-base leading-relaxed text-muted-foreground"
+              }
+            >
+              {step.text}
+            </p>
+          )}
         </div>
         {index < steps.length - 1 ? (
           <ChevronRight
