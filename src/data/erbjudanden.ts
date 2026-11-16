@@ -26,8 +26,13 @@ export const OFFER_SURFACE_LINE =
 
 /** Numrerade punkter under "I paketet ingår två tillfällen:" på kortet för Snabbhetspaketet. */
 export const SNABBHET_OVERVIEW_POINTS = [
-  "Du testar din snabbhet med laserportar, efter uppvärmning med instruktör. Du får ett individuellt träningsprogram och provar övningarna med vägledning.",
-  "Du kommer tillbaka efter cirka åtta veckor för uppföljande snabbhetstest.",
+  {
+    text: "Du springer 10, 20 och 30 meter med tidtagning via laserportar. Du får ett individuellt 8v träningsprogram och testar på övningarna tillsammans med instruktör.",
+    afterNote: "Du tränar på egen hand enligt träningsprogrammet.",
+  },
+  {
+    text: "Efter cirka åtta veckor kommer du tillbaka för upprepning av uppvärmning och sprintlöpningar, för att följa utvecklingen av din snabbhet.",
+  },
 ] as const;
 
 /** Första punkterna i listan under "Läs mer" för Snabbhetspaketet. */

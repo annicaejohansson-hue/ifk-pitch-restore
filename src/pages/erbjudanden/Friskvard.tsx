@@ -184,14 +184,12 @@ const Friskvard = () => {
 
             <aside className="mb-8 rounded-2xl bg-secondary/45 px-5 py-4 sm:px-6 sm:py-5">
               <p className="mb-1.5 text-lg font-semibold text-foreground md:text-xl">
-                Du kan använda friskvårdsbidraget
+                Träna med möjlighet till friskvårdsbidrag
               </p>
               <p className={offerLeadClass}>
-                Betala med Swish eller bankgiro och lämna kvittot till din
-                arbetsgivare (kvittot uppfyller Skatteverkets krav).
-                Träningstillfällen som köps under 2026 kan genomföras till och
-                med{" "}
-                {OFFER_FIRST_VISIT_END_LABEL}.
+                Betala med Swish eller bankgiro och få ett kvitto att lämna till
+                din arbetsgivare. Träningstillfällen som köps under 2026 kan
+                genomföras till och med {OFFER_FIRST_VISIT_END_LABEL}.
               </p>
             </aside>
 
@@ -312,17 +310,22 @@ const Friskvard = () => {
                     aria-labelledby="snabbhet-ingar-rubrik"
                     className="mb-3 list-none space-y-2.5 p-0"
                   >
-                    {SNABBHET_OVERVIEW_POINTS.map((text, index) => (
-                      <li key={text} className="flex items-start gap-2.5">
+                    {SNABBHET_OVERVIEW_POINTS.map((point, index) => (
+                      <li key={point.text} className="flex items-start gap-2.5">
                         <span
                           className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 border-primary text-[11px] font-semibold tabular-nums text-primary"
                           aria-hidden="true"
                         >
                           {index + 1}
                         </span>
-                        <span className="min-w-0 text-base leading-snug text-muted-foreground md:text-lg">
-                          {text}
-                        </span>
+                        <div className="min-w-0 space-y-2 text-base leading-snug text-muted-foreground md:text-lg">
+                          <p>{point.text}</p>
+                          {"afterNote" in point && point.afterNote ? (
+                            <p className="text-sm italic md:text-base">
+                              {point.afterNote}
+                            </p>
+                          ) : null}
+                        </div>
                       </li>
                     ))}
                   </ol>

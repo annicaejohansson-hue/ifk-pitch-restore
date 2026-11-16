@@ -97,7 +97,7 @@ export const services: ServiceContent[] = [
   {
     slug: "halkoppar-barn",
     path: HEEL_CUP_SERVICE_PATH,
-    title: "Hälkoppsinlägg för barn med ont i hälen",
+    title: "Hälkoppsinlägg för barn och vuxna med ont i hälen",
     titleLines: [
       "Hälkoppsinlägg för barn",
       "och vuxna med ont i\u00a0hälen",
@@ -106,16 +106,16 @@ export const services: ServiceContent[] = [
     cardDescription:
       "Har du eller ditt barn ont i hälen vid idrott eller i vardagen? Vi bedömer besvären och formar vid behov individuella hälkoppsinlägg efter din fot. Målet är mindre hälsmärta så att du kan fortsätta med din träning och dina aktiviteter.",
     overviewBlurb:
-      "Fysioterapeutisk bedömning och, när det är lämpligt, individuellt anpassade hälkoppsinlägg för barn och unga med hälsmärta.",
+      "Fysioterapeutisk bedömning och, när det är lämpligt, individuellt anpassade hälkoppsinlägg för barn och vuxna med hälsmärta.",
     metaDescription:
-      "Har ditt barn ont i hälen vid fotboll eller annan idrott? Hos Caselo i Danderyd får barnet en fysioterapeutisk bedömning och individuellt anpassade hälkoppsinlägg när det är lämpligt.",
+      "Ont i hälen vid idrott eller i vardagen? Hos Caselo i Danderyd får du eller ditt barn en fysioterapeutisk bedömning och individuellt anpassade hälkoppsinlägg när det är lämpligt.",
     image: "/halkoppar/20260929_141824.jpg",
     imageAlt:
       "Fotbollsskor på planen med ett hälkoppsinlägg bredvid skorna, vid Danderyd Arena",
     accentClass: "bg-[hsl(210_48%_34%)]",
     imagePosition: "left",
     intro: [
-      "Hälsmärta är vanligt hos växande barn som spelar fotboll eller ägnar sig åt annan idrott med mycket löpning och hopp. Hos Caselo får barnet en fysioterapeutisk bedömning och individuellt anpassade hälkoppsinlägg som kan avlasta hälen.",
+      "Hälsmärta kan begränsa både träning och vardag – hos växande barn vid idrott med mycket löpning och hopp, och hos vuxna vid till exempel belastningsrelaterade hälbesvär. Hos Caselo får du en fysioterapeutisk bedömning och individuellt anpassade hälkoppsinlägg som kan avlasta hälen när det är lämpligt.",
     ],
     sections: [],
   },

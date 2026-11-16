@@ -19,7 +19,7 @@ const Tjanster = () => {
         <title>Tjänster – Caselo Idrottsmedicin</title>
         <meta
           name="description"
-          content="Smärta och skador, hälkoppsinlägg för barn med hälsmärta samt personlig träning hos Caselo Idrottsmedicin."
+          content="Smärta och skador, hälkoppsinlägg för barn och vuxna med hälsmärta samt personlig träning hos Caselo Idrottsmedicin."
         />
       </Helmet>
 

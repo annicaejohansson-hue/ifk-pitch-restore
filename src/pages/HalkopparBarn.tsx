@@ -14,21 +14,20 @@ import Partner from "@/components/Partner";
 import { quotes as testimonialQuotes } from "@/components/Testimonial";
 import { useVisitor } from "@/context/VisitorContext";
 import { trackKontaktLank } from "@/lib/analytics";
-import {
-  CHILD_HEEL_CUP_BOOKING_ID,
-  SITE_ORIGIN,
-} from "@/lib/booking";
+import { SITE_ORIGIN } from "@/lib/booking";
 import { HEEL_CUP_SERVICE_PATH } from "@/data/tjanster";
 
 const PAGE_PATH = HEEL_CUP_SERVICE_PATH;
 const PAGE_URL = `${SITE_ORIGIN}${PAGE_PATH}`;
 const OG_IMAGE_URL = `${SITE_ORIGIN}/og-halkoppar-barn.jpg`;
-const LAST_REVIEWED = "2026-09-06";
-const LAST_REVIEWED_DISPLAY = "6 september 2026";
+const LAST_REVIEWED = "2026-11-16";
+const LAST_REVIEWED_DISPLAY = "16 november 2026";
+const HEEL_CUP_BOOKING_CATEGORY = "halkoppsinlagg";
 
-const SEO_TITLE = "Hälkoppsinlägg för barn med hälsmärta | Caselo Danderyd";
+const SEO_TITLE =
+  "Hälkoppsinlägg för barn och vuxna med hälsmärta | Caselo Danderyd";
 const SEO_DESCRIPTION =
-  "Har ditt barn ont i hälen vid fotboll eller annan idrott? Hos Caselo i Danderyd får barnet en fysioterapeutisk bedömning och individuellt anpassade hälkoppsinlägg när det är lämpligt.";
+  "Ont i hälen vid idrott eller i vardagen? Hos Caselo i Danderyd får du eller ditt barn en fysioterapeutisk bedömning och individuellt anpassade hälkoppsinlägg när det är lämpligt.";
 
 const EMAIL = "henrik@caseloidrottsmedicin.se";
 const ADDRESS_STREET = "Rinkebyvägen 4";
@@ -45,19 +44,19 @@ const inlineLinkClass =
   "font-medium text-primary underline underline-offset-4 hover:text-primary/80";
 
 const symptoms = [
-  "Barnet får ont i hälen under eller efter träning",
+  "Ont i hälen under eller efter träning",
   "Smärtan ökar vid löpning och hopp",
-  "Barnet haltar eller går på tå efter aktivitet",
+  "Hälta eller gång på tå efter aktivitet",
   "Besvären återkommer under perioder med mer träning",
-  "Fotbollsskor eller hårda underlag gör mer ont",
+  "Fotbollsskor, hårda underlag eller mycket stående gör mer ont",
 ];
 
 const reasons = [
   "Legitimerad fysioterapeut med tio års erfarenhet av idrottsskador",
   "Bedömning, hjälpmedel och rehabilitering i ett sammanhållet upplägg",
-  "Förståelse för vägen tillbaka till träning och match",
+  "Förståelse för vägen tillbaka till träning och aktivitet",
   "Mottagning på Danderyd Arena, i direkt anslutning till fotbollsplan",
-  "Möjlighet till dialog med tränare när spelaren och vårdnadshavaren samtycker",
+  "Möjlighet till dialog med tränare när du eller vårdnadshavare samtycker",
 ];
 
 type FaqItem = {
@@ -71,25 +70,31 @@ const faqs: FaqItem[] = [
     id: "vad-ar-halkoppar",
     question: "Vad är hälkoppsinlägg?",
     answer:
-      "Hälkoppsinlägg är personligt utformade inlägg som formas efter barnets häl. De används i skon för att ge stöd och avlastning vid hälsmärta.",
+      "Hälkoppsinlägg är personligt utformade inlägg som formas efter din häl. De används i skon för att ge stöd och avlastning vid hälsmärta.",
   },
   {
     id: "nar-kan-halkoppar-hjalpa",
-    question: "När kan hälkoppsinlägg hjälpa ett barn med ont i hälen?",
+    question: "När kan hälkoppsinlägg hjälpa vid ont i hälen?",
     answer:
-      "Hälkoppsinlägg kan vara ett möjligt hjälpmedel när en fysioterapeutisk bedömning visar att avlastning av hälen är lämplig, till exempel vid hälsmärta kopplad till idrott. De passar inte automatiskt vid alla typer av hälbesvär, och resultatet beror på orsaken till smärtan och barnets belastning.",
+      "Hälkoppsinlägg kan vara ett möjligt hjälpmedel när en fysioterapeutisk bedömning visar att avlastning av hälen är lämplig, till exempel vid hälsmärta kopplad till idrott eller belastning i vardagen. De passar inte automatiskt vid alla typer av hälbesvär, och resultatet beror på orsaken till smärtan och din belastning.",
+  },
+  {
+    id: "barn-och-vuxna",
+    question: "Passar hälkoppsinlägg för både barn och vuxna?",
+    answer:
+      "Ja. Caselo tillverkar individuellt anpassade hälkoppsinlägg för både barn och vuxna. På bokningssidan väljer du nybesök för barn eller vuxen beroende på ålder.",
   },
   {
     id: "samma-som-skoinlagg",
     question: "Är hälkoppsinlägg samma sak som vanliga skoinlägg?",
     answer:
-      "Hälkoppsinlägg är personligt utformade inlägg som formas efter barnets häl. De är inte samma sak som ett färdigt skoinlägg från butik.",
+      "Hälkoppsinlägg är personligt utformade inlägg som formas efter din häl. De är inte samma sak som ett färdigt skoinlägg från butik.",
   },
   {
     id: "vad-ar-severs",
     question: "Vad är Severs skada?",
     answer:
-      "Severs skada, även kallad Severs sjukdom eller calcaneal apofysit, är en vanlig orsak till hälsmärta hos aktiva barn i tillväxt. Den hänger ihop med belastning på tillväxtzonen i hälbenet, ofta vid löpning och hopp. Diagnos ska inte ställas utifrån en webbsida – en individuell bedömning behövs.",
+      "Severs skada, även kallad Severs sjukdom eller calcaneal apofysit, är en vanlig orsak till hälsmärta hos aktiva barn i tillväxt. Den hänger ihop med belastning på tillväxtzonen i hälbenet, ofta vid löpning och hopp. Hos vuxna kan andra belastningsrelaterade hälbesvär ligga bakom smärtan. Diagnos ska inte ställas utifrån en webbsida – en individuell bedömning behövs.",
   },
   {
     id: "fotbollsskor",
@@ -152,14 +157,14 @@ const structuredData = {
     {
       "@type": "Service",
       "@id": `${PAGE_URL}#service`,
-      name: "Hälkoppsinlägg för barn med hälsmärta",
+      name: "Hälkoppsinlägg för barn och vuxna med hälsmärta",
       serviceType:
-        "Fysioterapeutisk bedömning och skräddarsydda hälkoppsinlägg för barn",
+        "Fysioterapeutisk bedömning och skräddarsydda hälkoppsinlägg för barn och vuxna",
       url: PAGE_URL,
       provider: { "@id": `${SITE_ORIGIN}/#clinic` },
       areaServed: [
-        { "@type": "City", "name": "Danderyd" },
-        { "@type": "AdministrativeArea", "name": "Stockholm" },
+        { "@type": "City", name: "Danderyd" },
+        { "@type": "AdministrativeArea", name: "Stockholm" },
       ],
     },
     {
@@ -181,7 +186,7 @@ const structuredData = {
         {
           "@type": "ListItem",
           position: 3,
-          name: "Hälkoppsinlägg för barn",
+          name: "Hälkoppsinlägg för barn och vuxna",
           item: PAGE_URL,
         },
       ],
@@ -236,54 +241,56 @@ const HalkopparBarn = () => {
 
       <section className="bg-background py-8 md:py-14">
         <div className="container px-8 md:px-4">
-        <div className="mx-auto max-w-5xl">
-          <div className="grid items-start gap-8 md:grid-cols-2 md:gap-10">
-            <div className="min-w-0">
-              <PageIntro
-                className="mb-5 md:mb-6"
-                eyebrow="Tjänster"
-                eyebrowHref="/tjanster"
-                title="Hälkoppsinlägg för barn med ont i hälen"
-              >
-                <p>
-                  Hälsmärta är vanligt hos växande barn som spelar fotboll eller
-                  ägnar sig åt annan idrott med mycket löpning och hopp.
-                </p>
-                <p>
-                  Hos Caselo får barnet en fysioterapeutisk bedömning och
-                  individuellt anpassade hälkoppsinlägg som kan avlasta hälen.
-                </p>
-              </PageIntro>
-              <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-                <Button asChild variant="secondary" className={goldCtaClass}>
-                  <BookingLink
-                    serviceId={CHILD_HEEL_CUP_BOOKING_ID}
-                    aria-label="Boka tid"
-                  >
-                    <Calendar
-                      className="h-4 w-4 sm:h-5 sm:w-5"
-                      aria-hidden="true"
-                    />
-                    Boka tid
-                  </BookingLink>
-                </Button>
-              </div>
-            </div>
-            <figure className="min-w-0">
-              <div className="overflow-hidden rounded-2xl shadow-[var(--shadow-card)]">
-                <div className="aspect-square w-full overflow-hidden bg-muted">
-                  <img
-                    src="/halkoppar/20260929_141727.jpg"
-                    alt="Fotbollsskor på planen med ett hälkoppsinlägg i skon, vid Danderyd Arena"
-                    className="h-full w-full object-cover object-[center_50%]"
-                    fetchPriority="high"
-                    decoding="async"
-                  />
+          <div className="mx-auto max-w-5xl">
+            <div className="grid items-start gap-8 md:grid-cols-2 md:gap-10">
+              <div className="min-w-0">
+                <PageIntro
+                  className="mb-5 md:mb-6"
+                  eyebrow="Tjänster"
+                  eyebrowHref="/tjanster"
+                  title="Hälkoppsinlägg för barn och vuxna med ont i hälen"
+                >
+                  <p>
+                    Hälsmärta kan begränsa både träning och vardag – hos växande
+                    barn vid idrott med mycket löpning och hopp, och hos vuxna
+                    vid belastningsrelaterade hälbesvär.
+                  </p>
+                  <p>
+                    Hos Caselo får du en fysioterapeutisk bedömning och
+                    individuellt anpassade hälkoppsinlägg som kan avlasta hälen
+                    när det är lämpligt.
+                  </p>
+                </PageIntro>
+                <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+                  <Button asChild variant="secondary" className={goldCtaClass}>
+                    <BookingLink
+                      categoryId={HEEL_CUP_BOOKING_CATEGORY}
+                      aria-label="Boka tid för hälkoppsinlägg"
+                    >
+                      <Calendar
+                        className="h-4 w-4 sm:h-5 sm:w-5"
+                        aria-hidden="true"
+                      />
+                      Boka tid
+                    </BookingLink>
+                  </Button>
                 </div>
               </div>
-            </figure>
+              <figure className="min-w-0">
+                <div className="overflow-hidden rounded-2xl shadow-[var(--shadow-card)]">
+                  <div className="aspect-square w-full overflow-hidden bg-muted">
+                    <img
+                      src="/halkoppar/20260929_141727.jpg"
+                      alt="Fotbollsskor på planen med ett hälkoppsinlägg i skon, vid Danderyd Arena"
+                      className="h-full w-full object-cover object-[center_50%]"
+                      fetchPriority="high"
+                      decoding="async"
+                    />
+                  </div>
+                </div>
+              </figure>
+            </div>
           </div>
-        </div>
         </div>
       </section>
 
@@ -295,8 +302,8 @@ const HalkopparBarn = () => {
             </h2>
             <div className="rounded-2xl border border-border/60 bg-card p-5 shadow-[var(--shadow-card)] sm:p-6 md:p-8">
               <p className="mb-5 text-base leading-relaxed text-muted-foreground md:mb-6 md:text-lg">
-                Många barn i åldern 9 till 15 år drabbas av hälsmärta som kan gå
-                ut över både idrott och vardag.
+                Hälsmärta kan drabba både idrottande barn och vuxna – och gå ut
+                över träning, arbete och vardag.
               </p>
               <ul className="space-y-3.5 sm:space-y-4">
                 {symptoms.map((item) => (
@@ -321,18 +328,22 @@ const HalkopparBarn = () => {
           <div className="mx-auto grid max-w-5xl items-start gap-8 md:grid-cols-2 md:items-center md:gap-12">
             <div className="min-w-0">
               <h2 className="mb-4 text-balance text-2xl font-bold tracking-tight text-foreground sm:text-3xl md:mb-6 md:text-4xl">
-                Varför får barn ont i hälen?
+                Varför får man ont i hälen?
               </h2>
               <p className="mb-4 text-base leading-relaxed text-foreground md:text-lg">
-                Hälsmärta hos idrottande barn beror ofta på hög belastning under
-                tillväxten, och en vanlig orsak är Severs skada.
+                Orsaken till hälsmärta skiljer sig mellan barn och vuxna, men
+                hög belastning är ofta en gemensam nämnare.
+              </p>
+              <p className="mb-4 text-base leading-relaxed text-muted-foreground md:text-lg">
+                Hos idrottande barn i tillväxt beror besvären ofta på belastning
+                under tillväxten. En vanlig orsak är Severs skada, även kallad
+                Severs sjukdom eller calcaneal apofysit, som hänger ihop med
+                tillväxtzonen i hälbenet – ofta vid löpning och hopp.
               </p>
               <p className="text-base leading-relaxed text-muted-foreground md:text-lg">
-                Kroppen förändras under tillväxten. Upprepad belastning från
-                löpning och hopp – till exempel efter fotboll – kan göra hälen
-                känslig. Severs skada, även kallad Severs sjukdom eller
-                calcaneal apofysit, är då en vanlig orsak till hälsmärta hos
-                aktiva barn.
+                Hos vuxna kan andra belastningsrelaterade hälbesvär ligga bakom
+                smärtan. En individuell bedömning behövs för att förstå orsaken
+                och vilka åtgärder som är lämpliga.
               </p>
             </div>
             <figure className="min-w-0">
@@ -369,22 +380,25 @@ const HalkopparBarn = () => {
               <div className="space-y-4 text-base leading-relaxed text-muted-foreground md:text-lg">
                 <p className="text-foreground">
                   Hälkoppsinlägg är personligt utformade inlägg som formas efter
-                  barnets häl, som visat sig vara en mycket effektiv behandling
-                  vid Severs skada. De används i skon för att ge stöd och
-                  avlastning vid hälsmärta.
+                  din häl. De används i skon för att ge stöd och avlastning vid
+                  hälsmärta, till exempel när bedömningen visar att det är
+                  lämpligt vid Severs skada eller andra belastningsrelaterade
+                  hälbesvär.
                 </p>
                 <p>
                   Inlägget formas efter hälen för att kunna dämpa belastningen
                   och göra det lättare att gå, springa och vara aktiv.
                 </p>
                 <p>
-                  Hur hälkoppsinläggen används i vardagen och i idrottsskor går vi
-                  igenom vid besöket. Caselo tillverkar också hälkoppsinlägg för
-                  vuxna; det bokas som ett eget nybesök på{" "}
-                  <BookingLink className={inlineLinkClass}>
+                  Hur hälkoppsinläggen används i vardagen och i idrottsskor går
+                  vi igenom vid besöket. På{" "}
+                  <BookingLink
+                    categoryId={HEEL_CUP_BOOKING_CATEGORY}
+                    className={inlineLinkClass}
+                  >
                     bokningssidan
-                  </BookingLink>
-                  .
+                  </BookingLink>{" "}
+                  väljer du nybesök för barn eller vuxen.
                 </p>
               </div>
             </div>
@@ -399,8 +413,9 @@ const HalkopparBarn = () => {
               Därför Caselo Idrottsmedicin
             </h2>
             <p className="mb-6 text-base leading-relaxed text-muted-foreground md:text-lg">
-              Henrik Nilsson på Caselo Idrottsmedicin erbjuder en specialiserad
-              tjänst för barn och unga med hälbesvär.
+              Henrik Nilsson på Caselo Idrottsmedicin erbjuder bedömning och
+              individuellt anpassade hälkoppsinlägg för både barn och vuxna med
+              hälbesvär.
             </p>
             <div className="grid items-stretch gap-6 md:grid-cols-2 md:gap-8">
               <ul className="space-y-3 rounded-2xl border border-border/60 bg-card p-5 shadow-[var(--shadow-card)] sm:p-6 md:p-8">
@@ -436,7 +451,8 @@ const HalkopparBarn = () => {
               och information för{" "}
               <Link to="/forening" className={inlineLinkClass}>
                 fotbollsföreningar
-              </Link>.
+              </Link>
+              .
             </p>
           </div>
         </div>
@@ -449,18 +465,22 @@ const HalkopparBarn = () => {
               Vanliga frågor
             </h2>
             <div className="rounded-2xl border border-border/60 bg-card px-5 py-2 shadow-[var(--shadow-card)] sm:px-6 md:px-8">
-            <Accordion type="single" collapsible className="w-full">
-              {faqs.map((faq) => (
-                <AccordionItem key={faq.id} value={faq.id} className="last:border-b-0">
-                  <AccordionTrigger className="min-h-11 py-4 text-left text-base font-semibold leading-snug hover:no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:text-lg">
-                    {faq.question}
-                  </AccordionTrigger>
-                  <AccordionContent className="text-base leading-relaxed text-muted-foreground md:text-lg">
-                    {faq.answer}
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
+              <Accordion type="single" collapsible className="w-full">
+                {faqs.map((faq) => (
+                  <AccordionItem
+                    key={faq.id}
+                    value={faq.id}
+                    className="last:border-b-0"
+                  >
+                    <AccordionTrigger className="min-h-11 py-4 text-left text-base font-semibold leading-snug hover:no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:text-lg">
+                      {faq.question}
+                    </AccordionTrigger>
+                    <AccordionContent className="text-base leading-relaxed text-muted-foreground md:text-lg">
+                      {faq.answer}
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
             </div>
           </div>
         </div>
@@ -470,12 +490,12 @@ const HalkopparBarn = () => {
         <div className="container px-8 md:px-4">
           <div className="mx-auto max-w-5xl rounded-2xl border border-border/60 bg-card px-5 py-7 text-center shadow-[var(--shadow-card)] sm:px-6 sm:py-8 md:px-10 md:py-10">
             <h2 className="mb-6 text-xl font-bold text-foreground md:text-2xl">
-              Vill ni boka en bedömning?
+              Vill du boka en bedömning?
             </h2>
             <div className="flex flex-col items-center justify-center gap-3 sm:flex-row sm:flex-wrap">
               <Button asChild variant="secondary" className={goldCtaClass}>
                 <BookingLink
-                  serviceId={CHILD_HEEL_CUP_BOOKING_ID}
+                  categoryId={HEEL_CUP_BOOKING_CATEGORY}
                   aria-label="Boka tid för bedömning av hälbesvär"
                 >
                   <Calendar
