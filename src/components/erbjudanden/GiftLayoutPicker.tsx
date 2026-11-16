@@ -165,7 +165,8 @@ const GiftLayoutPicker = ({
                     decoration={decoration}
                   />
                 </div>
-                <div className="mt-3">
+                {!hidePreview ? (
+                  <div className="mt-3">
                     <Button
                       type="button"
                       variant="outline"
@@ -174,44 +175,47 @@ const GiftLayoutPicker = ({
                     >
                       Förhandsgranska
                     </Button>
-                </div>
+                  </div>
+                ) : null}
               </div>
             );
           })}
       </div>
 
-      <Dialog open={previewId !== null} onOpenChange={(open) => !open && setPreviewId(null)}>
-        <DialogContent className="max-h-[90vh] w-[calc(100%-1.5rem)] max-w-xl overflow-y-auto p-4 sm:p-6">
-          <DialogHeader className="pr-10 text-left">
-            <DialogTitle>{preview?.label}</DialogTitle>
-            <DialogDescription>
-              Presentkort från Caselo Idrottsmedicin.
-            </DialogDescription>
-          </DialogHeader>
-          {previewId ? (
-            <GiftCardPreview
-              layout={previewId}
-              size="large"
-              productName={productName}
-              inscription={inscription}
-              quantity={quantity}
-              decoration={decoration}
-            />
-          ) : null}
-          {selectable && previewId ? (
-            <Button
-              type="button"
-              className="h-11 w-full whitespace-normal sm:w-auto"
-              onClick={() => {
-                onChange?.(previewId);
-                setPreviewId(null);
-              }}
-            >
-              Välj {preview?.label.toLowerCase()}
-            </Button>
-          ) : null}
-        </DialogContent>
-      </Dialog>
+      {!hidePreview ? (
+        <Dialog open={previewId !== null} onOpenChange={(open) => !open && setPreviewId(null)}>
+          <DialogContent className="max-h-[90vh] w-[calc(100%-1.5rem)] max-w-xl overflow-y-auto p-4 sm:p-6">
+            <DialogHeader className="pr-10 text-left">
+              <DialogTitle>{preview?.label}</DialogTitle>
+              <DialogDescription>
+                Presentkort från Caselo Idrottsmedicin.
+              </DialogDescription>
+            </DialogHeader>
+            {previewId ? (
+              <GiftCardPreview
+                layout={previewId}
+                size="large"
+                productName={productName}
+                inscription={inscription}
+                quantity={quantity}
+                decoration={decoration}
+              />
+            ) : null}
+            {selectable && previewId ? (
+              <Button
+                type="button"
+                className="h-11 w-full whitespace-normal sm:w-auto"
+                onClick={() => {
+                  onChange?.(previewId);
+                  setPreviewId(null);
+                }}
+              >
+                Välj {preview?.label.toLowerCase()}
+              </Button>
+            ) : null}
+          </DialogContent>
+        </Dialog>
+      ) : null}
     </div>
   );
 };

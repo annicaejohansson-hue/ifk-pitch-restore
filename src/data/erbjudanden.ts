@@ -581,9 +581,9 @@ export const GIFT_LAYOUT_OPTIONS: {
   },
   {
     id: "pappersvit",
-    label: "Pappersvit",
+    label: "Vit",
     shortLabel: "Vit",
-    description: "Nästan vit – minimal bläckförbrukning vid utskrift.",
+    description: "Vit – minimal bläckförbrukning vid utskrift.",
     isGift: true,
   },
   {

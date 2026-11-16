@@ -5,7 +5,6 @@ import BookingLink from "@/components/BookingLink";
 import Partner from "@/components/Partner";
 import PageIntro from "@/components/PageIntro";
 import { Button } from "@/components/ui/button";
-import GiftLayoutPicker from "@/components/erbjudanden/GiftLayoutPicker";
 import PtQuantityPicker from "@/components/erbjudanden/PtQuantityPicker";
 import SnabbhetCampaignPrice, {
   PaintbrushHighlight,
@@ -386,19 +385,14 @@ const Friskvard = () => {
               <h2 className={offerH2Class}>
                 Ett presentkort till julklapp eller födelsedagen
               </h2>
-              <p className={`${offerLeadClass} mb-6 max-w-3xl md:mb-8`}>
+              <p className={`${offerLeadClass} max-w-3xl`}>
                 Både personlig träning och snabbhetspaketet kan köpas som
                 presentkort att ge bort. Presentkortet skickas till din e-post
                 inom 24 timmar efter betalning, tillsammans med information om
-                hur mottagaren bokar. Presentkorten finns i flera färger –
-                se nedan. Du väljer färg och text på kortet i kassan.
+                hur mottagaren bokar. Presentkortet kommer i flera färger och
+                du kan själv välja text. Du väljer färg och text på kortet i
+                kassan.
               </p>
-            <GiftLayoutPicker
-              value="neutral"
-              selectable={false}
-              name="gift-preview"
-              productName="Träning"
-            />
           </div>
         </div>
       </section>

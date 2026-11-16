@@ -41,7 +41,6 @@ import {
   formatOfferPriceWithVat,
   formatPtProductName,
   getPtSessionQuote,
-  isFriskvardProduct,
   parseFriskvardFocusId,
   parseFriskvardFocusIds,
   parseGiftLayoutId,
@@ -75,19 +74,10 @@ const draftKey = (productId: "snabbhet" | "friskvard") =>
   `caselo-offer-draft:${productId}`;
 
 /**
- * På localhost ska omladdning ge ett tomt formulär. Därför varken sparas
- * eller återställs utkast/betalning från sessionStorage i lokal miljö.
+ * Kassan ska alltid börja tom när kunden kommer in via "betala nu, boka sen".
+ * Tidigare utkast/betalning i sessionStorage återställs därför aldrig.
  */
-const isLocalCheckoutDev = () => {
-  if (typeof window === "undefined") return Boolean(import.meta.env.DEV);
-  const host = window.location.hostname;
-  return (
-    import.meta.env.DEV || host === "localhost" || host === "127.0.0.1"
-  );
-};
-
-const clearLocalOfferStorage = () => {
-  if (!isLocalCheckoutDev()) return;
+const clearOfferCheckoutStorage = () => {
   try {
     for (const id of ["snabbhet", "friskvard"] as const) {
       sessionStorage.removeItem(draftKey(id));
@@ -98,53 +88,21 @@ const clearLocalOfferStorage = () => {
   }
 };
 
-clearLocalOfferStorage();
+clearOfferCheckoutStorage();
 
 const readStoredPayment = (
-  productId: "snabbhet" | "friskvard",
-): PaymentState | null => {
-  if (isLocalCheckoutDev()) return null;
-  try {
-    const raw = sessionStorage.getItem(storageKey(productId));
-    if (!raw) return null;
-    const stored = JSON.parse(raw) as PaymentState;
-    if (
-      stored?.orderRef &&
-      (stored.productId === productId ||
-        (productId === "friskvard" && isFriskvardProduct(stored.productId)))
-    ) {
-      return stored;
-    }
-  } catch {
-    /* ignore */
-  }
-  return null;
-};
+  _productId: "snabbhet" | "friskvard",
+): PaymentState | null => null;
 
-const readFormDraft = <T,>(productId: "snabbhet" | "friskvard") => {
-  if (isLocalCheckoutDev()) return null;
-  try {
-    const raw = sessionStorage.getItem(draftKey(productId));
-    if (!raw) return null;
-    const stored = JSON.parse(raw) as { values?: T; step?: number };
-    if (!stored || typeof stored !== "object") return null;
-    return stored;
-  } catch {
-    return null;
-  }
-};
+const readFormDraft = <T,>(_productId: "snabbhet" | "friskvard") =>
+  null as { values?: T; step?: number } | null;
 
 const writeFormDraft = (
-  productId: "snabbhet" | "friskvard",
-  values: unknown,
-  step: number,
+  _productId: "snabbhet" | "friskvard",
+  _values: unknown,
+  _step: number,
 ) => {
-  if (isLocalCheckoutDev()) return;
-  try {
-    sessionStorage.setItem(draftKey(productId), JSON.stringify({ values, step }));
-  } catch {
-    /* ignore */
-  }
+  /* Kassan sparar inte utkast mellan besök. */
 };
 
 const baseSchema = {
@@ -654,11 +612,6 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
     };
   }, []);
 
-  useEffect(() => {
-    const stored = readStoredPayment(productId);
-    if (stored) setPayment(stored);
-  }, [productId]);
-
   const rememberPayment = (next: PaymentState) => {
     setPayment((prev) => {
       const merged = {
@@ -702,13 +655,6 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
             ? prev.swishAppUrl
             : next.swishAppUrl,
       };
-      if (!isLocalCheckoutDev()) {
-        try {
-          sessionStorage.setItem(storageKey(productId), JSON.stringify(merged));
-        } catch {
-          /* ignore */
-        }
-      }
       return merged;
     });
   };
