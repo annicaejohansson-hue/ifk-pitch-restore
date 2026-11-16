@@ -60,8 +60,8 @@ const ProcessSteps = ({ steps, compact = false }: ProcessStepsProps) => (
               <p
                 className={
                   compact
-                    ? "text-base font-medium leading-snug text-foreground md:text-lg"
-                    : "text-lg font-medium leading-snug text-foreground md:text-xl"
+                    ? "text-pretty text-base font-medium leading-snug text-foreground md:text-lg"
+                    : "text-pretty text-lg font-medium leading-snug text-foreground md:text-xl"
                 }
               >
                 {step.text}
@@ -74,15 +74,15 @@ const ProcessSteps = ({ steps, compact = false }: ProcessStepsProps) => (
                 }
                 aria-hidden="true"
               />
-              <p
+              <div
                 className={
                   compact
-                    ? "text-sm leading-relaxed text-muted-foreground md:text-base"
-                    : "text-base leading-relaxed text-muted-foreground"
+                    ? "min-w-0 text-sm leading-relaxed text-muted-foreground md:text-base"
+                    : "min-w-0 text-base leading-relaxed text-muted-foreground"
                 }
               >
                 {step.detail}
-              </p>
+              </div>
             </>
           ) : (
             <p

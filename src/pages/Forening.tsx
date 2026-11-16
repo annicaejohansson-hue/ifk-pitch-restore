@@ -73,17 +73,17 @@ const Forening = () => {
                     className={`h-full min-h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03] ${choice.imageClass}`}
                   />
                 </div>
-                <div className="flex min-w-0 flex-1 flex-col justify-center gap-1 p-2.5 min-[375px]:gap-2 min-[375px]:p-3.5 sm:p-4 md:p-5">
-                  <h2 className="flex items-center gap-0.5 text-[0.8125rem] font-semibold leading-none tracking-tight text-primary min-[375px]:text-sm sm:text-base md:text-lg lg:text-xl">
-                    <span className="min-w-0 whitespace-nowrap">
+                <div className="flex min-w-0 flex-1 flex-col justify-center gap-1 p-2.5 min-[375px]:gap-1.5 min-[375px]:p-3.5 sm:gap-2 sm:p-4 md:p-5">
+                  <h2 className="flex min-w-0 items-start gap-0.5 text-[0.8125rem] font-semibold leading-snug tracking-tight text-primary min-[375px]:text-sm sm:items-center sm:text-base md:text-lg lg:text-xl">
+                    <span className="min-w-0 text-balance sm:whitespace-nowrap">
                       {choice.title}
                     </span>
                     <ChevronRight
-                      className="h-4 w-4 shrink-0 sm:h-5 sm:w-5 md:h-6 md:w-6"
+                      className="mt-0.5 h-4 w-4 shrink-0 sm:mt-0 sm:h-5 sm:w-5 md:h-6 md:w-6"
                       aria-hidden="true"
                     />
                   </h2>
-                  <p className="break-words text-xs italic leading-snug text-muted-foreground min-[375px]:text-sm">
+                  <p className="break-words text-[0.7rem] italic leading-snug text-muted-foreground/70 min-[375px]:text-xs sm:text-sm">
                     {choice.fits}
                   </p>
                   <p className="break-words text-sm leading-snug text-muted-foreground min-[375px]:text-base min-[375px]:leading-relaxed sm:text-sm sm:leading-relaxed">

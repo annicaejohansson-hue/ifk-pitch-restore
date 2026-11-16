@@ -51,15 +51,15 @@ const clubSteps: ProcessStep[] = [
         <span className="flex flex-col gap-0.5">
           <a
             href={`mailto:${CASELO_EMAIL}`}
-            className="inline-flex min-h-9 items-center gap-2 font-medium leading-snug text-primary underline-offset-4 hover:underline"
+            className="inline-flex min-h-10 max-w-full items-center gap-2 font-medium leading-snug text-primary underline-offset-4 hover:underline"
             aria-label={`Mejla ${CASELO_EMAIL}`}
           >
             <Mail className="h-5 w-5 shrink-0" aria-hidden="true" />
-            <span className="break-all">{CASELO_EMAIL}</span>
+            <span className="min-w-0 break-all">{CASELO_EMAIL}</span>
           </a>
           <a
             href={`tel:${CASELO_PHONE_DIGITS}`}
-            className="inline-flex min-h-9 items-center gap-2 font-medium leading-snug text-primary underline-offset-4 hover:underline"
+            className="inline-flex min-h-10 max-w-full items-center gap-2 font-medium leading-snug text-primary underline-offset-4 hover:underline"
             aria-label={`Ring ${CASELO_PHONE}`}
           >
             <Phone className="h-5 w-5 shrink-0" aria-hidden="true" />
@@ -133,9 +133,11 @@ const ForeningKlubb = () => {
 
               <a
                 href="#sa-fungerar-det"
-                className="inline-flex min-h-11 items-center gap-2 text-base font-medium text-foreground transition-colors hover:text-primary sm:text-lg max-md:order-2 md:mt-6"
+                className="inline-flex min-h-11 max-w-full items-center gap-2 text-pretty text-base font-medium leading-snug text-foreground transition-colors hover:text-primary sm:text-lg max-md:order-2 md:mt-6"
               >
-                Läs mer om hur ett samarbete kan fungera
+                <span className="min-w-0">
+                  Läs mer om hur ett samarbete kan fungera
+                </span>
                 <ArrowDown className="h-5 w-5 shrink-0" aria-hidden="true" />
               </a>
             </div>
@@ -172,7 +174,7 @@ const ForeningKlubb = () => {
                     className="mt-0.5 h-5 w-5 shrink-0 text-primary"
                     aria-hidden="true"
                   />
-                  <span className="text-base leading-relaxed text-foreground md:text-lg">
+                  <span className="min-w-0 text-pretty text-base leading-relaxed text-foreground md:text-lg">
                     {item}
                   </span>
                 </li>
