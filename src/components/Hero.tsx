@@ -164,8 +164,8 @@ const Hero = () => {
             <span className="block">Tillbaka till din idrott.</span>
             <span className="block">Vidare mot dina mål.</span>
           </h1>
-          <p className="mx-auto mb-8 w-full max-w-[22rem] px-1 text-lg leading-snug text-primary-foreground/90 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-150 break-words sm:mb-10 sm:max-w-2xl sm:px-0 sm:text-xl md:text-2xl">
-            Idrottsfysioterapi och personlig träning i Stockholm
+          <p className="mx-auto mb-8 w-full max-w-[24rem] px-1 text-pretty text-lg leading-snug text-primary-foreground/90 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-150 break-words sm:mb-10 sm:max-w-2xl sm:px-0 sm:text-xl md:text-2xl">
+            Idrottsfysioterapi och personlig träning i Stockholm och Mariefred
           </p>
           
           <div className="flex flex-col items-center sm:flex-row gap-4 justify-center">
