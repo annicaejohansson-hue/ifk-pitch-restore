@@ -717,8 +717,22 @@ export function formatOfferPriceWithVat(priceSek: number): string {
 }
 
 /**
- * Caselo lägger alltid både namn och personnummer på friskvårdskvittot,
- * oavsett belopp, så att kvittot är komplett för arbetsgivaren.
+ * Beloppsgräns inkl. moms för förenklad faktura enligt momslagens
+ * fakturaregler (Skatteverket). Över gränsen behövs köparuppgifter.
+ */
+export const SIMPLIFIED_INVOICE_MAX_SEK = 4000;
+
+/**
+ * Om beloppet överstiger gränsen för förenklad faktura ska kunduppgifter
+ * anges på underlaget (namn, och för friskvård vanligen även personnummer).
+ */
+export function needsFriskvardBuyerDetails(amountSek?: number): boolean {
+  return (amountSek ?? 0) > SIMPLIFIED_INVOICE_MAX_SEK;
+}
+
+/**
+ * Kundflödet ber fortfarande alltid om personnummer när friskvårdskvitto
+ * begärs, så att underlaget är komplett för arbetsgivaren.
  */
 export function needsFriskvardPersonalId(_amountSek?: number): boolean {
   return true;

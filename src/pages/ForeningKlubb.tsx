@@ -89,6 +89,7 @@ const clubOffers = [
   "Personlig kontakt och bollplank för föreningens tränare",
   "Rabatterade priser för alla era medlemmar",
   "Bokningsbara tider samma dag eller dagen efter",
+  "Samarbetet är kostnadsfritt för föreningen och innebär inget krav på ett visst antal bokningar",
 ];
 
 const ForeningKlubb = () => {

@@ -15,6 +15,13 @@ export type WellnessReceiptData = {
   orderRef: string;
   productName: string;
   amountSek: number;
+  /** Antal pass/paket – visas som — om saknas. */
+  quantityLabel: string;
+  quantityCaption?: string;
+  /** Rabatt som fri text, t.ex. "18 % (1 080 kr)". */
+  discountLabel: string;
+  discountCaption?: string;
+  showDiscountRow?: boolean;
   customerName: string;
   personalId: string;
   paidAtLabel: string;
@@ -131,6 +138,19 @@ const WellnessReceiptDocument = ({ data }: WellnessReceiptDocumentProps) => {
             </tr>
           </tbody>
         </table>
+
+        <dl className="mt-4 space-y-1.5 border-t border-neutral-200 pt-3">
+          <Row
+            label={data.quantityCaption || "Antal pass"}
+            value={data.quantityLabel || "—"}
+          />
+          {data.showDiscountRow === false ? null : (
+            <Row
+              label={data.discountCaption || "Rabatt"}
+              value={data.discountLabel || "—"}
+            />
+          )}
+        </dl>
 
         <p className="mt-5 flex items-baseline justify-between gap-3 border-t-2 border-neutral-900 pt-3 text-base font-bold sm:text-lg">
           <span>Totalt</span>

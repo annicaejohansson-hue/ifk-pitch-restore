@@ -104,6 +104,10 @@ const router = createBrowserRouter(
       <Route path="/erbjudanden/kassa" element={<ErbjudandenKassa />} />
       <Route path="/erbjudanden/boka" element={<ErbjudandenBoka />} />
       <Route path={WELLNESS_RECEIPT_PATH} element={<ErbjudandenKvitto />} />
+      <Route
+        path="/erbjudanden/kvitto"
+        element={<PermanentRedirect to={WELLNESS_RECEIPT_PATH} />}
+      />
       <Route path="*" element={<NotFound />} />
     </Route>,
   ),

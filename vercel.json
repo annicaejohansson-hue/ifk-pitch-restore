@@ -26,6 +26,11 @@
       "permanent": true
     },
     {
+      "source": "/erbjudanden/kvitto",
+      "destination": "/kvitto",
+      "permanent": true
+    },
+    {
       "source": "/tjanster/fysisk-prestation",
       "destination": "/personligtraning",
       "permanent": true

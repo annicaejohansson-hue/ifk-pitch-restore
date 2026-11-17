@@ -15,7 +15,7 @@ export const CASELO_ADDRESS_LINE_2 = "182 36 Danderyd";
 export const CASELO_ADDRESS = `${CASELO_ADDRESS_LINE_1}, ${CASELO_ADDRESS_LINE_2}`;
 export const CASELO_EMAIL = "henrik@caseloidrottsmedicin.se";
 
-export const WELLNESS_RECEIPT_PATH = "/erbjudanden/kvitto";
+export const WELLNESS_RECEIPT_PATH = "/kvitto";
 
 export function formatSekAmount(amountSek: number): string {
   return `${new Intl.NumberFormat("sv-SE", {
