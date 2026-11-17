@@ -21,6 +21,13 @@ const PARTNER_LOGOS = [
     height: 148,
     rounded: true,
   },
+  {
+    src: "/parsian-if-logo.png",
+    alt: "Parsian IF",
+    href: "https://www.parsianif.se/",
+    width: 240,
+    height: 280,
+  },
 ] as const;
 
 const logoClass = (variant: "footer" | "inline") =>
