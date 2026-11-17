@@ -45,7 +45,7 @@ const sectionX = "container px-8 md:px-4";
 const clubSteps: ProcessStep[] = [
   {
     title: "Hör av er",
-    text: "Maila Henrik eller slå en signal – vi pratar ihop oss om ett möjligt upplägg.",
+    text: "Maila Henrik eller slå en signal. Vi pratar ihop oss om ett möjligt upplägg.",
     detail: (
       <span className="flex flex-col gap-2.5">
         <span className="flex flex-col gap-0.5">
@@ -72,13 +72,18 @@ const clubSteps: ProcessStep[] = [
   },
   {
     title: "Förankra internt",
-    text: "Ni förankrar upplägget internt utifrån era behov – i den form och takt som passar er.",
-    detail:
-      "Kort startsträcka: muntlig eller skriftlig överenskommelse via mejl räcker – formellt avtal behövs bara om ni själva vill. Ingen avgift, bindningstid eller uppsägningstid, och det behöver inte vara exklusivt.",
+    text: "Ni förankrar upplägget internt. Flexibelt upplägg med låg tröskel och kort startsträcka.",
+    detail: (
+      <ul className="list-disc space-y-1.5 pl-5">
+        <li>Ingen avgift, bindningstid eller uppsägningstid</li>
+        <li>Inget krav på ett visst antal patientbokningar</li>
+        <li>Samarbetet går bra att kombinera med andra fysiokontakter</li>
+      </ul>
+    ),
   },
   {
     title: "Dela vidare",
-    text: "Vi skickar länken till er personliga bokningssida – ni tipsar medlemmarna och sedan är vi igång.",
+    text: "Vi skickar länken till er personliga bokningssida. Ni tipsar medlemmarna - sedan är vi igång!",
     detail:
       "Tipsa spelare, tränare och föräldrar. Vi hjälper gärna till med enkla formuleringar att klistra in i mejl eller på hemsidan.",
   },
@@ -227,7 +232,7 @@ const ForeningKlubb = () => {
               </figure>
               <div className="min-w-0 w-full max-w-xl">
                 <h2 className="mb-3 text-2xl font-bold tracking-tight text-foreground sm:text-3xl md:text-4xl">
-                  Partnersamarbete som passar er förening
+                  Samarbete som passar er förening
                 </h2>
                 <p className="mb-3 text-pretty text-base leading-relaxed text-muted-foreground md:text-lg">
                   Flera föreningar samarbetar redan med Caselo så att spelare får
@@ -301,6 +306,19 @@ const ForeningKlubb = () => {
                     onClick={() => trackKontaktEpost(visitorType)}
                   >
                     henrik@<wbr />caseloidrottsmedicin.se
+                  </a>
+                </li>
+                <li className="flex items-start gap-3">
+                  <Phone
+                    className="mt-0.5 h-5 w-5 shrink-0 text-primary"
+                    aria-hidden="true"
+                  />
+                  <a
+                    href={`tel:${CASELO_PHONE_DIGITS}`}
+                    className={contactLinkClass}
+                    aria-label={`Ring ${CASELO_PHONE}`}
+                  >
+                    {CASELO_PHONE}
                   </a>
                 </li>
                 <li className="flex items-start gap-3">
