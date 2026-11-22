@@ -175,6 +175,9 @@ const Kvitto = () => {
   const [customerName, setCustomerName] = useState(
     searchParams.get("namn") ?? "",
   );
+  const [customerEmail, setCustomerEmail] = useState(
+    (searchParams.get("epost") ?? searchParams.get("email") ?? "").trim(),
+  );
   const [personalId, setPersonalId] = useState(
     formatPersonalIdInput(searchParams.get("personnummer") ?? ""),
   );
@@ -377,6 +380,35 @@ const Kvitto = () => {
     setAllowIncompletePrint(true);
   };
 
+  const emailLooksValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+    customerEmail.trim(),
+  );
+
+  const openCustomerMail = () => {
+    const email = customerEmail.trim();
+    if (!emailLooksValid) return;
+    const refLabel = orderRef.trim() || "utan referens";
+    const subject = `Kvitto för friskvårdsbidrag – Caselo Idrottsmedicin (${refLabel})`;
+    const greetingName = customerName.trim() || "dig";
+    const body = [
+      `Hej ${greetingName}!`,
+      "",
+      "Här kommer ditt kvitto för friskvårdsbidrag från Caselo Idrottsmedicin.",
+      `Referens: ${refLabel}`,
+      productName.trim() ? `Tjänst: ${productName.trim()}` : null,
+      amountSek > 0 ? `Belopp: ${formatOfferPrice(amountSek)} inkl. moms` : null,
+      "",
+      "Bifoga den sparade PDF:en från kvittosidan i detta mejl.",
+      "",
+      "Vänliga hälsningar",
+      "Caselo Idrottsmedicin",
+      "henrik@caseloidrottsmedicin.se",
+    ]
+      .filter((line) => line != null)
+      .join("\n");
+    window.location.href = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  };
+
   return (
     <main className="min-h-[calc(100vh-7rem)] bg-gradient-to-b from-muted/40 to-background">
       <Helmet>
@@ -436,8 +468,8 @@ const Kvitto = () => {
               </h1>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground md:text-base">
                 {prefilledFromOrder
-                  ? "Uppgifterna är förifyllda från beställningen. När betalningen syns: kontrollera förhandsgranskningen, sätt betalningsdatum, spara som PDF och mejla till kunden."
-                  : "Fyll i uppgifterna från beställningen när betalningen syns. Kontrollera kvittot, spara som PDF och mejla till kunden."}
+                  ? "Uppgifterna är förifyllda från beställningen. När betalningen syns: kontrollera kvittot, sätt datum, spara PDF, öppna mejl till kunden och bifoga filen. Lägg samma PDF i Drive-mappen Kvitton."
+                  : "Fyll i uppgifterna när betalningen syns. Spara PDF, öppna mejl till kunden och bifoga filen. Lägg samma PDF i Drive-mappen Kvitton."}
               </p>
               <p className="mt-2 text-sm text-muted-foreground">
                 <span className="text-destructive" aria-hidden="true">
@@ -824,6 +856,27 @@ const Kvitto = () => {
                     </p>
                   ) : null}
                 </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="kvitto-epost">Kundens e-post</Label>
+                  <Input
+                    id="kvitto-epost"
+                    type="email"
+                    inputMode="email"
+                    autoComplete="email"
+                    className="h-11 text-base"
+                    value={customerEmail}
+                    onChange={(event) => setCustomerEmail(event.target.value)}
+                    placeholder="namn@exempel.se"
+                    aria-describedby="kvitto-epost-help"
+                  />
+                  <p
+                    id="kvitto-epost-help"
+                    className="text-xs leading-relaxed text-muted-foreground"
+                  >
+                    Förifylls från beställningen när länken innehåller e-post.
+                    Används till knappen Öppna mejl till kund.
+                  </p>
+                </div>
                 <div
                   id="kvitto-kund-info"
                   className="space-y-1.5 text-xs leading-relaxed text-muted-foreground"
@@ -899,12 +952,32 @@ const Kvitto = () => {
               <Button
                 type="button"
                 variant="secondary"
-                className={offerGoldCtaClass}
+                className={`${offerGoldCtaClass} min-h-11 w-full sm:w-auto`}
                 onClick={handlePrintClick}
               >
                 Skriv ut / spara som PDF
               </Button>
+              <Button
+                type="button"
+                variant="outline"
+                className={`${offerOutlineCtaClass} min-h-11 w-full sm:w-auto`}
+                onClick={openCustomerMail}
+                disabled={!emailLooksValid}
+              >
+                Öppna mejl till kund
+              </Button>
             </div>
+            <p className="text-xs leading-relaxed text-muted-foreground sm:text-sm">
+              1) Spara PDF. 2) Öppna mejl till kund och bifoga PDF:en. 3) Lägg
+              samma fil i Caselos Google Drive-mapp{" "}
+              <span className="font-medium text-foreground">Kvitton</span>.
+              {!emailLooksValid ? (
+                <>
+                  {" "}
+                  Fyll i en giltig e-postadress för att aktivera mejlknappen.
+                </>
+              ) : null}
+            </p>
 
             {allowIncompletePrint && !isComplete ? (
               <div className="space-y-3 rounded-xl border border-destructive/30 bg-destructive/5 p-3 sm:p-4">

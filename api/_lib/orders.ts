@@ -986,6 +986,7 @@ function buildOrderFormspreePayload(
         quantity: order.quantity || undefined,
         productId: order.productId,
         chosenPaymentMethod: order.chosenPaymentMethod ?? undefined,
+        buyerEmail: order.buyerEmail,
       })
     : "";
   const prepaidClaims =
@@ -1005,7 +1006,7 @@ function buildOrderFormspreePayload(
       ? `2. Kunden uppger ${reported}. Markera som betald först när pengarna syns hos Caselo.`
       : "2. Markera som betald först när pengarna syns hos Caselo.",
     order.wellnessReceipt
-      ? "3. När betalningen syns: öppna kvittoförhandsgranskningen (länk nedan), sätt datum, spara PDF och mejla kunden."
+      ? "3. När betalningen syns: öppna kvittoförhandsgranskningen (länk nedan), sätt datum, spara PDF, öppna mejl till kund och bifoga PDF:en. Spara samma fil i Drive-mappen Kvitton."
       : "3. När betalningen syns: skicka bekräftelse, kvitto och bokningsinfo till kunden.",
     order.gift
       ? "4. Mejla presentkortet till köparen tillsammans med bokningslänk."

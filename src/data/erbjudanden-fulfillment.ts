@@ -84,6 +84,7 @@ export function buildWellnessReceiptPreviewUrl(
     | "productId"
     | "chosenPaymentMethod"
     | "paidAtLabel"
+    | "buyerEmail"
   >,
 ): string {
   const params = new URLSearchParams();
@@ -95,6 +96,9 @@ export function buildWellnessReceiptPreviewUrl(
   }
   if (ctx.personalId?.trim()) {
     params.set("personnummer", ctx.personalId.trim());
+  }
+  if (ctx.buyerEmail?.trim()) {
+    params.set("epost", ctx.buyerEmail.trim());
   }
   if (ctx.chosenPaymentMethod === "bankgiro") {
     params.set("betalsatt", "bankgiro");
@@ -124,7 +128,7 @@ function wellnessChecklistLines(ctx: FulfillmentContext): string[] {
     );
   }
   lines.push(
-    `När betalningen syns: öppna förifylld förhandsgranskning, kontrollera uppgifterna, sätt betalningsdatum och skriv ut/spara PDF: ${previewUrl}`,
+    `När betalningen syns: öppna förifylld förhandsgranskning, kontrollera uppgifterna, sätt betalningsdatum, spara PDF, öppna mejl till kund och bifoga PDF:en. Spara samma fil i Caselos Drive-mapp Kvitton: ${previewUrl}`,
   );
   lines.push(
     `Produkt på kvitto: ${specified}. Belopp: ${formatOfferPriceWithVat(ctx.amountSek)}.`,
