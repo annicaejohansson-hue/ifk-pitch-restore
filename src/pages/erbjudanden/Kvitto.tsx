@@ -409,28 +409,18 @@ const Kvitto = () => {
     return { email, subject, body };
   }, [customerEmail, orderRef, customerName, productName, amountSek]);
 
-  const mailtoHref = emailLooksValid
-    ? `mailto:${customerMailContent.email}?subject=${encodeURIComponent(customerMailContent.subject)}&body=${encodeURIComponent(customerMailContent.body)}`
-    : undefined;
-
   const gmailComposeHref = emailLooksValid
     ? `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(customerMailContent.email)}&su=${encodeURIComponent(customerMailContent.subject)}&body=${encodeURIComponent(customerMailContent.body)}`
     : undefined;
 
   const openCustomerMail = () => {
-    if (!emailLooksValid || !mailtoHref) {
+    if (!emailLooksValid || !gmailComposeHref) {
       setMailHint("Fyll i kundens e-postadress först.");
       document.getElementById("kvitto-epost")?.focus();
       return;
     }
     setMailHint(null);
-    // Native <a> click is more reliable than location.href for mailto.
-    const link = document.createElement("a");
-    link.href = mailtoHref;
-    link.rel = "noopener";
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
+    window.open(gmailComposeHref, "_blank", "noopener,noreferrer");
   };
 
   return (
@@ -984,13 +974,19 @@ const Kvitto = () => {
               >
                 Skriv ut / spara som PDF
               </Button>
-              {mailtoHref ? (
+              {gmailComposeHref ? (
                 <Button
                   asChild
                   variant="outline"
                   className={`${offerOutlineCtaClass} min-h-11 w-full sm:w-auto`}
                 >
-                  <a href={mailtoHref}>Öppna mejl till kund</a>
+                  <a
+                    href={gmailComposeHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Öppna mejl till kund
+                  </a>
                 </Button>
               ) : (
                 <Button
@@ -1009,26 +1005,12 @@ const Kvitto = () => {
               </p>
             ) : null}
             <p className="text-xs leading-relaxed text-muted-foreground sm:text-sm">
-              1) Spara PDF. 2) Öppna mejl till kund och bifoga PDF:en. 3) Lägg
-              samma fil i Caselos Google Drive-mapp{" "}
+              1) Spara PDF. 2) Öppna mejl till kund (Gmail) och bifoga PDF:en.
+              3) Lägg samma fil i Caselos Google Drive-mapp{" "}
               <span className="font-medium text-foreground">Kvitton</span>.
-              {gmailComposeHref ? (
-                <>
-                  {" "}
-                  Om inget mejlprogram öppnas:{" "}
-                  <a
-                    href={gmailComposeHref}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="font-medium text-primary underline underline-offset-4 hover:text-primary/80"
-                  >
-                    öppna i Gmail
-                  </a>
-                  .
-                </>
-              ) : (
+              {!gmailComposeHref ? (
                 <> Fyll i kundens e-post för att kunna öppna mejl.</>
-              )}
+              ) : null}
             </p>
 
             {allowIncompletePrint && !isComplete ? (
