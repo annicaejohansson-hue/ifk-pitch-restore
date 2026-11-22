@@ -5,11 +5,14 @@ import { Clock, ExternalLink, Mail, MapPin } from "lucide-react";
 import PageIntro from "@/components/PageIntro";
 import sportsImage from "@/assets/caselo-banner-kontakt.jpg";
 import { PRIVACY_PATH } from "@/pages/Personuppgifter";
+import {
+  CASELO_ADDRESS_LINE_1,
+  CASELO_ADDRESS_LINE_2,
+  CASELO_EMAIL,
+} from "@/data/caseloCompany";
+import { MOTTAGNINGAR_PATH } from "@/data/locations";
 
-const ADDRESS_LINE_1 = "Rinkebyvägen 4";
-const ADDRESS_LINE_2 = "182 36 Danderyd";
-const FULL_ADDRESS = `${ADDRESS_LINE_1}, ${ADDRESS_LINE_2}`;
-const EMAIL = "henrik@caseloidrottsmedicin.se";
+const FULL_ADDRESS = `${CASELO_ADDRESS_LINE_1}, ${CASELO_ADDRESS_LINE_2}`;
 const MAPS_SEARCH_URL = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(FULL_ADDRESS)}`;
 const MAPS_EMBED_URL = `https://maps.google.com/maps?q=${encodeURIComponent(FULL_ADDRESS)}&z=15&output=embed`;
 
@@ -24,7 +27,7 @@ const Kontakt = () => {
         <title>Kontakt – Caselo Idrottsmedicin</title>
         <meta
           name="description"
-          content="Kontakta Caselo Idrottsmedicin i Danderyd. Adress, e-post och öppettider."
+          content="Kontakta Caselo Idrottsmedicin. Adress, e-post och öppettider för mottagningarna i Danderyd och Mariefred."
         />
       </Helmet>
 
@@ -34,15 +37,21 @@ const Kontakt = () => {
             <PageIntro
               className="mb-8 md:mb-10"
               eyebrow="Kontakt"
-              title="Mottagning på Danderyd Arena"
+              title="Hör av dig"
             >
-              Här hittar du adress, e-post och öppettider. Mottagningen ligger
-              i direkt anslutning till fotbollsplan och löparbana.
+              Här hittar du e-post, öppettider och karta. Mer om båda
+              mottagningarna finns under{" "}
+              <Link
+                to={MOTTAGNINGAR_PATH}
+                className="font-medium text-primary underline underline-offset-4 hover:text-primary/80"
+              >
+                Om – Mottagningar
+              </Link>
+              .
             </PageIntro>
 
             <div className="rounded-2xl border border-border/60 bg-card/90 p-5 shadow-[var(--shadow-card)] backdrop-blur-sm sm:p-6 md:p-8 lg:p-10">
               <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start lg:gap-10">
-                {/* Left: contact + hours with generous spacing */}
                 <div className="flex min-w-0 flex-col justify-between gap-8 sm:gap-10 lg:min-h-[280px] lg:gap-12">
                   <div>
                     <h2 className="mb-4 text-xl font-bold text-foreground sm:mb-5 md:mb-6 md:text-2xl">
@@ -58,13 +67,13 @@ const Kontakt = () => {
                           <address className="not-italic text-base leading-relaxed text-foreground md:text-lg">
                             Caselo Idrottsmedicin
                             <br />
-                            {ADDRESS_LINE_1}
+                            {CASELO_ADDRESS_LINE_1} (Danderyd Arena)
                             <br />
-                            {ADDRESS_LINE_2}
+                            {CASELO_ADDRESS_LINE_2}
                           </address>
                           <p className="mt-2 text-sm leading-snug text-muted-foreground md:text-base md:leading-relaxed">
-                            Mottagningen ligger i direkt anslutning till fotbollsplan och
-                            löparbana.
+                            Mariefred: BalanZe Gym, Skogsborgsvägen 14, 647 31
+                            Mariefred (torsdagar).
                           </p>
                         </div>
                       </li>
@@ -74,7 +83,7 @@ const Kontakt = () => {
                           aria-hidden="true"
                         />
                         <a
-                          href={`mailto:${EMAIL}`}
+                          href={`mailto:${CASELO_EMAIL}`}
                           className="break-words text-base text-foreground underline-offset-4 hover:underline md:text-lg"
                         >
                           henrik@<wbr />caseloidrottsmedicin.se
@@ -101,15 +110,18 @@ const Kontakt = () => {
                         aria-hidden="true"
                       />
                       <p className="min-w-0 flex-1 text-base leading-relaxed text-foreground md:text-lg">
-                        Helgfria vardagar måndag–fredag
+                        Danderyd: måndag–onsdag och fredag
+                        <br />
+                        Mariefred: torsdagar
                         <br className="sm:hidden" />{" "}
-                        <span className="sm:ml-0">kl.&nbsp;08.00–16.00</span>
+                        <span className="text-muted-foreground">
+                          kl.&nbsp;08.00–16.00 (helgfria vardagar)
+                        </span>
                       </p>
                     </div>
                   </div>
                 </div>
 
-                {/* Right: flag — full width on mobile, constrained on larger */}
                 <div className="mx-auto w-full max-w-[240px] overflow-hidden rounded-xl sm:max-w-[280px] md:max-w-[320px] lg:mx-0 lg:justify-self-end">
                   <img
                     src={sportsImage}
@@ -120,10 +132,9 @@ const Kontakt = () => {
                   />
                 </div>
 
-                {/* Hitta hit / map — full width under image */}
                 <div className="min-w-0 lg:col-span-2">
                   <h2 className="mb-4 text-xl font-bold text-foreground md:text-2xl">
-                    Hitta hit
+                    Hitta hit – Danderyd
                   </h2>
                   <div className="relative overflow-hidden rounded-xl border border-border/50">
                     <a

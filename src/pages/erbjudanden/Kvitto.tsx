@@ -117,7 +117,9 @@ const buildPtServiceName = (quantity: number) =>
   `Personlig träning ${quantity} pass à 60 min`;
 
 const buildSnabbhetServiceName = (packageCount: number) =>
-  `Snabbhetsträning för ${packageCount} personer (två tillfällen per person)`;
+  packageCount === 1
+    ? "Snabbhetsträning för 1 person (två tillfällen)"
+    : `Snabbhetsträning för ${packageCount} personer (två tillfällen per person)`;
 
 
 type RequiredFieldKey =

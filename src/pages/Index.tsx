@@ -5,9 +5,10 @@ import Services from "@/components/Services";
 import Testimonial from "@/components/Testimonial";
 import { SITE_ORIGIN } from "@/lib/booking";
 
-const DEFAULT_TITLE = "Caselo Idrottsmedicin – Fysioterapi i Danderyd";
+const DEFAULT_TITLE =
+  "Caselo Idrottsmedicin – Fysioterapi i Danderyd och Mariefred";
 const DEFAULT_DESCRIPTION =
-  "Idrottsfysioterapi i Danderyd: skadebehandling, hälkoppsinlägg och prestationsutveckling.";
+  "Idrottsfysioterapi i Danderyd och Mariefred: skadebehandling, hälkoppsinlägg och prestationsutveckling.";
 
 type IndexProps = {
   title?: string;

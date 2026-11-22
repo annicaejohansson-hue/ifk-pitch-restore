@@ -1,9 +1,11 @@
 import { Link } from "react-router-dom";
 import type { ComponentPropsWithoutRef, MouseEvent, ReactNode } from "react";
 import { useVisitor } from "@/context/VisitorContext";
+import type { LocationId } from "@/data/locations";
 import {
   isExternalBookingUrl,
   withBookingCategory,
+  withBookingLocation,
   withBookingService,
 } from "@/lib/booking";
 import { trackBokaTid } from "@/lib/analytics";
@@ -14,6 +16,8 @@ type BookingLinkProps = Omit<ComponentPropsWithoutRef<"a">, "href"> & {
   serviceId?: string;
   /** Opens a column on `/boka` via `?kategori=` without preselecting a service. Ignored for external booking URLs. */
   categoryId?: string;
+  /** Marks a clinic on `/boka` via `?ort=` (still requires confirm). Ignored for external URLs. */
+  locationId?: LocationId;
 };
 
 /**
@@ -25,12 +29,13 @@ const BookingLink = ({
   onClick,
   serviceId,
   categoryId,
+  locationId,
   ...props
 }: BookingLinkProps) => {
   const { bookingUrl, visitorType } = useVisitor();
-  const href = withBookingCategory(
-    withBookingService(bookingUrl, serviceId),
-    categoryId,
+  const href = withBookingLocation(
+    withBookingCategory(withBookingService(bookingUrl, serviceId), categoryId),
+    locationId,
   );
 
   const handleClick = (event: MouseEvent<HTMLAnchorElement>) => {

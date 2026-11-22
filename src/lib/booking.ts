@@ -1,5 +1,6 @@
 import { getPartner, PARTNERS } from "@/lib/partners";
 import { getVisitorType, type VisitorType } from "@/lib/visitor";
+import type { LocationId } from "@/data/locations";
 
 /** Ordinary Caselo booking destination — swap here when the URL changes. */
 export const GENERAL_BOOKING_URL = "/boka";
@@ -18,6 +19,9 @@ export const CHILD_HEEL_CUP_BOOKING_ID = "halkopp-barn-nybesok";
 
 /** Column "Personlig träning" on `/boka` (PT-pass, Snabbhetspaketet). Matches `/boka` category id. */
 export const TRAINING_BOOKING_CATEGORY_ID = "traning-och-motion";
+
+/** Query key for booking location (`danderyd` | `mariefred`). */
+export const BOOKING_LOCATION_PARAM = "ort";
 
 export const SITE_ORIGIN = "https://www.caseloidrottsmedicin.se";
 
@@ -42,5 +46,16 @@ export function withBookingCategory(url: string, categoryId?: string): string {
   if (!categoryId || isExternalBookingUrl(url)) return url;
   const parsed = new URL(url, SITE_ORIGIN);
   parsed.searchParams.set("kategori", categoryId);
+  return `${parsed.pathname}${parsed.search}`;
+}
+
+/** Append `?ort=` so `/boka` can pre-mark a location (still requires confirm). */
+export function withBookingLocation(
+  url: string,
+  locationId?: LocationId,
+): string {
+  if (!locationId || isExternalBookingUrl(url)) return url;
+  const parsed = new URL(url, SITE_ORIGIN);
+  parsed.searchParams.set(BOOKING_LOCATION_PARAM, locationId);
   return `${parsed.pathname}${parsed.search}`;
 }

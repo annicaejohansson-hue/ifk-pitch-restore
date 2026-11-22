@@ -69,15 +69,15 @@ export const services: ServiceContent[] = [
     cardDescription:
       "När du har ont eller är skadad hjälper vi dig med tydlig bedömning, diagnos och individuellt anpassad behandling. Målet är att minska besvären och få dig tillbaka till idrott, arbetsliv eller rörelse i vardagen – tryggt och steg för steg.",
     overviewBlurb:
-      "Tydlig bedömning, diagnos och individuellt anpassad behandling när något gör ont eller begränsar dig i träning, arbete eller vardag.",
+      "Tydlig bedömning och behandling när något gör ont – vid behov med ultraljud, stötvåg och styrkemätning – så att du kan tillbaka till träning, arbete eller vardag.",
     metaDescription:
-      "Bedömning och behandling av smärta och skador hos Caselo Idrottsmedicin – nybesök och återbesök med rehabilitering och belastningsråd.",
+      "Bedömning och behandling av smärta och skador hos Caselo Idrottsmedicin – nybesök och återbesök med ultraljud, stötvåg, rehabilitering och belastningsråd.",
     image: injuryImageUrl,
     imageAlt: "Bedömning och behandling av smärta och skador",
     accentClass: "bg-primary",
     imagePosition: "left",
     intro: [
-      "När något gör ont eller begränsar dig i träning, arbete eller vardag behöver du en tydlig bild av vad som är fel – och en plan framåt. Vi undersöker besväret, ställer en bedömning och arbetar tillsammans med behandling, rehabilitering och belastningsråd som passar din situation.",
+      "När något gör ont eller begränsar dig i träning, arbete eller vardag behöver du en tydlig bild av vad som är fel – och en plan framåt. Vi undersöker besväret, ställer en bedömning och arbetar tillsammans med behandling, rehabilitering och belastningsråd som passar din situation. Vid behov kompletteras bedömningen med diagnostik med ultraljud och stötvågsbehandling, och styrkan kan följas upp med handhållen dynamometer.",
     ],
     sections: [
       {
