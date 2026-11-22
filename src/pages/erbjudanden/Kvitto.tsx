@@ -192,6 +192,7 @@ const Kvitto = () => {
   );
   const [showErrors, setShowErrors] = useState(false);
   const [allowIncompletePrint, setAllowIncompletePrint] = useState(false);
+  const [mailHint, setMailHint] = useState<string | null>(null);
   const prefilledFromOrder =
     Boolean(searchParams.get("ref")) &&
     Boolean(searchParams.get("produkt")) &&
@@ -384,9 +385,8 @@ const Kvitto = () => {
     customerEmail.trim(),
   );
 
-  const openCustomerMail = () => {
+  const customerMailContent = useMemo(() => {
     const email = customerEmail.trim();
-    if (!emailLooksValid) return;
     const refLabel = orderRef.trim() || "utan referens";
     const subject = `Kvitto för friskvårdsbidrag – Caselo Idrottsmedicin (${refLabel})`;
     const greetingName = customerName.trim() || "dig";
@@ -404,9 +404,33 @@ const Kvitto = () => {
       "Caselo Idrottsmedicin",
       "henrik@caseloidrottsmedicin.se",
     ]
-      .filter((line) => line != null)
+      .filter((line): line is string => line != null)
       .join("\n");
-    window.location.href = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    return { email, subject, body };
+  }, [customerEmail, orderRef, customerName, productName, amountSek]);
+
+  const mailtoHref = emailLooksValid
+    ? `mailto:${customerMailContent.email}?subject=${encodeURIComponent(customerMailContent.subject)}&body=${encodeURIComponent(customerMailContent.body)}`
+    : undefined;
+
+  const gmailComposeHref = emailLooksValid
+    ? `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(customerMailContent.email)}&su=${encodeURIComponent(customerMailContent.subject)}&body=${encodeURIComponent(customerMailContent.body)}`
+    : undefined;
+
+  const openCustomerMail = () => {
+    if (!emailLooksValid || !mailtoHref) {
+      setMailHint("Fyll i kundens e-postadress först.");
+      document.getElementById("kvitto-epost")?.focus();
+      return;
+    }
+    setMailHint(null);
+    // Native <a> click is more reliable than location.href for mailto.
+    const link = document.createElement("a");
+    link.href = mailtoHref;
+    link.rel = "noopener";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
   };
 
   return (
@@ -865,7 +889,10 @@ const Kvitto = () => {
                     autoComplete="email"
                     className="h-11 text-base"
                     value={customerEmail}
-                    onChange={(event) => setCustomerEmail(event.target.value)}
+                    onChange={(event) => {
+                      setCustomerEmail(event.target.value);
+                      if (mailHint) setMailHint(null);
+                    }}
                     placeholder="namn@exempel.se"
                     aria-describedby="kvitto-epost-help"
                   />
@@ -957,26 +984,51 @@ const Kvitto = () => {
               >
                 Skriv ut / spara som PDF
               </Button>
-              <Button
-                type="button"
-                variant="outline"
-                className={`${offerOutlineCtaClass} min-h-11 w-full sm:w-auto`}
-                onClick={openCustomerMail}
-                disabled={!emailLooksValid}
-              >
-                Öppna mejl till kund
-              </Button>
+              {mailtoHref ? (
+                <Button
+                  asChild
+                  variant="outline"
+                  className={`${offerOutlineCtaClass} min-h-11 w-full sm:w-auto`}
+                >
+                  <a href={mailtoHref}>Öppna mejl till kund</a>
+                </Button>
+              ) : (
+                <Button
+                  type="button"
+                  variant="outline"
+                  className={`${offerOutlineCtaClass} min-h-11 w-full sm:w-auto`}
+                  onClick={openCustomerMail}
+                >
+                  Öppna mejl till kund
+                </Button>
+              )}
             </div>
+            {mailHint ? (
+              <p className="text-sm text-destructive" role="alert">
+                {mailHint}
+              </p>
+            ) : null}
             <p className="text-xs leading-relaxed text-muted-foreground sm:text-sm">
               1) Spara PDF. 2) Öppna mejl till kund och bifoga PDF:en. 3) Lägg
               samma fil i Caselos Google Drive-mapp{" "}
               <span className="font-medium text-foreground">Kvitton</span>.
-              {!emailLooksValid ? (
+              {gmailComposeHref ? (
                 <>
                   {" "}
-                  Fyll i en giltig e-postadress för att aktivera mejlknappen.
+                  Om inget mejlprogram öppnas:{" "}
+                  <a
+                    href={gmailComposeHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-medium text-primary underline underline-offset-4 hover:text-primary/80"
+                  >
+                    öppna i Gmail
+                  </a>
+                  .
                 </>
-              ) : null}
+              ) : (
+                <> Fyll i kundens e-post för att kunna öppna mejl.</>
+              )}
             </p>
 
             {allowIncompletePrint && !isComplete ? (
