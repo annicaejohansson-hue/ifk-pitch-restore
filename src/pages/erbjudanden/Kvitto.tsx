@@ -387,27 +387,23 @@ const Kvitto = () => {
 
   const customerMailContent = useMemo(() => {
     const email = customerEmail.trim();
-    const refLabel = orderRef.trim() || "utan referens";
-    const subject = `Kvitto för friskvårdsbidrag – Caselo Idrottsmedicin (${refLabel})`;
-    const greetingName = customerName.trim() || "dig";
+    const subject = "Kvitto – Caselo Idrottsmedicin";
+    const firstName =
+      customerName.trim().split(/\s+/)[0] || "dig";
     const body = [
-      `Hej ${greetingName}!`,
+      `Hej ${firstName}!`,
       "",
-      "Här kommer ditt kvitto för friskvårdsbidrag från Caselo Idrottsmedicin.",
-      `Referens: ${refLabel}`,
+      "Här kommer ditt kvitto från Caselo Idrottsmedicin.",
       productName.trim() ? `Tjänst: ${productName.trim()}` : null,
       amountSek > 0 ? `Belopp: ${formatOfferPrice(amountSek)} inkl. moms` : null,
       "",
-      "Bifoga den sparade PDF:en från kvittosidan i detta mejl.",
-      "",
       "Vänliga hälsningar",
-      "Caselo Idrottsmedicin",
-      "henrik@caseloidrottsmedicin.se",
+      "Henrik",
     ]
       .filter((line): line is string => line != null)
       .join("\n");
     return { email, subject, body };
-  }, [customerEmail, orderRef, customerName, productName, amountSek]);
+  }, [customerEmail, customerName, productName, amountSek]);
 
   const gmailComposeHref = emailLooksValid
     ? `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(customerMailContent.email)}&su=${encodeURIComponent(customerMailContent.subject)}&body=${encodeURIComponent(customerMailContent.body)}`
