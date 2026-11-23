@@ -122,6 +122,20 @@ const Om = () => {
 
       <Mottagningar />
 
+      <section
+        className="bg-background py-8 md:py-12"
+        aria-label="Samarbetspartner"
+      >
+        <div className="container px-8 md:px-4">
+          <div className="mx-auto max-w-5xl">
+            <Partner
+              variant="inline"
+              className="mt-0 border-t-0 pt-0"
+            />
+          </div>
+        </div>
+      </section>
+
       <section className="bg-muted py-12 md:py-20">
         <div className="container px-8 md:px-4">
           <div className="mx-auto max-w-5xl">

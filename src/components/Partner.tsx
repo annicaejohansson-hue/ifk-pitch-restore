@@ -74,12 +74,21 @@ const PartnerLogos = ({ variant }: { variant: "footer" | "inline" }) => (
 
 type PartnerProps = {
   variant?: "footer" | "inline";
+  /** Extra classes on the inline wrapper (e.g. drop top border in a page section). */
+  className?: string;
 };
 
-const Partner = ({ variant = "footer" }: PartnerProps) => {
+const Partner = ({ variant = "footer", className = "" }: PartnerProps) => {
   if (variant === "inline") {
     return (
-      <div className="mt-6 border-t border-border/60 pt-5">
+      <div
+        className={[
+          "mt-6 border-t border-border/60 pt-5",
+          className,
+        ]
+          .filter(Boolean)
+          .join(" ")}
+      >
         <p className="mb-3 text-center text-base text-muted-foreground sm:text-left md:text-lg">
           Samarbetspartner till
         </p>
