@@ -25,22 +25,27 @@ const PARTNER_LOGOS = [
     src: "/parsian-if-logo.png",
     alt: "Parsian IF",
     href: "https://www.parsianif.se/",
-    width: 240,
-    height: 280,
+    width: 191,
+    height: 256,
   },
   {
-    src: "https://fotbolltransfers-images.ams3.cdn.digitaloceanspaces.com/uploads/images/clubs/1624662934/full.png",
+    src: "/fc-djursholm-logo.png",
     alt: "FC Djursholm",
     href: "https://www.fcdjursholm.se/",
-    width: 400,
-    height: 400,
+    width: 509,
+    height: 560,
   },
 ] as const;
 
-const logoClass = (variant: "footer" | "inline") =>
+const logoSlotClass = (variant: "footer" | "inline") =>
   variant === "inline"
-    ? "h-16 w-auto max-w-[28vw] object-contain sm:h-20 sm:max-w-none md:h-24"
-    : "h-14 w-auto max-w-[28vw] object-contain sm:h-16 sm:max-w-none md:h-24";
+    ? "inline-flex h-16 w-16 shrink-0 items-center justify-center sm:h-20 sm:w-20 md:h-24 md:w-24"
+    : "inline-flex h-14 w-14 shrink-0 items-center justify-center sm:h-16 sm:w-16 md:h-24 md:w-24";
+
+const logoImgClass = (variant: "footer" | "inline") =>
+  variant === "inline"
+    ? "h-full w-full object-contain"
+    : "h-full w-full object-contain";
 
 const PartnerLogos = ({ variant }: { variant: "footer" | "inline" }) => (
   <>
@@ -50,13 +55,13 @@ const PartnerLogos = ({ variant }: { variant: "footer" | "inline" }) => (
         href={logo.href}
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+        className={`${logoSlotClass(variant)} min-h-11 min-w-11 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2`}
         aria-label={`${logo.alt} (öppnas i ny flik)`}
       >
         <img
           src={logo.src}
           alt=""
-          className={`${logoClass(variant)}${"rounded" in logo && logo.rounded ? " rounded-full bg-white" : ""}`}
+          className={`${logoImgClass(variant)}${"rounded" in logo && logo.rounded ? " rounded-full bg-white" : ""}`}
           width={logo.width}
           height={logo.height}
           loading="lazy"
@@ -78,7 +83,7 @@ const Partner = ({ variant = "footer" }: PartnerProps) => {
         <p className="mb-3 text-center text-base text-muted-foreground sm:text-left md:text-lg">
           Samarbetspartner till
         </p>
-        <div className="flex flex-wrap items-center justify-center gap-5 sm:justify-start md:gap-6">
+        <div className="flex flex-wrap items-center justify-center gap-4 sm:justify-start md:gap-5">
           <PartnerLogos variant="inline" />
         </div>
       </div>
@@ -88,9 +93,9 @@ const Partner = ({ variant = "footer" }: PartnerProps) => {
   return (
     <footer className="no-print bg-[#0e1627] py-6 md:py-8">
       <div className="container px-8 md:px-4">
-        <div className="mx-auto flex max-w-4xl flex-col items-center justify-center gap-3 text-center text-primary-foreground sm:flex-row sm:flex-wrap sm:gap-4 sm:text-left md:gap-6">
+        <div className="mx-auto flex max-w-5xl flex-col items-center justify-center gap-3 text-center text-primary-foreground sm:flex-row sm:flex-wrap sm:gap-4 sm:text-left md:gap-5">
           <p className="text-base md:text-lg">Samarbetspartner till</p>
-          <div className="flex flex-wrap items-center justify-center gap-3 p-0 md:gap-4">
+          <div className="flex flex-wrap items-center justify-center gap-4 p-0 md:gap-5">
             <PartnerLogos variant="footer" />
           </div>
         </div>
