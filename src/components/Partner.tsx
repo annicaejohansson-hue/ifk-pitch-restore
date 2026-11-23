@@ -28,6 +28,13 @@ const PARTNER_LOGOS = [
     width: 240,
     height: 280,
   },
+  {
+    src: "https://fotbolltransfers-images.ams3.cdn.digitaloceanspaces.com/uploads/images/clubs/1624662934/full.png",
+    alt: "FC Djursholm",
+    href: "https://www.fcdjursholm.se/",
+    width: 400,
+    height: 400,
+  },
 ] as const;
 
 const logoClass = (variant: "footer" | "inline") =>
