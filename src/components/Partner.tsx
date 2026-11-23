@@ -89,9 +89,9 @@ const Partner = ({ variant = "footer", className = "" }: PartnerProps) => {
           .filter(Boolean)
           .join(" ")}
       >
-        <p className="mb-3 text-center text-base text-muted-foreground sm:text-left md:text-lg">
+        <h2 className="mb-4 text-balance text-2xl font-bold tracking-tight text-foreground sm:text-3xl md:mb-6 md:text-4xl">
           Samarbetspartner till
-        </p>
+        </h2>
         <div className="flex flex-wrap items-center justify-center gap-4 sm:justify-start md:gap-5">
           <PartnerLogos variant="inline" />
         </div>
