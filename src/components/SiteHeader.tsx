@@ -95,7 +95,7 @@ const SiteHeader = () => {
         {isPartner ? (
           <>
             <div className="hidden flex-1 md:block lg:hidden" aria-hidden="true" />
-            <div className="mt-2 w-full min-w-0 md:order-last md:mt-2 lg:order-none lg:mt-0 lg:w-0 lg:min-w-[12rem] lg:flex-1 lg:px-2">
+            <div className="mt-2 w-full min-w-0 md:order-last md:mt-2 lg:order-none lg:mt-0 lg:w-0 lg:min-w-[18rem] lg:flex-1 lg:px-2">
               <IfkStocksundBanner />
             </div>
           </>

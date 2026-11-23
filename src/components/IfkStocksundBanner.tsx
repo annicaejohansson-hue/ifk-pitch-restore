@@ -16,16 +16,18 @@ const IfkStocksundBanner = () => {
       <img
         src={partner.logoSrc}
         alt={partner.logoAlt}
-        className="h-6 w-auto shrink-0 object-contain sm:h-10 md:h-11"
+        className="h-6 w-auto max-w-8 shrink-0 object-contain sm:h-10 sm:max-w-11 md:h-11 md:max-w-12"
         width={partner.logoWidth}
         height={partner.logoHeight}
         loading="eager"
         decoding="async"
       />
       <div className="min-w-0 flex-1 overflow-hidden [container-type:inline-size]">
-        <p className="break-words text-xs font-semibold leading-snug tracking-tight text-primary sm:text-[13px] lg:text-sm">
-          Som spelare i {partner.name} har du rabatterade priser hos Caselo
-          Idrottsmedicin.
+        <p className="text-xs font-semibold leading-snug tracking-tight text-primary sm:text-[13px] lg:text-sm">
+          Som spelare i {partner.name} har du rabatterade{" "}
+          <span className="md:block">
+            priser hos Caselo Idrottsmedicin.
+          </span>
         </p>
         <p className="mt-0.5 text-xs font-normal leading-snug text-muted-foreground/70 sm:text-[11px]">
           Är du inte spelare i {partner.name}?{" "}
