@@ -123,14 +123,14 @@ const Om = () => {
       <Mottagningar />
 
       <section
-        className="flex items-center bg-muted py-10 md:py-14"
+        className="bg-muted py-8 md:py-10"
         aria-label="Samarbetspartner"
       >
-        <div className="container w-full px-8 md:px-4">
+        <div className="container px-8 md:px-4">
           <div className="mx-auto max-w-5xl">
             <Partner
               variant="inline"
-              className="mt-0 border-t-0 pt-0 [&_h2]:mb-4 md:[&_h2]:mb-5"
+              className="m-0 border-0 p-0"
             />
           </div>
         </div>

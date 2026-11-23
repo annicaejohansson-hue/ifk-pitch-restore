@@ -1,3 +1,5 @@
+import { cn } from "@/lib/utils";
+
 const PARTNER_LOGOS = [
   {
     src: "https://irp.cdn-website.com/e6471f24/dms3rep/multi/g10.png",
@@ -82,14 +84,9 @@ const Partner = ({ variant = "footer", className = "" }: PartnerProps) => {
   if (variant === "inline") {
     return (
       <div
-        className={[
-          "mt-6 border-t border-border/60 pt-5",
-          className,
-        ]
-          .filter(Boolean)
-          .join(" ")}
+        className={cn("mt-6 border-t border-border/60 pt-5", className)}
       >
-        <h2 className="mb-4 text-balance text-2xl font-bold tracking-tight text-foreground sm:text-3xl md:mb-6 md:text-4xl">
+        <h2 className="mb-4 text-balance text-2xl font-bold tracking-tight text-foreground sm:text-3xl md:mb-5 md:text-4xl">
           Samarbetspartner till
         </h2>
         <div className="flex flex-wrap items-center justify-center gap-4 sm:justify-start md:gap-5">
