@@ -123,7 +123,7 @@ const Om = () => {
       <Mottagningar />
 
       <section
-        className="bg-background py-8 md:py-12"
+        className="bg-muted py-8 md:py-12"
         aria-label="Samarbetspartner"
       >
         <div className="container px-8 md:px-4">
@@ -136,7 +136,7 @@ const Om = () => {
         </div>
       </section>
 
-      <section className="bg-muted py-12 md:py-20">
+      <section className="bg-background py-12 md:py-20">
         <div className="container px-8 md:px-4">
           <div className="mx-auto max-w-5xl">
             <h2 className="mb-4 text-balance text-2xl font-bold tracking-tight text-foreground sm:text-3xl md:mb-6 md:text-4xl">
@@ -186,7 +186,7 @@ const Om = () => {
         </div>
       </section>
 
-      <section className="bg-background py-12 md:py-20">
+      <section className="bg-muted py-12 md:py-20">
         <div className="container px-8 md:px-4">
           <div className="mx-auto max-w-5xl rounded-2xl border border-border/60 bg-card px-5 py-7 text-center shadow-[var(--shadow-card)] sm:px-6 sm:py-8 md:px-10 md:py-10">
             <p className="mx-auto mb-6 max-w-2xl text-base font-semibold leading-relaxed text-foreground md:text-lg">
