@@ -33,7 +33,7 @@ const IfkStocksundBanner = () => {
             onClick={() => setVisitorType("general")}
             className="underline underline-offset-2 decoration-muted-foreground/40 hover:text-muted-foreground hover:decoration-muted-foreground/70"
           >
-            Till startsidan
+            Följ denna länk
           </Link>
         </p>
       </div>
