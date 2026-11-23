@@ -24,10 +24,10 @@ const IfkStocksundBanner = () => {
       />
       <div className="min-w-0 shrink">
         <p className="text-xs font-semibold leading-snug tracking-tight text-primary sm:whitespace-nowrap sm:text-[13px] lg:text-sm">
-          Som spelare i {partner.name} har du rabatterade priser.
+          Som medlem i {partner.name} har du rabatterade priser.
         </p>
         <p className="mt-0.5 text-xs font-normal leading-snug text-muted-foreground/70 sm:whitespace-nowrap sm:text-[11px]">
-          Är du inte spelare i {partner.name}?{" "}
+          Är du inte medlem i {partner.name}?{" "}
           <Link
             to="/"
             onClick={() => setVisitorType("general")}
