@@ -10,7 +10,7 @@ const Testimonial = () => {
       <div className="container px-8 md:px-4">
         <div className="mx-auto max-w-5xl">
           <h2 className="mb-6 break-words text-left text-2xl font-bold tracking-tight text-primary sm:mb-8 sm:text-3xl md:mb-10 md:text-5xl">
-            Vad patienter säger
+            Vad kunder säger
           </h2>
           <div className="grid grid-cols-1 items-stretch gap-12 md:grid-cols-3 md:gap-16">
             {quotes.map((quote) => (
