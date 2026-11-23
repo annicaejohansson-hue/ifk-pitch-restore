@@ -1,4 +1,4 @@
-export type PartnerId = "ifk-stocksund" | "enebybergs-if";
+export type PartnerId = "ifk-stocksund" | "enebybergs-if" | "fc-djursholm";
 
 export type PartnerConfig = {
   id: PartnerId;
@@ -43,10 +43,28 @@ export const PARTNERS: Record<PartnerId, PartnerConfig> = {
     kaddioCalFilter: "enebybergs-if",
     kaddioNameSuffix: " (Enebybergs IF)",
   },
+  "fc-djursholm": {
+    id: "fc-djursholm",
+    name: "FC Djursholm",
+    landingPath: "/fc-djursholm",
+    bookingUrl: "/boka?partner=fc-djursholm",
+    logoSrc:
+      "https://fotbolltransfers-images.ams3.cdn.digitaloceanspaces.com/uploads/images/clubs/1624662934/full.png",
+    logoAlt: "FC Djursholm",
+    logoWidth: 400,
+    logoHeight: 400,
+    kaddioBookingUrl: `${KADDIO_ORIGIN}/booking/fc-djursholm`,
+    kaddioCalFilter: "fc-djursholm",
+    kaddioNameSuffix: " (FC Djursholm)",
+  },
 };
 
 export function isPartnerId(value: string | null | undefined): value is PartnerId {
-  return value === "ifk-stocksund" || value === "enebybergs-if";
+  return (
+    value === "ifk-stocksund" ||
+    value === "enebybergs-if" ||
+    value === "fc-djursholm"
+  );
 }
 
 export function getPartner(

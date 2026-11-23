@@ -20,7 +20,7 @@ export type BookingService = {
   /** Shown above the calendar when this service is selected */
   bookingNotice?: string;
   /**
-   * Partnerpris (IFK Stocksund / Enebybergs IF).
+   * Partnerpris (IFK Stocksund / Enebybergs IF / FC Djursholm).
    * Om `name` saknas visas bara partnerpriset; bokningen går i ordinarie Kaddio-kalender.
    * Om `sharedAcrossPartners` är true används samma Kaddio-typ för alla partnerföreningar
    * (t.ex. "… - Partner"), annars IFK-namn respektive `name + kaddioNameSuffix`.
