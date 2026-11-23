@@ -41,13 +41,10 @@ const PARTNER_LOGOS = [
 
 const logoSlotClass = (variant: "footer" | "inline") =>
   variant === "inline"
-    ? "inline-flex h-16 w-16 shrink-0 items-center justify-center sm:h-20 sm:w-20 md:h-24 md:w-24"
-    : "inline-flex h-14 w-14 shrink-0 items-center justify-center sm:h-16 sm:w-16 md:h-24 md:w-24";
+    ? "inline-flex h-12 w-12 shrink-0 items-center justify-center sm:h-16 sm:w-16 md:h-20 md:w-20 lg:h-24 lg:w-24"
+    : "inline-flex h-12 w-12 shrink-0 items-center justify-center sm:h-14 sm:w-14 md:h-16 md:w-16 lg:h-24 lg:w-24";
 
-const logoImgClass = (variant: "footer" | "inline") =>
-  variant === "inline"
-    ? "h-full w-full object-contain"
-    : "h-full w-full object-contain";
+const logoImgClass = () => "h-full w-full object-contain";
 
 const PartnerLogos = ({ variant }: { variant: "footer" | "inline" }) => (
   <>
@@ -63,7 +60,7 @@ const PartnerLogos = ({ variant }: { variant: "footer" | "inline" }) => (
         <img
           src={logo.src}
           alt=""
-          className={`${logoImgClass(variant)}${"rounded" in logo && logo.rounded ? " rounded-full bg-white" : ""}`}
+          className={`${logoImgClass()}${"rounded" in logo && logo.rounded ? " rounded-full bg-white" : ""}`}
           width={logo.width}
           height={logo.height}
           loading="lazy"
@@ -89,7 +86,7 @@ const Partner = ({ variant = "footer", className = "" }: PartnerProps) => {
         <h2 className="mb-4 text-balance text-2xl font-bold tracking-tight text-foreground sm:text-3xl md:mb-5 md:text-4xl">
           Samarbetspartner till
         </h2>
-        <div className="flex flex-wrap items-center justify-center gap-4 sm:justify-start md:gap-5">
+        <div className="flex flex-wrap items-center justify-center gap-3 sm:justify-start sm:gap-4 md:gap-5">
           <PartnerLogos variant="inline" />
         </div>
       </div>
@@ -101,7 +98,7 @@ const Partner = ({ variant = "footer", className = "" }: PartnerProps) => {
       <div className="container px-8 md:px-4">
         <div className="mx-auto flex max-w-5xl flex-col items-center justify-center gap-3 text-center text-primary-foreground sm:flex-row sm:flex-wrap sm:gap-4 sm:text-left md:gap-5">
           <p className="text-base md:text-lg">Samarbetspartner till</p>
-          <div className="flex flex-wrap items-center justify-center gap-4 p-0 md:gap-5">
+          <div className="flex flex-wrap items-center justify-center gap-3 p-0 sm:gap-4 md:gap-5">
             <PartnerLogos variant="footer" />
           </div>
         </div>
