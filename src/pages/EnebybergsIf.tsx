@@ -4,7 +4,7 @@ import Index from "@/pages/Index";
 
 const SEO_TITLE = "Enebybergs IF – Caselo Idrottsmedicin";
 const SEO_DESCRIPTION =
-  "Som spelare i Enebybergs IF har du rabatterade priser hos Caselo Idrottsmedicin. Boka idrottsfysioterapi i Danderyd.";
+  "Som medlem i Enebybergs IF har du rabatterade priser hos Caselo Idrottsmedicin. Boka idrottsfysioterapi i Danderyd.";
 
 const EnebybergsIf = () => {
   const { setVisitorType } = useVisitor();
