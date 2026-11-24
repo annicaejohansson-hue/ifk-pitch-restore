@@ -1390,7 +1390,7 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
                       id={`${productId}-wellness-yes`}
                     />
                     <span className="min-w-0 pt-0.5 text-base leading-snug">
-                      Ja, kvittot ska kunna lämnas till min arbetsgivare
+                      Ja, jag behöver kvitto för friskvårdsbidrag
                     </span>
                   </label>
                 </RadioGroup>
