@@ -58,14 +58,14 @@ const Kontakt = () => {
               title="Hör av dig"
             >
               Här hittar du e-post, öppettider och karta för Danderyd och
-              Mariefred. Mer om båda mottagningarna finns under{" "}
+              Mariefred.{" "}
               <Link
                 to={MOTTAGNINGAR_PATH}
                 className="font-medium text-primary underline underline-offset-4 hover:text-primary/80"
               >
-                Om – Mottagningar
-              </Link>
-              .
+                Läs mer
+              </Link>{" "}
+              om mottagningarna.
             </PageIntro>
 
             <div className="mb-8 rounded-2xl border border-border/60 bg-card/90 p-5 shadow-[var(--shadow-card)] backdrop-blur-sm sm:mb-10 sm:p-6 md:p-8">
