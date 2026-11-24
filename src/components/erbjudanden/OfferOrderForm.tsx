@@ -1202,7 +1202,7 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
                 <label className={radioItemClass}>
                   <RadioGroupItem value="self" id={`${productId}-recipient-self`} />
                   <span className="min-w-0 pt-0.5 text-base leading-snug">
-                    Nej, kvitto och bokningsinstruktion räcker
+                    Nej, det behövs inte
                   </span>
                 </label>
                 <label className={radioItemClass}>
