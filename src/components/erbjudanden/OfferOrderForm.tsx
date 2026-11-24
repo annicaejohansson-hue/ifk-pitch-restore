@@ -257,9 +257,6 @@ const friskvardSchema = z
       .array(z.enum(["fotbollsfys", "lopteknik-snabbhet", "fys-idrott"]))
       .min(1, "Välj minst ett fokus."),
     sportName: z.string().trim(),
-    personalConfirm: z.boolean().refine((value) => value === true, {
-      message: "Bekräfta att träningen är personlig och inte överlåtbar.",
-    }),
   })
   .refine(emailMatch, {
     path: ["buyerEmailConfirm"],
@@ -352,7 +349,6 @@ const PT_CHECKOUT_STEPS = [
       "quantity",
       "focuses",
       "sportName",
-      "personalConfirm",
     ],
   },
   {
@@ -571,7 +567,6 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
       participantName: "",
       focuses: focusFromUrl ? [focusFromUrl] : [],
       sportName: "",
-      personalConfirm: false,
       wellnessReceipt: "no",
       receiptCustomerName: "",
       personalId: "",
@@ -855,8 +850,7 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
       errors.quantity ||
       errors.participantName ||
       errors.focuses ||
-      errors.sportName ||
-      errors.personalConfirm
+      errors.sportName
     ) {
       goToCheckoutStep(0);
       return;
@@ -1895,31 +1889,6 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
                     )}
                   />
                 </section>
-
-                <FormField
-                  control={friskvardForm.control}
-                  name="personalConfirm"
-                  render={({ field }) => (
-                    <FormItem className="border-t border-border/60 pt-6">
-                      <label className="flex min-h-11 items-start gap-3">
-                        <FormControl>
-                          <Checkbox
-                            className="mt-1 h-5 w-5"
-                            checked={field.value === true}
-                            onCheckedChange={(checked) =>
-                              field.onChange(checked === true)
-                            }
-                          />
-                        </FormControl>
-                        <span className="text-sm leading-relaxed text-foreground md:text-base">
-                          Jag förstår att träningen är personlig och inte kan
-                          överlåtas eller bytas mot andra tjänster.
-                        </span>
-                      </label>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
               </div>
 
               <div className={cn("space-y-5", checkoutStep !== 1 && "hidden")}>
