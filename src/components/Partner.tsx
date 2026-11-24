@@ -42,7 +42,7 @@ const PARTNER_LOGOS = [
 const logoSlotClass = (variant: "footer" | "inline") =>
   variant === "inline"
     ? "inline-flex h-12 w-12 shrink-0 items-center justify-center sm:h-16 sm:w-16 md:h-20 md:w-20 lg:h-24 lg:w-24"
-    : "inline-flex h-12 w-12 shrink-0 items-center justify-center sm:h-14 sm:w-14 md:h-16 md:w-16 lg:h-24 lg:w-24";
+    : "inline-flex h-11 w-11 shrink-0 items-center justify-center sm:h-14 sm:w-14 md:h-16 md:w-16 lg:h-24 lg:w-24";
 
 const logoImgClass = () => "h-full w-full object-contain";
 
@@ -94,11 +94,13 @@ const Partner = ({ variant = "footer", className = "" }: PartnerProps) => {
   }
 
   return (
-    <footer className="no-print bg-[#0e1627] py-6 md:py-8">
-      <div className="container px-8 md:px-4">
+    <footer className="no-print overflow-x-hidden bg-[#0e1627] py-6 md:py-8">
+      <div className="container px-4 sm:px-8 md:px-4">
         <div className="mx-auto flex max-w-5xl flex-col items-center justify-center gap-3 text-center text-primary-foreground sm:flex-row sm:flex-wrap sm:gap-4 sm:text-left md:gap-5">
-          <p className="text-base md:text-lg">Samarbetspartner till</p>
-          <div className="flex flex-wrap items-center justify-center gap-3 p-0 sm:gap-4 md:gap-5">
+          <p className="text-balance text-base md:text-lg">
+            Samarbetspartner till
+          </p>
+          <div className="flex max-w-full flex-wrap items-center justify-center gap-2 p-0 sm:gap-4 md:gap-5">
             <PartnerLogos variant="footer" />
           </div>
         </div>

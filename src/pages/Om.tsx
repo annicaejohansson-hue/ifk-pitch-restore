@@ -216,12 +216,12 @@ const Om = () => {
       </section>
 
       <section className="bg-background py-10 md:py-14">
-        <div className="container px-8 md:px-4">
+        <div className="container px-4 sm:px-8 md:px-4">
           <div className="mx-auto max-w-5xl">
             <h2 className="mb-3 text-balance text-xl font-bold tracking-tight text-foreground md:mb-4 md:text-2xl">
               Företagsuppgifter
             </h2>
-            <p className="text-base leading-relaxed text-muted-foreground md:text-lg">
+            <p className="text-pretty text-base leading-relaxed text-muted-foreground md:text-lg">
               {CASELO_LEGAL_NAME}, organisationsnummer {CASELO_ORG_NUMBER}.
             </p>
             <p className="mt-3">
