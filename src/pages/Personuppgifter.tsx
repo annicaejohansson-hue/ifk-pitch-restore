@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
 import PageIntro from "@/components/PageIntro";
-import Partner from "@/components/Partner";
 import { OFFER_CONTACT_EMAIL } from "@/data/erbjudanden";
 import {
   CASELO_ADDRESS_LINE_1,
@@ -268,8 +267,6 @@ const Personuppgifter = () => {
           </div>
         </div>
       </section>
-
-      <Partner />
     </main>
   );
 };

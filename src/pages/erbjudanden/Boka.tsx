@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { Helmet } from "react-helmet";
 import { Link, useSearchParams } from "react-router-dom";
-import Partner from "@/components/Partner";
 import PageIntro from "@/components/PageIntro";
 import { Button } from "@/components/ui/button";
 import {
@@ -155,8 +154,6 @@ const BokaErbjudande = () => {
           </div>
         </div>
       </section>
-
-      <Partner />
     </main>
   );
 };

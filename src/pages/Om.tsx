@@ -209,8 +209,6 @@ const Om = () => {
           </div>
         </div>
       </section>
-
-      <Partner />
     </main>
   );
 };

@@ -4,7 +4,6 @@ import { Calendar } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import BookingLink from "@/components/BookingLink";
-import Partner from "@/components/Partner";
 import PageIntro from "@/components/PageIntro";
 import { services } from "@/data/tjanster";
 
@@ -103,8 +102,6 @@ const Tjanster = () => {
           </div>
         </div>
       </section>
-
-      <Partner />
     </main>
   );
 };

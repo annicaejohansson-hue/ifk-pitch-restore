@@ -13,6 +13,7 @@ import {
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import SiteHeader from "@/components/SiteHeader";
+import Partner from "@/components/Partner";
 import Boka from "@/pages/Boka";
 import IfkStocksund from "@/pages/IfkStocksund";
 import EnebybergsIf from "@/pages/EnebybergsIf";
@@ -65,6 +66,7 @@ const AppLayout = () => (
     <Analytics />
     <SiteHeader />
     <Outlet />
+    <Partner />
   </VisitorProvider>
 );
 

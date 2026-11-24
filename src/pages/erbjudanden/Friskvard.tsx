@@ -2,7 +2,6 @@ import { useEffect, useRef, useState, type HTMLAttributes } from "react";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
 import BookingLink from "@/components/BookingLink";
-import Partner from "@/components/Partner";
 import PageIntro from "@/components/PageIntro";
 import { Button } from "@/components/ui/button";
 import PtQuantityPicker from "@/components/erbjudanden/PtQuantityPicker";
@@ -440,8 +439,6 @@ const Friskvard = () => {
           </div>
         </div>
       </section>
-
-      <Partner />
     </main>
   );
 };

@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { Helmet } from "react-helmet";
 import { Navigate, useParams } from "react-router-dom";
-import Partner from "@/components/Partner";
 import PermanentRedirect from "@/components/PermanentRedirect";
 import ServiceDetail from "@/components/ServiceDetail";
 import {
@@ -43,8 +42,6 @@ const TjansterDetail = () => {
           <ServiceDetail service={service} />
         </div>
       </section>
-
-      <Partner />
     </main>
   );
 };

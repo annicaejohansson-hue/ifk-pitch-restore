@@ -1,6 +1,5 @@
 import { Helmet } from "react-helmet";
 import { Link, useSearchParams } from "react-router-dom";
-import Partner from "@/components/Partner";
 import PageIntro from "@/components/PageIntro";
 import OfferOrderForm from "@/components/erbjudanden/OfferOrderForm";
 import {
@@ -91,8 +90,6 @@ const Kassa = () => {
           </div>
         </div>
       </section>
-
-      <Partner />
     </main>
   );
 };

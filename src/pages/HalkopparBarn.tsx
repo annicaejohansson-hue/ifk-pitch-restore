@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/accordion";
 import BookingLink from "@/components/BookingLink";
 import PageIntro from "@/components/PageIntro";
-import Partner from "@/components/Partner";
 import { quotes as testimonialQuotes } from "@/components/Testimonial";
 import { useVisitor } from "@/context/VisitorContext";
 import { trackKontaktLank } from "@/lib/analytics";
@@ -553,8 +552,6 @@ const HalkopparBarn = () => {
           </div>
         </div>
       </section>
-
-      <Partner />
     </main>
   );
 };
