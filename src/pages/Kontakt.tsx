@@ -17,8 +17,8 @@ const OPENING_HOURS: Record<
   { days: string; timeNote: string }
 > = {
   danderyd: {
-    days: "Måndag–onsdag och fredag",
-    timeNote: "kl. 08.00–16.00 (helgfria vardagar)",
+    days: "Mån, Tis, Ons, Fre",
+    timeNote: "kl. 09.30–15.00",
   },
   mariefred: {
     days: "Torsdagar",
