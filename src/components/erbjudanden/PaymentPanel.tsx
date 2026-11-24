@@ -383,9 +383,9 @@ const PaymentPanel = ({
         {payment.customerReportedPayment ? (
           <p className="mt-4 rounded-xl bg-muted px-4 py-3 text-sm leading-relaxed text-foreground md:text-base">
             Tack, vi kontrollerar betalningen. När betalningen syns hos Caselo
-            skickas bokningsbekräftelse samt eventuellt kvitto och presentkort
-            inom 24 timmar. Om du behöver kvitto eller presentkort tidigare,
-            maila{" "}
+            skickas köpbekräftelse, bokningslänk samt eventuellt kvitto och
+            presentkort inom 24 timmar. Om du behöver kvitto eller presentkort
+            tidigare, maila{" "}
             <a
               className="font-medium text-primary underline underline-offset-4 hover:text-primary/80"
               href={`mailto:${OFFER_CONTACT_EMAIL}`}
