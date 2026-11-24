@@ -202,16 +202,7 @@ export const resolveServiceForVisitor = (
         }
       : service;
 
-  if (service.id !== "pt-pass" || !service.description) return resolved;
-
-  const discountNote = partner
-    ? "Eventuell ytterligare rabatt visas i nästa steg."
-    : "Eventuell rabatt vidare i nästa steg";
-
-  return {
-    ...resolved,
-    description: `${service.description}\n\n${discountNote}`,
-  };
+  return resolved;
 };
 
 /**
