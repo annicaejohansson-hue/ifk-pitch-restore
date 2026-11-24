@@ -57,8 +57,8 @@ const Kontakt = () => {
               eyebrow="Kontakt"
               title="Hör av dig"
             >
-              Här hittar du e-post, öppettider och karta för Danderyd och
-              Mariefred.{" "}
+              Här hittar du e-post, öppettider och karta för mottagningarna i
+              Danderyd och Mariefred.{" "}
               <Link
                 to={MOTTAGNINGAR_PATH}
                 className="font-medium text-primary underline underline-offset-4 hover:text-primary/80"
