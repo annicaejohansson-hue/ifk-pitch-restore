@@ -8,7 +8,12 @@ import Partner from "@/components/Partner";
 import PageIntro from "@/components/PageIntro";
 import Mottagningar from "@/components/Mottagningar";
 import { SITE_ORIGIN } from "@/lib/booking";
+import {
+  CASELO_LEGAL_NAME,
+  CASELO_ORG_NUMBER,
+} from "@/data/caseloCompany";
 import { MOTTAGNINGAR_HASH } from "@/data/locations";
+import { PRIVACY_PATH } from "@/pages/Personuppgifter";
 import henrikFoto from "@/assets/IMG_9111.jpg";
 
 const PAGE_PATH = "/om";
@@ -206,6 +211,27 @@ const Om = () => {
                 </BookingLink>
               </Button>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-background py-10 md:py-14">
+        <div className="container px-8 md:px-4">
+          <div className="mx-auto max-w-5xl">
+            <h2 className="mb-3 text-balance text-xl font-bold tracking-tight text-foreground md:mb-4 md:text-2xl">
+              Företagsuppgifter
+            </h2>
+            <p className="text-base leading-relaxed text-muted-foreground md:text-lg">
+              {CASELO_LEGAL_NAME}, organisationsnummer {CASELO_ORG_NUMBER}.
+            </p>
+            <p className="mt-3">
+              <Link
+                to={PRIVACY_PATH}
+                className="inline-flex min-h-11 items-center text-base font-medium text-primary underline underline-offset-4 hover:text-primary/80 md:text-lg"
+              >
+                Personuppgiftspolicy
+              </Link>
+            </p>
           </div>
         </div>
       </section>
