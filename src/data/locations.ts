@@ -19,7 +19,10 @@ export type LocationConfig = {
   scheduleHeroPart: string;
   addressLine1: string;
   addressLine2: string;
+  /** Query for Maps-sök/embed (helst företagsnamn så rätt pin visas). */
   mapsQuery: string;
+  /** Direktlänk till Google Place (öppnas i Maps). */
+  mapsUrl?: string;
   /** Kort ingress om platsen (mottagningsflik). */
   placeIntro: string;
   /** Plats-specifika punkter (inte gemensamma behandlingsmetoder). */
@@ -53,7 +56,9 @@ export const LOCATIONS: Record<LocationId, LocationConfig> = {
     scheduleHeroPart: "Danderyd mån–ons & fre",
     addressLine1: "Rinkebyvägen 4",
     addressLine2: "182 36 Danderyd",
-    mapsQuery: "Rinkebyvägen 4, 182 36 Danderyd",
+    mapsQuery: "Caselo Idrottsmedicin, Rinkebyvägen 4, 182 36 Danderyd",
+    mapsUrl:
+      "https://www.google.com/maps/place/Caselo+Idrottsmedicin/@59.4142713,18.0431145,17z/data=!4m6!3m5!1s0x465f9d3c9078edf1:0xfe98c6b735b513c4!8m2!3d59.4142713!4d18.0431145!16s%2Fg%2F11zfbvfv96",
     placeIntro: "",
     placeHighlights: [
       "Fullstor fotbollsplan 25 meter från kliniken som möjliggör rehab och testning inför återgång till träning och tävling, till exempel maxlöpningar och idrottsspecifika moment",

@@ -91,7 +91,8 @@ const Kontakt = () => {
               {LOCATION_IDS.map((id) => {
                 const location = LOCATIONS[id];
                 const hours = OPENING_HOURS[id];
-                const searchUrl = mapsSearchUrl(location.mapsQuery);
+                const searchUrl =
+                  location.mapsUrl ?? mapsSearchUrl(location.mapsQuery);
                 const embedUrl = mapsEmbedUrl(location.mapsQuery);
                 const showBanner = id === "danderyd";
 

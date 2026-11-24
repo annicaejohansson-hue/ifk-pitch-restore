@@ -61,7 +61,9 @@ const Mottagningar = ({
 
           {LOCATION_IDS.map((id: LocationId) => {
             const location = LOCATIONS[id];
-            const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location.mapsQuery)}`;
+            const mapsUrl =
+              location.mapsUrl ??
+              `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location.mapsQuery)}`;
             return (
               <TabsContent
                 key={id}
