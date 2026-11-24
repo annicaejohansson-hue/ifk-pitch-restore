@@ -8,14 +8,17 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { useVisitor } from "@/context/VisitorContext";
-import PtPrepaidPricePanel from "@/components/booking/PtPrepaidPricePanel";
 import {
   BOOKING_LOCATION_PARAM,
   TRAINING_BOOKING_CATEGORY_ID,
 } from "@/lib/booking";
 import { getPartner, isPartnerId, type PartnerConfig } from "@/lib/partners";
-import type { PtPrepaidDisplay } from "@/data/erbjudanden-prepaid";
+import {
+  ptPrepaidFromRefAndQuantity,
+  type PtPrepaidDisplay,
+} from "@/data/erbjudanden-prepaid";
 import { PT_SESSION_LIST_PRICE_SEK } from "@/data/erbjudanden";
+import { verifyPrepaidBookingToken } from "@/lib/erbjudanden/api";
 import {
   CASELO_EMAIL,
   CASELO_PHONE,
@@ -456,6 +459,40 @@ const Boka = () => {
     if (categoryId) setOpenCategoryId(categoryId);
   }, [kategoriParam]);
 
+  // Förbetalda PT-länkar från mejl (utan synlig formulärpanel).
+  useEffect(() => {
+    let cancelled = false;
+    const token = prepaidToken?.trim();
+    if (token) {
+      void verifyPrepaidBookingToken(token)
+        .then((result) => {
+          if (cancelled) return;
+          setPtPrepaid({
+            orderRef: result.orderRef,
+            quantity: result.quantity,
+            unitPriceSek: result.unitPriceSek,
+            listUnitPriceSek: result.listUnitPriceSek,
+            verified: true,
+          });
+        })
+        .catch(() => {
+          if (!cancelled) setPtPrepaid(null);
+        });
+      return () => {
+        cancelled = true;
+      };
+    }
+
+    const fromParams = ptPrepaidFromRefAndQuantity(
+      prepaidRef ?? "",
+      prepaidAntal,
+    );
+    setPtPrepaid(fromParams);
+    return () => {
+      cancelled = true;
+    };
+  }, [prepaidToken, prepaidRef, prepaidAntal]);
+
   const categories = useMemo(
     () => bookingCategoriesForLocation(activeLocationId, activePartner),
     [activeLocationId, activePartner],
@@ -765,16 +802,6 @@ const Boka = () => {
                         Byt tjänst
                       </button>
                     </div>
-                    {selectedServiceId === "pt-pass" ? (
-                      <div className="sm:pl-9">
-                        <PtPrepaidPricePanel
-                          initialToken={prepaidToken}
-                          initialRef={prepaidRef}
-                          initialQuantity={prepaidAntal}
-                          onPrepaidChange={setPtPrepaid}
-                        />
-                      </div>
-                    ) : null}
                   </div>
 
                   {bookingReady && iframeSrc ? (
