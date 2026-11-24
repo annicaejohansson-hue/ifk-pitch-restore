@@ -22,7 +22,7 @@ const OPENING_HOURS: Record<
   },
   mariefred: {
     days: "Torsdagar",
-    timeNote: "kl. 08.00–16.00 (helgfria vardagar)",
+    timeNote: "kl. 08.00–16.00",
   },
 };
 
