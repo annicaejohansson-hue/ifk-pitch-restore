@@ -1208,7 +1208,7 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
                 <label className={radioItemClass}>
                   <RadioGroupItem value="gift" id={`${productId}-recipient-gift`} />
                   <span className="min-w-0 pt-0.5 text-base leading-snug">
-                    Ja, jag vill även få ett presentkort mailat till mig
+                    Ja, jag vill få ett presentkort mailat till mig
                   </span>
                 </label>
               </RadioGroup>
