@@ -583,6 +583,13 @@ export async function createOfferOrder(
       defaultGiftInscription(product.id);
   }
 
+  if (product.id === "snabbhet") {
+    participantName = clip(input.participantName, 120);
+    if (participantName.length < 2) {
+      fields.participantName = "Ange namn på den som ska springa.";
+    }
+  }
+
   if (isFriskvardProduct(product.id)) {
     participantName = clip(input.participantName, 120);
     const parsedFocuses = parseFriskvardFocusIds(clip(input.focus, 80));

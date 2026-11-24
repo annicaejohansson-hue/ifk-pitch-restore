@@ -162,6 +162,7 @@ export function buildFulfillmentChecklist(ctx: FulfillmentContext): string {
     return [
       ...common,
       ...wellnessChecklistLines(ctx),
+      `Den som ska springa: ${ctx.participantName || "ej angiven"}.`,
       recipient,
       "Skicka: presentkort för det specificerade snabbhetspaketet, kvitto, bokningslänk för första besöket (ca 75 min) och instruktion att återtest (45 min) bokas 8–10 veckor efter första besöket.",
       `Första besöket ska genomföras senast ${OFFER_FIRST_VISIT_END_LABEL}. Återtestet får ske efter årsskiftet 2027/2028.`,

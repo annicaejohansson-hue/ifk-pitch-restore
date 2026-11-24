@@ -210,6 +210,10 @@ const snabbhetSchema = z
   .object({
     ...baseSchema,
     ...wellnessFieldsSchema,
+    participantName: z
+      .string()
+      .trim()
+      .min(2, "Ange namn på den som ska springa."),
     recipient: z.enum(["self", "gift"]),
     giftLayout: giftLayoutSchema,
     giftDecoration: giftDecorationSchema,
@@ -374,8 +378,7 @@ const PT_CHECKOUT_STEPS = [
 const SNABBHET_CHECKOUT_STEPS = [
   {
     title: "Tjänst",
-    // Bekräftelse av paketet – inga obligatoriska fält.
-    fields: [] as const,
+    fields: ["participantName"] as const,
   },
   {
     title: "Presentkort",
@@ -536,6 +539,7 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
       buyerEmail: "",
       buyerEmailConfirm: "",
       privacyConsent: false,
+      participantName: "",
       recipient: "self",
       giftLayout: layoutFromUrl,
       giftDecoration: DEFAULT_GIFT_DECORATION,
@@ -584,6 +588,7 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
   const snabbhetGiftDecoration = snabbhetForm.watch("giftDecoration");
   const snabbhetGiftInscription = snabbhetForm.watch("giftInscription");
   const snabbhetWellnessReceipt = snabbhetForm.watch("wellnessReceipt");
+  const snabbhetParticipantName = snabbhetForm.watch("participantName");
   const friskvardRecipient = friskvardForm.watch("recipient");
   const friskvardGiftLayout = friskvardForm.watch("giftLayout");
   const friskvardGiftDecoration = friskvardForm.watch("giftDecoration");
@@ -738,6 +743,7 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
         buyerEmail: values.buyerEmail,
         buyerEmailConfirm: values.buyerEmailConfirm,
         paymentMethod: values.paymentMethod,
+        participantName: values.participantName,
         giftLayout: values.giftLayout,
         giftDecoration: values.giftDecoration,
         recipient: values.recipient,
@@ -1600,6 +1606,24 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
                     .
                   </p>
                 </div>
+                <FormField
+                  control={snabbhetForm.control}
+                  name="participantName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Namn på den som ska springa:</FormLabel>
+                      <FormControl>
+                        <Input
+                          autoComplete="name"
+                          className={fieldClass}
+                          placeholder="Förnamn Efternamn"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
 
               <div className={cn("space-y-5", checkoutStep !== 1 && "hidden")}>
@@ -1629,6 +1653,11 @@ const OfferOrderForm = ({ productId }: OfferOrderFormProps) => {
                   </p>
                   <ul className="mt-2 space-y-1 break-words text-sm leading-snug text-foreground md:text-base">
                     <li>Upplägg: {product.name}</li>
+                    {snabbhetParticipantName?.trim() ? (
+                      <li>
+                        Den som ska springa: {snabbhetParticipantName.trim()}
+                      </li>
+                    ) : null}
                     <li>Totalt: {priceLabel}</li>
                     {snabbhetWellnessReceipt === "yes" ? (
                       <li>Kvitto för friskvårdsbidrag</li>
