@@ -18,6 +18,29 @@ const KADDIO_ORIGIN = "https://caseloidrottsmedicin.kaddio.com";
 /** Kaddio-bokningssida för partners i Danderyd (IFK Stocksund, Enebyberg, FC Djursholm, …). */
 const PARTNER_DANDERYD_KADDIO_BOOKING_URL = `${KADDIO_ORIGIN}/booking/partner-danderyd`;
 const PARTNER_DANDERYD_KADDIO_CAL_FILTER = "partner-danderyd";
+/** Kaddio-bokningssida för partners i Mariefred. */
+export const PARTNER_MARIEFRED_KADDIO_BOOKING_URL = `${KADDIO_ORIGIN}/booking/partner-mariefred`;
+export const PARTNER_MARIEFRED_KADDIO_CAL_FILTER = "partner-mariefred";
+
+/** Kalenderfilter för partner + ort (samma tjänstenamn, olika Kaddio-sidor). */
+export function partnerKaddioCalFilter(
+  partner: PartnerConfig | null,
+  locationId: string | null | undefined,
+): string {
+  if (!partner) return "";
+  if (locationId === "mariefred") return PARTNER_MARIEFRED_KADDIO_CAL_FILTER;
+  return partner.kaddioCalFilter;
+}
+
+/** Bokningsstartsida i Kaddio för partner + ort. */
+export function partnerKaddioBookingUrl(
+  partner: PartnerConfig | null,
+  locationId: string | null | undefined,
+): string | null {
+  if (!partner) return null;
+  if (locationId === "mariefred") return PARTNER_MARIEFRED_KADDIO_BOOKING_URL;
+  return partner.kaddioBookingUrl;
+}
 
 export const PARTNERS: Record<PartnerId, PartnerConfig> = {
   "ifk-stocksund": {

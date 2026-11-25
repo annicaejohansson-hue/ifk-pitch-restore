@@ -12,7 +12,13 @@ import {
   BOOKING_LOCATION_PARAM,
   TRAINING_BOOKING_CATEGORY_ID,
 } from "@/lib/booking";
-import { getPartner, isPartnerId, type PartnerConfig } from "@/lib/partners";
+import {
+  getPartner,
+  isPartnerId,
+  partnerKaddioBookingUrl,
+  partnerKaddioCalFilter,
+  type PartnerConfig,
+} from "@/lib/partners";
 import {
   ptPrepaidFromRefAndQuantity,
   type PtPrepaidDisplay,
@@ -34,6 +40,7 @@ import {
 } from "@/data/bookingCatalog";
 import {
   getLocation,
+  isLocationBookable,
   isLocationId,
   LOCATION_IDS,
   LOCATIONS,
@@ -99,17 +106,17 @@ const slugifyForKaddio = (value: string) => {
 };
 
 /**
- * Build Kaddio calendar URL.
- * Partner filter and location filter both use /cal/{filter}/… — location wins
- * when both exist and location has its own filter (Mariefred). Partner filter
- * still applies on Danderyd (empty location filter).
+ * Build Kaddio calendar URL filter segment under /cal/{filter}/…
+ * Partner + ort: partner-danderyd / partner-mariefred.
+ * Utan partner: ortens filter (t.ex. Mariefred när det är öppet).
  */
 const calendarFilterFor = (
   location: LocationConfig | null,
   partner: PartnerConfig | null,
 ) => {
+  const partnerFilter = partnerKaddioCalFilter(partner, location?.id ?? null);
+  if (partnerFilter) return partnerFilter;
   if (location?.kaddioCalFilter) return location.kaddioCalFilter;
-  if (partner) return partner.kaddioCalFilter;
   return "";
 };
 
@@ -254,9 +261,11 @@ const ServiceList = ({
 const LocationPicker = ({
   highlightedId,
   onChoose,
+  partner,
 }: {
   highlightedId: LocationId | null;
   onChoose: (id: LocationId) => void;
+  partner: PartnerConfig | null;
 }) => (
   <div className="mx-auto w-full max-w-2xl">
     <h2 className="mb-4 text-balance text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
@@ -265,7 +274,7 @@ const LocationPicker = ({
     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:items-stretch sm:gap-4">
       {LOCATION_IDS.map((id) => {
         const location = LOCATIONS[id];
-        const bookable = location.bookingEnabled;
+        const bookable = isLocationBookable(id, partner);
         const selected = bookable && highlightedId === id;
         return (
           <button
@@ -322,15 +331,16 @@ const Boka = () => {
   const prepaidRef = searchParams.get("ref");
   const prepaidAntal = searchParams.get("antal");
   const ortParam = searchParams.get(BOOKING_LOCATION_PARAM);
+  const partnerFromParams = getPartner(searchParams.get("partner"));
   const suggestedLocationId =
-    isLocationId(ortParam) && LOCATIONS[ortParam].bookingEnabled
+    isLocationId(ortParam) && isLocationBookable(ortParam, partnerFromParams)
       ? ortParam
       : null;
 
   const [locationConfirmed, setLocationConfirmed] = useState(false);
   const [pendingLocationId, setPendingLocationId] = useState<LocationId | null>(
     () =>
-      isLocationId(ortParam) && LOCATIONS[ortParam].bookingEnabled
+      isLocationId(ortParam) && isLocationBookable(ortParam, partnerFromParams)
         ? ortParam
         : null,
   );
@@ -358,11 +368,17 @@ const Boka = () => {
     }
   }, [searchParams, setVisitorType]);
 
+  const activePartner = partner ?? partnerFromParams;
+  const activeLocationId: LocationId | null = locationConfirmed
+    ? pendingLocationId
+    : null;
+  const activeLocation = getLocation(activeLocationId);
+
   // Ort från länk: markera men kräv bekräftelse. Generell bokning: ingen förval.
   useEffect(() => {
     if (prevOrtRef.current === ortParam) return;
     prevOrtRef.current = ortParam;
-    if (isLocationId(ortParam) && LOCATIONS[ortParam].bookingEnabled) {
+    if (isLocationId(ortParam) && isLocationBookable(ortParam, activePartner)) {
       setPendingLocationId(ortParam);
       setLocationConfirmed(false);
       setSelectedServiceId(undefined);
@@ -372,13 +388,7 @@ const Boka = () => {
       setPendingLocationId(null);
       setLocationConfirmed(false);
     }
-  }, [ortParam]);
-
-  const activePartner = partner ?? getPartner(searchParams.get("partner"));
-  const activeLocationId: LocationId | null = locationConfirmed
-    ? pendingLocationId
-    : null;
-  const activeLocation = getLocation(activeLocationId);
+  }, [ortParam, activePartner]);
 
   const writeOrtParam = (id: LocationId | null) => {
     setSearchParams(
@@ -400,7 +410,7 @@ const Boka = () => {
   };
 
   const confirmLocation = (id: LocationId) => {
-    if (!LOCATIONS[id].bookingEnabled) return;
+    if (!isLocationBookable(id, activePartner)) return;
     const changing =
       locationConfirmed && pendingLocationId && pendingLocationId !== id;
     setPendingLocationId(id);
@@ -521,7 +531,9 @@ const Boka = () => {
 
   // Tjänster utan Kaddio-partnervariant bokas i ordinarie kalenderfilter.
   const calendarPartner = selectedService?.ifk?.name ? activePartner : null;
-  const bookingReady = Boolean(activeLocation?.bookingEnabled);
+  const bookingReady = Boolean(
+    activeLocationId && isLocationBookable(activeLocationId, activePartner),
+  );
 
   const iframeSrc =
     selectedServiceName && bookingReady && activeLocation
@@ -538,9 +550,8 @@ const Boka = () => {
           activeLocation,
           calendarPartner,
         )
-      : activePartner
-        ? activePartner.kaddioBookingUrl
-        : KADDIO_BOOKING_URL;
+      : partnerKaddioBookingUrl(activePartner, activeLocationId) ??
+        KADDIO_BOOKING_URL;
 
   useEffect(() => {
     if (!iframeSrc) return;
@@ -685,6 +696,7 @@ const Boka = () => {
             <LocationPicker
               highlightedId={pickerHighlight}
               onChoose={chooseLocationCard}
+              partner={activePartner}
             />
           </div>
         </section>

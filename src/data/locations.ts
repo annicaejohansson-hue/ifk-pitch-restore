@@ -3,6 +3,8 @@
  * Tjänster och priser delas tills vidare; Kaddio-filter styr faktisk plats.
  */
 
+import type { PartnerConfig } from "@/lib/partners";
+
 export type LocationId = "danderyd" | "mariefred";
 
 export type LocationConfig = {
@@ -102,4 +104,17 @@ export function getLocation(
   id: string | null | undefined,
 ): LocationConfig | null {
   return isLocationId(id) ? LOCATIONS[id] : null;
+}
+
+/**
+ * Danderyd är alltid bokningsbar.
+ * Mariefred är stängd för allmänheten tills vidare, men öppen för partners
+ * (Kaddio: /booking/partner-mariefred).
+ */
+export function isLocationBookable(
+  id: LocationId,
+  partner: PartnerConfig | null = null,
+): boolean {
+  if (LOCATIONS[id].bookingEnabled) return true;
+  return id === "mariefred" && Boolean(partner);
 }

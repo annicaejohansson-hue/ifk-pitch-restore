@@ -24,12 +24,14 @@ export type BookingService = {
    * Om `name` saknas visas bara partnerpriset; bokningen går i ordinarie Kaddio-kalender.
    * Med `sharedAcrossPartners: true` används samma Kaddio-typ för alla partnerföreningar
    * (namn som slutar med " (Partner)").
+   * `priceByLocation` åsidosätter partnerpriset per ort (t.ex. Mariefred).
    */
   ifk?: {
     priceSek: number;
     ordinaryPriceSek?: number;
     name?: string;
     sharedAcrossPartners?: boolean;
+    priceByLocation?: Partial<Record<LocationId, number>>;
   };
 };
 
@@ -72,6 +74,7 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
           priceSek: 750,
           name: SMARTA_NYBESOK_PARTNER_NAME,
           sharedAcrossPartners: true,
+          priceByLocation: { mariefred: 600 },
         },
         description:
           "Nybesök bokas när du kommer första gången för ett besvär. Tjänsten är för dig som har ont eller är skadad och vill få hjälp med bedömning/diagnos och individuellt anpassade åtgärder för att minska besvären och hjälpa dig återgå till idrott, arbete eller vardag. Besöket kan innehålla behandling, rehabiliteringsövningar, träningsupplägg och råd om belastning.",
@@ -86,6 +89,7 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
           priceSek: 590,
           name: SMARTA_ATERBESOK_PARTNER_NAME,
           sharedAcrossPartners: true,
+          priceByLocation: { mariefred: 450 },
         },
         description:
           "Återbesök bokas när du redan har undersökts hos Caselo Idrottsmedicin för besväret du söker för.",
@@ -205,10 +209,15 @@ const partnerServiceName = (
 export const resolveServiceForVisitor = (
   service: BookingService,
   partner: PartnerConfig | null,
+  locationId: LocationId | null = null,
 ): BookingService => {
   if (!partner || !service.ifk) return service;
 
-  const partnerPrice = service.ifk.priceSek;
+  const locationPrice =
+    locationId && service.ifk.priceByLocation
+      ? service.ifk.priceByLocation[locationId]
+      : undefined;
+  const partnerPrice = locationPrice ?? service.ifk.priceSek;
   const comparePrice = service.ordinaryPriceSek ?? service.priceSek;
 
   return {
@@ -221,25 +230,25 @@ export const resolveServiceForVisitor = (
 };
 
 /**
- * Katalog för en ort. Just nu identisk överallt – hook för framtida skillnader.
+ * Katalog för en ort. Partnerpriser kan skilja per ort (t.ex. Mariefred).
  */
 export const bookingCategoriesForLocation = (
-  _locationId: LocationId | null,
+  locationId: LocationId | null,
   partner: PartnerConfig | null,
 ): BookingCategory[] =>
   BOOKING_CATEGORIES.map((category) => ({
     ...category,
     services: category.services?.map((service) =>
-      resolveServiceForVisitor(service, partner),
+      resolveServiceForVisitor(service, partner, locationId),
     ),
     subgroups: category.subgroups?.map((subgroup) => ({
       ...subgroup,
       services: subgroup.services.map((service) =>
-        resolveServiceForVisitor(service, partner),
+        resolveServiceForVisitor(service, partner, locationId),
       ),
     })),
     packages: category.packages?.map((service) =>
-      resolveServiceForVisitor(service, partner),
+      resolveServiceForVisitor(service, partner, locationId),
     ),
   }));
 
