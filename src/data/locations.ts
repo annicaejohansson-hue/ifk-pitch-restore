@@ -84,8 +84,7 @@ export const LOCATIONS: Record<LocationId, LocationConfig> = {
       "Fullstor fotbollsplan 2 min med bil från kliniken som möjliggör rehab och testning inför återgång till träning och tävling, till exempel maxlöpningar och idrottsspecifika moment",
     ],
     kaddioCalFilter: mariefredFilter,
-    // Stängd i ortsvalet tills vidare ("öppnar snart"). Sätt true när Kaddio är klart.
-    bookingEnabled: false,
+    bookingEnabled: true,
   },
 };
 
@@ -106,15 +105,10 @@ export function getLocation(
   return isLocationId(id) ? LOCATIONS[id] : null;
 }
 
-/**
- * Danderyd är alltid bokningsbar.
- * Mariefred är stängd för allmänheten tills vidare, men öppen för partners
- * (Kaddio: /booking/partner-mariefred).
- */
+/** Ort är bokningsbar när `bookingEnabled` är true. */
 export function isLocationBookable(
   id: LocationId,
-  partner: PartnerConfig | null = null,
+  _partner: PartnerConfig | null = null,
 ): boolean {
-  if (LOCATIONS[id].bookingEnabled) return true;
-  return id === "mariefred" && Boolean(partner);
+  return LOCATIONS[id].bookingEnabled;
 }

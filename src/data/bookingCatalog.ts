@@ -20,10 +20,16 @@ export type BookingService = {
   /** Shown above the calendar when this service is selected */
   bookingNotice?: string;
   /**
-   * Partnerpris (IFK Stocksund / Enebybergs IF / FC Djursholm m.fl.).
+   * Ortspecifika namn/priser för vanlig bokning (utan partnerbanner), t.ex. Mariefred.
+   */
+  byLocation?: Partial<
+    Record<LocationId, { name: string; priceSek: number }>
+  >;
+  /**
+   * Partnerpris (IFK Stocksund / Enebybergs IF / FC Djursholm / IFK Mariefred m.fl.).
    * Om `name` saknas visas bara partnerpriset; bokningen går i ordinarie Kaddio-kalender.
    * Med `sharedAcrossPartners: true` används samma Kaddio-typ för alla partnerföreningar
-   * (namn som slutar med " (Partner)").
+   * (namn som slutar med " (Partner)" / " (Partner Mariefred)").
    * `priceByLocation` / `nameByLocation` åsidosätter per ort (t.ex. Mariefred).
    */
   ifk?: {
@@ -76,6 +82,12 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
         label: "Nybesök",
         durationMin: 40,
         priceSek: 895,
+        byLocation: {
+          mariefred: {
+            name: "Smärta och skador - NYBESÖK (Mariefred)",
+            priceSek: 600,
+          },
+        },
         ifk: {
           priceSek: 750,
           name: SMARTA_NYBESOK_PARTNER_NAME,
@@ -92,6 +104,12 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
         label: "Återbesök",
         durationMin: 30,
         priceSek: 695,
+        byLocation: {
+          mariefred: {
+            name: "Smärta och skador - ÅTERBESÖK (Mariefred)",
+            priceSek: 450,
+          },
+        },
         ifk: {
           priceSek: 590,
           name: SMARTA_ATERBESOK_PARTNER_NAME,
@@ -114,6 +132,12 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
         label: "Nybesök - VUXEN (fyllda 18 år eller äldre)",
         durationMin: 40,
         priceSek: 1495,
+        byLocation: {
+          mariefred: {
+            name: "Hälkoppsinlägg Vuxen - NYBESÖK (Mariefred)",
+            priceSek: 1495,
+          },
+        },
         ifk: {
           priceSek: 1270,
           name: "Hälkoppsinlägg Vuxen - NYBESÖK (Partner)",
@@ -131,6 +155,12 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
         label: "Återbesök - VUXEN (fyllda 18 år eller äldre)",
         durationMin: 30,
         priceSek: 1295,
+        byLocation: {
+          mariefred: {
+            name: "Hälkoppsinlägg Vuxen - ÅTERBESÖK (Mariefred)",
+            priceSek: 1295,
+          },
+        },
         ifk: {
           priceSek: 1100,
           name: "Hälkoppsinlägg Vuxen - ÅTERBESÖK (Partner)",
@@ -148,6 +178,12 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
         label: "Nybesök - BARN (ej fyllda 18 år)",
         durationMin: 40,
         priceSek: 1295,
+        byLocation: {
+          mariefred: {
+            name: "Hälkoppsinlägg Barn - NYBESÖK (Mariefred)",
+            priceSek: 1295,
+          },
+        },
         ifk: {
           priceSek: 1100,
           name: "Hälkoppsinlägg Barn - NYBESÖK (Partner)",
@@ -165,6 +201,12 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
         label: "Återbesök - BARN (ej fyllda 18 år)",
         durationMin: 30,
         priceSek: 1095,
+        byLocation: {
+          mariefred: {
+            name: "Hälkoppsinlägg Barn - ÅTERBESÖK (Mariefred)",
+            priceSek: 1095,
+          },
+        },
         ifk: {
           priceSek: 930,
           name: "Hälkoppsinlägg Barn - ÅTERBESÖK (Partner)",
@@ -188,6 +230,12 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
         label: "PT-pass",
         durationMin: 60,
         priceSek: 990,
+        byLocation: {
+          mariefred: {
+            name: "Personlig Träning (Mariefred)",
+            priceSek: 990,
+          },
+        },
         ifk: {
           priceSek: 840,
           name: "Personlig Träning (Partner)",
@@ -206,6 +254,12 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
         durationMin: 75,
         priceSek: 1000,
         ordinaryPriceSek: 2685,
+        byLocation: {
+          mariefred: {
+            name: "Snabbhetspaketet (Mariefred)",
+            priceSek: 1000,
+          },
+        },
         ifk: {
           priceSek: 1000,
           name: "Snabbhetspaketet (Partner)",
@@ -238,28 +292,55 @@ const partnerServiceName = (
   return `${service.name}${partner.kaddioNameSuffix}`;
 };
 
+const ordinaryPriceAtLocation = (
+  service: BookingService,
+  locationId: LocationId | null,
+): number => {
+  if (locationId && service.byLocation?.[locationId]) {
+    return service.byLocation[locationId].priceSek;
+  }
+  return service.priceSek;
+};
+
 export const resolveServiceForVisitor = (
   service: BookingService,
   partner: PartnerConfig | null,
   locationId: LocationId | null = null,
 ): BookingService => {
-  if (!partner || !service.ifk) return service;
+  if (partner && service.ifk) {
+    const locationPrice =
+      locationId && service.ifk.priceByLocation
+        ? service.ifk.priceByLocation[locationId]
+        : undefined;
+    const partnerPrice = locationPrice ?? service.ifk.priceSek;
+    // Överstruket = ordinarie på samma ort (eller kampanjens ordinaryPriceSek).
+    const comparePrice =
+      service.ordinaryPriceSek ?? ordinaryPriceAtLocation(service, locationId);
 
-  const locationPrice =
-    locationId && service.ifk.priceByLocation
-      ? service.ifk.priceByLocation[locationId]
-      : undefined;
-  const partnerPrice = locationPrice ?? service.ifk.priceSek;
-  // Ordinarie = priset på vanliga sidan (kampanjens ordinaryPriceSek om det finns).
-  const comparePrice = service.ordinaryPriceSek ?? service.priceSek;
+    return {
+      ...service,
+      name: partnerServiceName(service, partner, locationId),
+      priceSek: partnerPrice,
+      ordinaryPriceSek:
+        comparePrice !== partnerPrice ? comparePrice : undefined,
+    };
+  }
 
-  return {
-    ...service,
-    name: partnerServiceName(service, partner, locationId),
-    priceSek: partnerPrice,
-    ordinaryPriceSek:
-      comparePrice !== partnerPrice ? comparePrice : undefined,
-  };
+  if (locationId && service.byLocation?.[locationId]) {
+    const loc = service.byLocation[locationId];
+    return {
+      ...service,
+      name: loc.name,
+      priceSek: loc.priceSek,
+      // Behåll kampanjens ordinaryPriceSek (t.ex. Snabbhetspaketet) om det finns.
+      ordinaryPriceSek:
+        service.ordinaryPriceSek && service.ordinaryPriceSek !== loc.priceSek
+          ? service.ordinaryPriceSek
+          : undefined,
+    };
+  }
+
+  return service;
 };
 
 /**
