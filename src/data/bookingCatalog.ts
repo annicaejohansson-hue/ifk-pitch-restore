@@ -165,7 +165,7 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
         durationMin: 60,
         priceSek: 990,
         ifk: {
-          priceSek: 990,
+          priceSek: 840,
           name: "Personlig Träning (Partner)",
           sharedAcrossPartners: true,
         },
