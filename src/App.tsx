@@ -16,6 +16,7 @@ import SiteHeader from "@/components/SiteHeader";
 import Partner from "@/components/Partner";
 import Boka from "@/pages/Boka";
 import IfkStocksund from "@/pages/IfkStocksund";
+import IfkMariefred from "@/pages/IfkMariefred";
 import EnebybergsIf from "@/pages/EnebybergsIf";
 import FcDjursholm from "@/pages/FcDjursholm";
 import Kontakt from "@/pages/Kontakt";
@@ -75,6 +76,7 @@ const router = createBrowserRouter(
     <Route element={<AppLayout />}>
       <Route path="/" element={<Index />} />
       <Route path="/ifk-stocksund" element={<IfkStocksund />} />
+      <Route path="/ifk-mariefred" element={<IfkMariefred />} />
       <Route path="/enebybergs-if" element={<EnebybergsIf />} />
       <Route path="/fc-djursholm" element={<FcDjursholm />} />
       <Route path="/boka" element={<Boka />} />

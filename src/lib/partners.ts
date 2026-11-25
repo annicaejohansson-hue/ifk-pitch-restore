@@ -1,4 +1,8 @@
-export type PartnerId = "ifk-stocksund" | "enebybergs-if" | "fc-djursholm";
+export type PartnerId =
+  | "ifk-stocksund"
+  | "enebybergs-if"
+  | "fc-djursholm"
+  | "ifk-mariefred";
 
 export type PartnerConfig = {
   id: PartnerId;
@@ -22,6 +26,9 @@ const PARTNER_DANDERYD_KADDIO_CAL_FILTER = "partner-danderyd";
 export const PARTNER_MARIEFRED_KADDIO_BOOKING_URL = `${KADDIO_ORIGIN}/booking/partner-mariefred`;
 export const PARTNER_MARIEFRED_KADDIO_CAL_FILTER = "partner-mariefred";
 
+const IFK_MARIEFRED_LOGO_SRC =
+  "https://az729104.cdn.laget.se/emblem_4818200.png;width=480;height=480;paddingWidth=16;mode=pad;scale=both;anchor=middlecenter";
+
 /** Kalenderfilter för partner + ort (samma tjänstenamn, olika Kaddio-sidor). */
 export function partnerKaddioCalFilter(
   partner: PartnerConfig | null,
@@ -29,6 +36,7 @@ export function partnerKaddioCalFilter(
 ): string {
   if (!partner) return "";
   if (locationId === "mariefred") return PARTNER_MARIEFRED_KADDIO_CAL_FILTER;
+  if (locationId === "danderyd") return PARTNER_DANDERYD_KADDIO_CAL_FILTER;
   return partner.kaddioCalFilter;
 }
 
@@ -39,6 +47,7 @@ export function partnerKaddioBookingUrl(
 ): string | null {
   if (!partner) return null;
   if (locationId === "mariefred") return PARTNER_MARIEFRED_KADDIO_BOOKING_URL;
+  if (locationId === "danderyd") return PARTNER_DANDERYD_KADDIO_BOOKING_URL;
   return partner.kaddioBookingUrl;
 }
 
@@ -82,13 +91,27 @@ export const PARTNERS: Record<PartnerId, PartnerConfig> = {
     kaddioCalFilter: PARTNER_DANDERYD_KADDIO_CAL_FILTER,
     kaddioNameSuffix: " (FC Djursholm)",
   },
+  "ifk-mariefred": {
+    id: "ifk-mariefred",
+    name: "IFK Mariefred",
+    landingPath: "/ifk-mariefred",
+    bookingUrl: "/boka?partner=ifk-mariefred&ort=mariefred",
+    logoSrc: IFK_MARIEFRED_LOGO_SRC,
+    logoAlt: "IFK Mariefred",
+    logoWidth: 480,
+    logoHeight: 480,
+    kaddioBookingUrl: PARTNER_MARIEFRED_KADDIO_BOOKING_URL,
+    kaddioCalFilter: PARTNER_MARIEFRED_KADDIO_CAL_FILTER,
+    kaddioNameSuffix: " (IFK Mariefred)",
+  },
 };
 
 export function isPartnerId(value: string | null | undefined): value is PartnerId {
   return (
     value === "ifk-stocksund" ||
     value === "enebybergs-if" ||
-    value === "fc-djursholm"
+    value === "fc-djursholm" ||
+    value === "ifk-mariefred"
   );
 }
 

@@ -14,6 +14,9 @@ export const ENEBYBERGS_IF_BOOKING_URL = PARTNERS["enebybergs-if"].bookingUrl;
 /** FC Djursholm booking destination — same layout as /boka, partner prices. */
 export const FC_DJURSHOLM_BOOKING_URL = PARTNERS["fc-djursholm"].bookingUrl;
 
+/** IFK Mariefred booking destination — Mariefred partner prices. */
+export const IFK_MARIEFRED_BOOKING_URL = PARTNERS["ifk-mariefred"].bookingUrl;
+
 /** External Kaddio calendar used when an IFK visitor opens booking in a new window. */
 export const IFK_STOCKSUND_KADDIO_URL = PARTNERS["ifk-stocksund"].kaddioBookingUrl;
 
