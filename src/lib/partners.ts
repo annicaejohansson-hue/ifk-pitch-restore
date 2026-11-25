@@ -15,9 +15,9 @@ export type PartnerConfig = {
 };
 
 const KADDIO_ORIGIN = "https://caseloidrottsmedicin.kaddio.com";
-/** Gemensam Kaddio-bokningssida för alla partners med banner. */
-const PARTNER_KADDIO_BOOKING_URL = `${KADDIO_ORIGIN}/booking/partner`;
-const PARTNER_KADDIO_CAL_FILTER = "partner";
+/** Kaddio-bokningssida för partners i Danderyd (IFK Stocksund, Enebyberg, FC Djursholm, …). */
+const PARTNER_DANDERYD_KADDIO_BOOKING_URL = `${KADDIO_ORIGIN}/booking/partner-danderyd`;
+const PARTNER_DANDERYD_KADDIO_CAL_FILTER = "partner-danderyd";
 
 export const PARTNERS: Record<PartnerId, PartnerConfig> = {
   "ifk-stocksund": {
@@ -29,8 +29,8 @@ export const PARTNERS: Record<PartnerId, PartnerConfig> = {
     logoAlt: "IFK Stocksund",
     logoWidth: 350,
     logoHeight: 438,
-    kaddioBookingUrl: PARTNER_KADDIO_BOOKING_URL,
-    kaddioCalFilter: PARTNER_KADDIO_CAL_FILTER,
+    kaddioBookingUrl: PARTNER_DANDERYD_KADDIO_BOOKING_URL,
+    kaddioCalFilter: PARTNER_DANDERYD_KADDIO_CAL_FILTER,
     kaddioNameSuffix: " (IFK Stocksund)",
   },
   "enebybergs-if": {
@@ -42,8 +42,8 @@ export const PARTNERS: Record<PartnerId, PartnerConfig> = {
     logoAlt: "Enebybergs IF",
     logoWidth: 148,
     logoHeight: 148,
-    kaddioBookingUrl: PARTNER_KADDIO_BOOKING_URL,
-    kaddioCalFilter: PARTNER_KADDIO_CAL_FILTER,
+    kaddioBookingUrl: PARTNER_DANDERYD_KADDIO_BOOKING_URL,
+    kaddioCalFilter: PARTNER_DANDERYD_KADDIO_CAL_FILTER,
     kaddioNameSuffix: " (Enebybergs IF)",
   },
   "fc-djursholm": {
@@ -55,8 +55,8 @@ export const PARTNERS: Record<PartnerId, PartnerConfig> = {
     logoAlt: "FC Djursholm",
     logoWidth: 509,
     logoHeight: 560,
-    kaddioBookingUrl: PARTNER_KADDIO_BOOKING_URL,
-    kaddioCalFilter: PARTNER_KADDIO_CAL_FILTER,
+    kaddioBookingUrl: PARTNER_DANDERYD_KADDIO_BOOKING_URL,
+    kaddioCalFilter: PARTNER_DANDERYD_KADDIO_CAL_FILTER,
     kaddioNameSuffix: " (FC Djursholm)",
   },
 };
