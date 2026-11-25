@@ -47,10 +47,9 @@ export type BookingCategory = {
   packages?: BookingService[];
 };
 
-const SMARTA_NYBESOK_NAME =
-  "Bedömning och behandling av smärta och skador - NYBESÖK";
-const SMARTA_ATERBESOK_NAME =
-  "Bedömning och behandling av smärta och skador - ÅTERBESÖK";
+/** Kaddio-namn för vanlig bokning (utan partnerbanner). */
+const SMARTA_NYBESOK_NAME = "Smärta och skador - NYBESÖK";
+const SMARTA_ATERBESOK_NAME = "Smärta och skador - ÅTERBESÖK";
 /** Kaddio-namn för partners med banner (IFK Stocksund, Enebyberg, FC Djursholm, …). */
 const SMARTA_NYBESOK_PARTNER_NAME = "Smärta och skador - NYBESÖK (Partner)";
 const SMARTA_ATERBESOK_PARTNER_NAME = "Smärta och skador - ÅTERBESÖK (Partner)";
@@ -161,7 +160,7 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
     services: [
       {
         id: "pt-pass",
-        name: "Personlig Träning (PT-pass)",
+        name: "Personlig Träning",
         label: "PT-pass",
         durationMin: 60,
         priceSek: 990,
