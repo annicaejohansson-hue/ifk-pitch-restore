@@ -24,7 +24,7 @@ export type BookingService = {
    * Om `name` saknas visas bara partnerpriset; bokningen går i ordinarie Kaddio-kalender.
    * Med `sharedAcrossPartners: true` används samma Kaddio-typ för alla partnerföreningar
    * (namn som slutar med " (Partner)").
-   * `priceByLocation` åsidosätter partnerpriset per ort (t.ex. Mariefred).
+   * `priceByLocation` / `nameByLocation` åsidosätter per ort (t.ex. Mariefred).
    */
   ifk?: {
     priceSek: number;
@@ -32,6 +32,7 @@ export type BookingService = {
     name?: string;
     sharedAcrossPartners?: boolean;
     priceByLocation?: Partial<Record<LocationId, number>>;
+    nameByLocation?: Partial<Record<LocationId, string>>;
   };
 };
 
@@ -52,9 +53,14 @@ export type BookingCategory = {
 /** Kaddio-namn för vanlig bokning (utan partnerbanner). */
 const SMARTA_NYBESOK_NAME = "Smärta och skador - NYBESÖK";
 const SMARTA_ATERBESOK_NAME = "Smärta och skador - ÅTERBESÖK";
-/** Kaddio-namn för partners med banner (IFK Stocksund, Enebyberg, FC Djursholm, …). */
+/** Kaddio-namn för partners i Danderyd (IFK Stocksund, Enebyberg, FC Djursholm, …). */
 const SMARTA_NYBESOK_PARTNER_NAME = "Smärta och skador - NYBESÖK (Partner)";
 const SMARTA_ATERBESOK_PARTNER_NAME = "Smärta och skador - ÅTERBESÖK (Partner)";
+/** Kaddio-namn för partners i Mariefred. */
+const SMARTA_NYBESOK_PARTNER_MF_NAME =
+  "Smärta och skador - NYBESÖK (Partner Mariefred)";
+const SMARTA_ATERBESOK_PARTNER_MF_NAME =
+  "Smärta och skador - ÅTERBESÖK (Partner Mariefred)";
 export const SNABBHET_BOOKING_NOTICE =
   "Du bokar tid för första besöket. Återtestet görs cirka 8 veckor senare.";
 
@@ -75,6 +81,7 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
           name: SMARTA_NYBESOK_PARTNER_NAME,
           sharedAcrossPartners: true,
           priceByLocation: { mariefred: 600 },
+          nameByLocation: { mariefred: SMARTA_NYBESOK_PARTNER_MF_NAME },
         },
         description:
           "Nybesök bokas när du kommer första gången för ett besvär. Tjänsten är för dig som har ont eller är skadad och vill få hjälp med bedömning/diagnos och individuellt anpassade åtgärder för att minska besvären och hjälpa dig återgå till idrott, arbete eller vardag. Besöket kan innehålla behandling, rehabiliteringsövningar, träningsupplägg och råd om belastning.",
@@ -90,6 +97,7 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
           name: SMARTA_ATERBESOK_PARTNER_NAME,
           sharedAcrossPartners: true,
           priceByLocation: { mariefred: 450 },
+          nameByLocation: { mariefred: SMARTA_ATERBESOK_PARTNER_MF_NAME },
         },
         description:
           "Återbesök bokas när du redan har undersökts hos Caselo Idrottsmedicin för besväret du söker för.",
@@ -110,6 +118,9 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
           priceSek: 1270,
           name: "Hälkoppsinlägg Vuxen - NYBESÖK (Partner)",
           sharedAcrossPartners: true,
+          nameByLocation: {
+            mariefred: "Hälkoppsinlägg Vuxen - NYBESÖK (Partner Mariefred)",
+          },
         },
         description:
           "För dig som ska göra hälkoppsinlägg för första gången. Besöket omfattar undersökning och tillverkning av personligt utformade hälkoppsinlägg. Inlägget formas efter din häl för att ge stöd, minska belastningen på hälen, dämpa smärta och göra det lättare att gå, springa och vara aktiv.",
@@ -124,6 +135,9 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
           priceSek: 1100,
           name: "Hälkoppsinlägg Vuxen - ÅTERBESÖK (Partner)",
           sharedAcrossPartners: true,
+          nameByLocation: {
+            mariefred: "Hälkoppsinlägg Vuxen - ÅTERBESÖK (Partner Mariefred)",
+          },
         },
         description:
           "Tillverkning av fler personligt utformade hälkoppsinlägg. Bokas av dig som tidigare genomfört ett nybesök.",
@@ -138,6 +152,9 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
           priceSek: 1100,
           name: "Hälkoppsinlägg Barn - NYBESÖK (Partner)",
           sharedAcrossPartners: true,
+          nameByLocation: {
+            mariefred: "Hälkoppsinlägg Barn - NYBESÖK (Partner Mariefred)",
+          },
         },
         description:
           "För dig som ska göra hälkoppsinlägg för första gången. Besöket omfattar undersökning och tillverkning av personligt utformade hälkoppsinlägg. Inlägget formas efter din häl för att ge stöd, minska belastningen på hälen, dämpa smärta och göra det lättare att gå, springa och vara aktiv.",
@@ -152,6 +169,9 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
           priceSek: 930,
           name: "Hälkoppsinlägg Barn - ÅTERBESÖK (Partner)",
           sharedAcrossPartners: true,
+          nameByLocation: {
+            mariefred: "Hälkoppsinlägg Barn - ÅTERBESÖK (Partner Mariefred)",
+          },
         },
         description:
           "Tillverkning av fler personligt utformade hälkoppsinlägg. Bokas av dig som tidigare genomfört ett nybesök.",
@@ -172,6 +192,9 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
           priceSek: 840,
           name: "Personlig Träning (Partner)",
           sharedAcrossPartners: true,
+          nameByLocation: {
+            mariefred: "Personlig Träning (Partner Mariefred)",
+          },
         },
         description:
           "Individuellt träningspass à 60 minuter med personlig återkoppling och övningar att fortsätta med. Passet anpassas efter dig, till exempel fotbollsfys, löpteknik och snabbhet eller fys för din idrott eller motionsform.",
@@ -187,6 +210,9 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
           priceSek: 1000,
           name: "Snabbhetspaketet (Partner)",
           sharedAcrossPartners: true,
+          nameByLocation: {
+            mariefred: "Snabbhetspaketet (Partner Mariefred)",
+          },
         },
         description: `Du testar din snabbhet med laserportar på 10, 20 och 30 meter, får ett träningsprogram anpassat efter dig och kommer tillbaka efter cirka 8 veckor för ett uppföljande test. Första besöket tar ca 75 min och återbesöket ca 45 min.\n\n${SNABBHET_BOOKING_NOTICE}`,
         bookingNotice: SNABBHET_BOOKING_NOTICE,
@@ -198,8 +224,14 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
 const partnerServiceName = (
   service: BookingService,
   partner: PartnerConfig,
+  locationId: LocationId | null,
 ): string => {
   if (!service.ifk?.name) return service.name;
+  const locationName =
+    locationId && service.ifk.nameByLocation
+      ? service.ifk.nameByLocation[locationId]
+      : undefined;
+  if (locationName) return locationName;
   if (service.ifk.sharedAcrossPartners) return service.ifk.name;
   if (partner.id === "ifk-stocksund") return service.ifk.name;
   // Legacy fallback om en tjänst ännu inte har delat Partner-namn i Kaddio.
@@ -218,11 +250,12 @@ export const resolveServiceForVisitor = (
       ? service.ifk.priceByLocation[locationId]
       : undefined;
   const partnerPrice = locationPrice ?? service.ifk.priceSek;
+  // Ordinarie = priset på vanliga sidan (kampanjens ordinaryPriceSek om det finns).
   const comparePrice = service.ordinaryPriceSek ?? service.priceSek;
 
   return {
     ...service,
-    name: partnerServiceName(service, partner),
+    name: partnerServiceName(service, partner, locationId),
     priceSek: partnerPrice,
     ordinaryPriceSek:
       comparePrice !== partnerPrice ? comparePrice : undefined,
