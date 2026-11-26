@@ -847,17 +847,27 @@ const Boka = () => {
                   ) : (
                     <div className="rounded-xl border border-border/70 bg-muted/40 px-4 py-5 sm:px-5 sm:py-6">
                       <p className="text-base font-semibold text-foreground md:text-lg">
-                        Onlinebokning för {activeLocation?.name} är på väg.
+                        Kalendern kunde inte laddas just nu.
                       </p>
                       <p className="mt-2 text-sm leading-relaxed text-muted-foreground md:text-base">
-                        Just nu syns inga tider här (vi blandar inte ihop med
-                        Danderyd). Mejla eller ring så bokar vi in dig på en
-                        torsdag i Mariefred.
+                        Prova att öppna bokningssidan i ett nytt fönster, eller
+                        mejla/ring så hjälper vi dig boka i{" "}
+                        {activeLocation?.name}.
                       </p>
                       <ul className="mt-4 space-y-2 text-sm md:text-base">
                         <li>
                           <a
-                            href={`mailto:${CASELO_EMAIL}?subject=${encodeURIComponent(`Bokning Mariefred – ${selectedDisplayName ?? "tid"}`)}`}
+                            href={fallbackHref}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="font-medium text-primary underline underline-offset-4"
+                          >
+                            Öppna bokningssidan i nytt fönster
+                          </a>
+                        </li>
+                        <li>
+                          <a
+                            href={`mailto:${CASELO_EMAIL}?subject=${encodeURIComponent(`Bokning ${activeLocation?.name ?? ""} – ${selectedDisplayName ?? "tid"}`)}`}
                             className="font-medium text-primary underline underline-offset-4"
                           >
                             {CASELO_EMAIL}
