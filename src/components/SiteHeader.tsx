@@ -26,7 +26,10 @@ const SiteHeader = () => {
 
   const desktopLinkClass = (active: boolean) =>
     [
-      "inline-flex min-h-10 shrink-0 items-center whitespace-nowrap text-sm font-light tracking-wider transition-colors hover:text-primary sm:min-h-0 sm:text-base md:text-base lg:text-lg",
+      "inline-flex min-h-10 shrink-0 items-center whitespace-nowrap font-light transition-colors hover:text-primary sm:min-h-0",
+      isPartner
+        ? "text-sm tracking-wide lg:text-[15px]"
+        : "text-sm tracking-wider md:text-sm lg:text-[15px]",
       active ? "text-primary" : "text-foreground/80",
     ].join(" ");
 
@@ -38,9 +41,42 @@ const SiteHeader = () => {
 
   const showHeaderBooking = location.pathname !== "/boka";
 
+  const bookingButton = (
+    <Button
+      asChild={showHeaderBooking}
+      size="sm"
+      variant="secondary"
+      tabIndex={showHeaderBooking ? undefined : -1}
+      aria-hidden={showHeaderBooking ? undefined : true}
+      className={[
+        "min-h-11 shrink-0 px-4 text-sm shadow-[var(--shadow-button)] transition-[var(--transition-smooth)] hover:shadow-[var(--shadow-hover)]",
+        showHeaderBooking ? "" : "invisible pointer-events-none",
+      ].join(" ")}
+    >
+      {showHeaderBooking ? (
+        <BookingLink aria-label="Gå till bokningssidan">
+          <Calendar className="h-4 w-4" aria-hidden="true" />
+          Boka tid
+        </BookingLink>
+      ) : (
+        <>
+          <Calendar className="h-4 w-4" aria-hidden="true" />
+          Boka tid
+        </>
+      )}
+    </Button>
+  );
+
   return (
     <header className="no-print overflow-x-hidden border-b-2 border-primary bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container min-w-0 px-8 md:px-4 py-2.5 sm:py-3 md:flex md:min-h-28 md:items-center md:gap-4 md:py-2 lg:gap-6">
+      <div
+        className={[
+          "container min-w-0 px-8 md:px-4 py-2.5 sm:py-3 md:flex md:min-h-28 md:items-center md:py-2",
+          isPartner
+            ? "md:flex-wrap md:gap-2 lg:flex-nowrap lg:gap-5"
+            : "md:gap-4 lg:gap-6",
+        ].join(" ")}
+      >
         <div className="flex items-center justify-between gap-3 md:contents">
           <Link
             to="/"
@@ -56,49 +92,57 @@ const SiteHeader = () => {
             />
           </Link>
 
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button
-                type="button"
-                className="inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-md border border-border/80 text-foreground hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 md:hidden"
-                aria-label="Öppna meny"
+          <div className="md:hidden">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  type="button"
+                  className="inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-md border border-border/80 text-foreground hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                  aria-label="Öppna meny"
+                >
+                  <Menu className="h-6 w-6" aria-hidden="true" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                align="end"
+                sideOffset={6}
+                className="w-56 p-1.5"
               >
-                <Menu className="h-6 w-6" aria-hidden="true" />
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              align="end"
-              sideOffset={6}
-              className="w-56 p-1.5"
-            >
-              {NAV_LINKS.map((link) => (
-                <DropdownMenuItem key={link.to} asChild>
-                  <Link
-                    to={link.to}
-                    className={mobileLinkClass(
-                      isActive(location.pathname, link.to, link.match),
-                    )}
-                  >
-                    {link.label}
-                  </Link>
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+                {NAV_LINKS.map((link) => (
+                  <DropdownMenuItem key={link.to} asChild>
+                    <Link
+                      to={link.to}
+                      className={mobileLinkClass(
+                        isActive(location.pathname, link.to, link.match),
+                      )}
+                    >
+                      {link.label}
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
 
-        {/* Same flex-1 slot with or without partner so nav stays put */}
-        <div
-          className={[
-            "min-w-0 flex-1 md:flex md:items-center md:justify-start md:overflow-hidden md:pl-2 lg:pl-4",
-            isPartner ? "mt-2 md:mt-0" : "hidden md:block",
-          ].join(" ")}
-        >
-          {isPartner ? <IfkStocksundBanner /> : null}
-        </div>
+        {isPartner ? (
+          <>
+            <div className="hidden flex-1 md:block lg:hidden" aria-hidden="true" />
+            <div className="mt-2 w-full min-w-0 md:order-last md:mt-2 lg:order-none lg:mt-0 lg:w-auto lg:shrink-0 lg:pl-3 xl:pl-5">
+              <IfkStocksundBanner />
+            </div>
+          </>
+        ) : (
+          <div className="hidden flex-1 md:block" aria-hidden="true" />
+        )}
 
         <nav
-          className="hidden shrink-0 items-center gap-x-4 md:flex lg:gap-x-10 xl:gap-x-14"
+          className={[
+            "hidden items-center md:flex",
+            isPartner
+              ? "min-w-0 shrink-0 gap-x-4 lg:min-w-0 lg:flex-1 lg:justify-between lg:gap-x-4 lg:pl-6 xl:pl-8"
+              : "shrink-0 gap-x-4 lg:gap-x-8 xl:gap-x-10",
+          ].join(" ")}
           aria-label="Huvudmeny"
         >
           {NAV_LINKS.map((link) => (
@@ -112,30 +156,14 @@ const SiteHeader = () => {
               {link.label}
             </Link>
           ))}
-          <Button
-            asChild={showHeaderBooking}
-            size="sm"
-            variant="secondary"
-            tabIndex={showHeaderBooking ? undefined : -1}
-            aria-hidden={showHeaderBooking ? undefined : true}
-            className={[
-              "min-h-11 shrink-0 px-4 text-sm shadow-[var(--shadow-button)] transition-[var(--transition-smooth)] hover:shadow-[var(--shadow-hover)]",
-              showHeaderBooking ? "" : "invisible pointer-events-none",
-            ].join(" ")}
-          >
-            {showHeaderBooking ? (
-              <BookingLink aria-label="Gå till bokningssidan">
-                <Calendar className="h-4 w-4" aria-hidden="true" />
-                Boka tid
-              </BookingLink>
-            ) : (
-              <>
-                <Calendar className="h-4 w-4" aria-hidden="true" />
-                Boka tid
-              </>
-            )}
-          </Button>
+          {isPartner ? bookingButton : null}
         </nav>
+
+        {!isPartner ? (
+          <div className="hidden shrink-0 md:ml-4 md:block lg:ml-6 xl:ml-8">
+            {bookingButton}
+          </div>
+        ) : null}
       </div>
     </header>
   );

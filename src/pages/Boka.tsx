@@ -651,7 +651,7 @@ const Boka = () => {
           </p>
           {showLocationStep ? (
             <StepLabel step={1}>
-              Börja med att välja mottagning. Därefter väljer du tjänst och tid.
+              Börja med att välja mottagning.
             </StepLabel>
           ) : (
             <div className="space-y-3">
