@@ -33,7 +33,7 @@ const Services = () => {
                     alt={service.cardTitle}
                     className={[
                       "h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]",
-                      service.slug === "halkoppar-barn"
+                      service.slug === "halkoppar"
                         ? "object-[center_28%]"
                         : "",
                     ].join(" ")}

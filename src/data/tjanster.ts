@@ -13,18 +13,19 @@ export const PERSONAL_TRAINING_PATH = OFFER_PATHS.friskvard;
 /** Tidigare tjänstesida med Steg 1–3; omdirigeras till PERSONAL_TRAINING_PATH. */
 export const PERFORMANCE_LEGACY_PATH = "/tjanster/fysisk-prestation";
 
-export const HEEL_CUP_SERVICE_PATH = "/tjanster/halkoppar-barn";
+export const HEEL_CUP_SERVICE_PATH = "/tjanster/halkoppar";
 
 /** Former public URLs for the heel-cup service – redirect to HEEL_CUP_SERVICE_PATH. */
 export const HEEL_CUP_LEGACY_PATHS = [
   "/halkoppar-barn",
+  "/tjanster/halkoppar-barn",
   "/tjanster/halkoppsinlagg",
   "/tjanster/halkoppsinlag",
 ] as const;
 
 export type ServiceSlug =
   | "smarta-och-skador"
-  | "halkoppar-barn"
+  | "halkoppar"
   | "personlig-traning";
 
 export type ServiceSection = {
@@ -95,7 +96,7 @@ export const services: ServiceContent[] = [
     ],
   },
   {
-    slug: "halkoppar-barn",
+    slug: "halkoppar",
     path: HEEL_CUP_SERVICE_PATH,
     title: "Hälkoppsinlägg för barn och vuxna med ont i hälen",
     titleLines: [
@@ -146,5 +147,9 @@ export function getServiceBySlug(slug: string): ServiceContent | undefined {
 }
 
 export function isLegacyHeelCupSlug(slug: string | undefined): boolean {
-  return slug === "halkoppsinlagg" || slug === "halkoppsinlag";
+  return (
+    slug === "halkoppar-barn" ||
+    slug === "halkoppsinlagg" ||
+    slug === "halkoppsinlag"
+  );
 }

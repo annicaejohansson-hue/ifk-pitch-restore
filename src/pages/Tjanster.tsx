@@ -47,7 +47,7 @@ const Tjanster = () => {
                     alt={service.imageAlt}
                     className={[
                       "h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]",
-                      service.slug === "halkoppar-barn"
+                      service.slug === "halkoppar"
                         ? "object-[center_28%]"
                         : "",
                     ].join(" ")}
@@ -60,7 +60,7 @@ const Tjanster = () => {
                       <span
                         key={line}
                         className={
-                          service.slug === "halkoppar-barn"
+                          service.slug === "halkoppar"
                             ? "block"
                             : "block md:whitespace-nowrap"
                         }

@@ -83,7 +83,7 @@ const router = createBrowserRouter(
       <Route path="/parsian-if" element={<ParsianIf />} />
       <Route path="/boka" element={<Boka />} />
       <Route path="/tjanster" element={<Tjanster />} />
-      <Route path="/tjanster/halkoppar-barn" element={<HalkopparBarn />} />
+      <Route path={HEEL_CUP_SERVICE_PATH} element={<HalkopparBarn />} />
       {HEEL_CUP_LEGACY_PATHS.map((from) => (
         <Route
           key={from}
