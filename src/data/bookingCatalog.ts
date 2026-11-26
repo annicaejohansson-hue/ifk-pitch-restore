@@ -56,9 +56,9 @@ export type BookingCategory = {
   packages?: BookingService[];
 };
 
-/** Kaddio-namn för vanlig bokning (utan partnerbanner). */
-const SMARTA_NYBESOK_NAME = "Smärta och skador - NYBESÖK";
-const SMARTA_ATERBESOK_NAME = "Smärta och skador - ÅTERBESÖK";
+/** Kaddio-namn för vanlig bokning i Danderyd (utan partnerbanner). */
+const SMARTA_NYBESOK_NAME = "Smärta och skador - NYBESÖK (Danderyd)";
+const SMARTA_ATERBESOK_NAME = "Smärta och skador - ÅTERBESÖK (Danderyd)";
 /** Kaddio-namn för partners i Danderyd (IFK Stocksund, Enebyberg, FC Djursholm, Parsian IF, …). */
 const SMARTA_NYBESOK_PARTNER_NAME =
   "Smärta och skador - NYBESÖK (Partner Danderyd)";
@@ -130,7 +130,7 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
     services: [
       {
         id: "halkopp-vuxen-nybesok",
-        name: "Hälkoppsinlägg Vuxen - NYBESÖK",
+        name: "Hälkoppsinlägg Vuxen - NYBESÖK (Danderyd)",
         label: "Nybesök - VUXEN (fyllda 18 år eller äldre)",
         durationMin: 40,
         priceSek: 1495,
@@ -153,7 +153,7 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
       },
       {
         id: "halkopp-vuxen-aterbesok",
-        name: "Hälkoppsinlägg Vuxen - ÅTERBESÖK",
+        name: "Hälkoppsinlägg Vuxen - ÅTERBESÖK (Danderyd)",
         label: "Återbesök - VUXEN (fyllda 18 år eller äldre)",
         durationMin: 30,
         priceSek: 1295,
@@ -176,7 +176,7 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
       },
       {
         id: "halkopp-barn-nybesok",
-        name: "Hälkoppsinlägg Barn - NYBESÖK",
+        name: "Hälkoppsinlägg Barn - NYBESÖK (Danderyd)",
         label: "Nybesök - BARN (ej fyllda 18 år)",
         durationMin: 40,
         priceSek: 1295,
@@ -199,7 +199,7 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
       },
       {
         id: "halkopp-barn-aterbesok",
-        name: "Hälkoppsinlägg Barn - ÅTERBESÖK",
+        name: "Hälkoppsinlägg Barn - ÅTERBESÖK (Danderyd)",
         label: "Återbesök - BARN (ej fyllda 18 år)",
         durationMin: 30,
         priceSek: 1095,
@@ -228,7 +228,7 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
     services: [
       {
         id: "pt-pass",
-        name: "Personlig Träning",
+        name: "Personlig Träning (Danderyd)",
         label: "PT-pass",
         durationMin: 60,
         priceSek: 990,
@@ -251,7 +251,7 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
       },
       {
         id: "snabbhetspaketet",
-        name: "Snabbhetspaketet",
+        name: "Snabbhetspaketet (Danderyd)",
         label: "Snabbhetspaketet",
         durationMin: 75,
         priceSek: 1000,
