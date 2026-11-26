@@ -641,14 +641,11 @@ const Boka = () => {
         />
       </Helmet>
 
-      <section className="bg-gradient-to-b from-primary/10 to-background pt-5 pb-3 md:pt-6 md:pb-3">
+      <section className="bg-gradient-to-b from-primary/10 to-background pt-8 pb-3 md:pt-10 md:pb-3">
         <div className="container mx-auto max-w-7xl px-8 md:px-4">
-          <h1 className="mb-2 break-words text-4xl font-bold tracking-tight text-foreground sm:text-4xl md:mb-3 md:text-5xl">
+          <h1 className="mb-3 break-words text-4xl font-bold tracking-tight text-foreground sm:text-4xl md:mb-4 md:text-5xl">
             Boka tid
           </h1>
-          <p className="mb-3 text-base text-muted-foreground md:mb-4 md:text-lg">
-            Välkommen!
-          </p>
           {showLocationStep ? (
             <StepLabel step={1}>
               Börja med att välja mottagning.
