@@ -41,6 +41,12 @@ import {
   PERFORMANCE_LEGACY_PATH,
   PERSONAL_TRAINING_PATH,
 } from "@/data/tjanster";
+import {
+  FORENING_LEGACY_REDIRECTS,
+  SAMARBETE_FORENING_PATH,
+  SAMARBETE_PATH,
+  SAMARBETE_LAG_PATH,
+} from "@/data/forening";
 import { VisitorProvider } from "@/context/VisitorContext";
 import Analytics from "@/components/Analytics";
 import ScrollToTop from "@/components/ScrollToTop";
@@ -99,13 +105,16 @@ const router = createBrowserRouter(
       <Route path="/om" element={<Om />} />
       <Route path="/kontakt" element={<Kontakt />} />
       <Route path={PRIVACY_PATH} element={<Personuppgifter />} />
-      <Route path="/forening" element={<Forening />} />
-      <Route path="/forening/klubb" element={<ForeningKlubb />} />
-      <Route path="/forening/tranare" element={<ForeningTranare />} />
-      <Route
-        path="/forening/spelare"
-        element={<PermanentRedirect to="/boka" />}
-      />
+      <Route path={SAMARBETE_PATH} element={<Forening />} />
+      <Route path={SAMARBETE_FORENING_PATH} element={<ForeningKlubb />} />
+      <Route path={SAMARBETE_LAG_PATH} element={<ForeningTranare />} />
+      {FORENING_LEGACY_REDIRECTS.map(({ from, to }) => (
+        <Route
+          key={from}
+          path={from}
+          element={<PermanentRedirect to={to} />}
+        />
+      ))}
       <Route path="/erbjudanden/snabbhet" element={<SnabbhetRedirect />} />
       <Route path={PERSONAL_TRAINING_PATH} element={<ErbjudandenFriskvard />} />
       <Route path="/erbjudanden/friskvard" element={<PersonalTrainingRedirect />} />

@@ -60,7 +60,7 @@ export const LOCATIONS: Record<LocationId, LocationConfig> = {
       "https://www.google.com/maps/place/Caselo+Idrottsmedicin/@59.4142713,18.0431145,17z/data=!4m6!3m5!1s0x465f9d3c9078edf1:0xfe98c6b735b513c4!8m2!3d59.4142713!4d18.0431145!16s%2Fg%2F11zfbvfv96",
     placeIntro: "",
     placeHighlights: [
-      "Fullstor fotbollsplan 25 meter från kliniken som möjliggör rehab och testning inför återgång till träning och tävling, till exempel maxlöpningar och idrottsspecifika moment",
+      "Fullstor fotbollsplan 25 meter från kliniken som möjliggör verklighetsnära rehab och testning inför återgång till träning och tävling, till exempel maxlöpningar och idrottsspecifika moment",
     ],
     kaddioCalFilter: "danderyd",
     bookingEnabled: true,
@@ -78,7 +78,7 @@ export const LOCATIONS: Record<LocationId, LocationConfig> = {
     placeIntro: "",
     placeHighlights: [
       "Gym för styrketräning, konditionsträning och funktionell träning. Som kund hos Henrik får du möjlighet att komplettera din rehabilitering med en månad gratis träning på BalanZe.",
-      "Fullstor fotbollsplan 2 min med bil från kliniken som möjliggör rehab och testning inför återgång till träning och tävling, till exempel maxlöpningar och idrottsspecifika moment",
+      "Fullstor fotbollsplan 2 min med bil från kliniken som möjliggör verklighetsnära rehab och testning inför återgång till träning och tävling, till exempel maxlöpningar och idrottsspecifika moment",
     ],
     kaddioCalFilter: mariefredFilter,
     bookingEnabled: true,

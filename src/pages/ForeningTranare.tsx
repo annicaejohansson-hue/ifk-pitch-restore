@@ -14,6 +14,7 @@ import PageIntro from "@/components/PageIntro";
 import ProcessSteps from "@/components/forening/ProcessSteps";
 import AudienceSwitch from "@/components/forening/AudienceSwitch";
 import SharePlayerLink from "@/components/forening/SharePlayerLink";
+import { SAMARBETE_FORENING_PATH } from "@/data/forening";
 import henrikFoto from "@/assets/IMG_9111-guidance.jpg";
 import rehabFoto from "@/assets/IMG_9118.jpg";
 import { useVisitor } from "@/context/VisitorContext";
@@ -37,25 +38,25 @@ const sectionX = "container px-8 md:px-4";
 
 const coachSteps = [
   {
-    title: "Hänvisa spelaren",
-    text: "Tipsa spelaren eller vårdnadshavaren om Caselo. De bokar och betalar själva – ingen kostnad för laget eller föreningen, och inget avtal krävs. Mottagning på Danderyd Arena.",
+    title: "Hänvisa medlemmen",
+    text: "Tipsa medlemmen eller vårdnadshavaren om Caselo. De bokar och betalar själva – ingen kostnad för laget eller föreningen, och inget avtal krävs.",
   },
   {
     title: "Bedömning och rehab",
-    text: "Henrik bedömer besvären och tar fram en plan för rehab och återgång till fotbollen – anpassad efter vad spelaren behöver kunna på planen.",
+    text: "Henrik bedömer besvären och tar fram en plan för rehab och återgång – anpassad efter vad medlemmen behöver kunna göra på träning och match/tävling.",
   },
   {
     title: "Återkoppling till tränare",
-    text: "Med spelarens eller vårdnadshavarens samtycke ger Henrik dig som tränare tydliga råd om hur spelaren kan delta i och stegra sin träning, och tryggt återgå till match.",
+    text: "Med medlemmens eller vårdnadshavarens samtycke ger Henrik dig som tränare tydliga råd om hur medlemmen kan delta i och stegra sin träning, och tryggt återgå till tävling/match.",
   },
 ];
 
 const trainingHelp = [
-  "Om spelaren kan delta i träningen",
+  "Om det går att träna",
   "Vilka moment som bör undvikas eller anpassas",
-  "Vad spelaren kan göra istället",
+  "Vad man kan göra istället",
   "När belastningen kan ökas",
-  "När spelaren närmar sig full träning och match",
+  "När det är möjligt att återgå till full träning och match/tävling",
 ];
 
 const ForeningTranare = () => {
@@ -71,7 +72,7 @@ const ForeningTranare = () => {
         <title>För lag – Caselo Idrottsmedicin</title>
         <meta
           name="description"
-          content="När en spelare skadas: kan hen träna, hur anpassas träningen, när är match okej? Hänvisa till leg. fysioterapeut Henrik Nilsson på Caselo Idrottsmedicin."
+          content="När en medlem skadas: kan hen träna, hur anpassas träningen, när är match okej? Hänvisa till leg. fysioterapeut Henrik Nilsson på Caselo Idrottsmedicin."
         />
       </Helmet>
 
@@ -79,7 +80,7 @@ const ForeningTranare = () => {
         <div className="mx-auto w-full min-w-0 max-w-5xl">
           <div className="mb-4 flex justify-end md:mb-5">
             <AudienceSwitch
-              to="/forening/klubb"
+              to={SAMARBETE_FORENING_PATH}
               label="Företräder du en förening? →"
             />
           </div>
@@ -88,18 +89,18 @@ const ForeningTranare = () => {
               <PageIntro
                 className="min-w-0 max-md:order-1"
                 eyebrow="För lag"
-                title="En kontaktväg när en spelare får ont eller skadar sig"
-                mobileTitle={"En kontaktväg när en spelare skadar\u00a0sig"}
+                title="En kontaktväg när en i laget får ont eller skadar sig"
+                mobileTitle={"En kontaktväg när en i laget skadar\u00a0sig"}
               >
                 <p>
-                  När en spelare skadar sig kan det vara svårt för dig som
-                  tränare eller ledare att veta: Kan spelaren träna? Hur bör
-                  träningen anpassas? När är det okej att spela match igen?
+                  Vid skada eller smärta kan det vara svårt för dig som tränare
+                  eller ledare att veta: Kan hen träna? Hur bör träningen
+                  anpassas? När är det okej att spela match igen?
                 </p>
                 <p>
-                  Hänvisa spelaren till leg. fysioterapeut Henrik Nilsson för
-                  bedömning och rehabilitering – och få vägledning kring
-                  återgången till träning och match.
+                  Hänvisa till leg. fysioterapeut Henrik Nilsson för bedömning
+                  och rehabilitering – och få vägledning kring återgången till
+                  träning och match/tävling.
                 </p>
               </PageIntro>
 
@@ -117,7 +118,7 @@ const ForeningTranare = () => {
                 <div className="aspect-[4/5] w-full md:aspect-[5/4]">
                   <img
                     src={rehabFoto}
-                    alt="Henrik Nilsson undersöker en fotbollsspelare på planen vid Danderyd Arena"
+                    alt="Henrik Nilsson undersöker en medlem på planen vid Danderyd Arena"
                     className="h-full w-full object-cover object-[42%_38%] md:object-[40%_42%]"
                     width={1200}
                     height={900}
@@ -150,7 +151,7 @@ const ForeningTranare = () => {
         <div className={sectionX}>
           <div className="mx-auto max-w-5xl">
             <h2 className="mb-3 text-balance text-2xl font-bold tracking-tight text-foreground sm:text-3xl md:text-4xl">
-              Fysioterapi med fotbollen som utgångspunkt
+              Fysioterapi med idrotten som utgångspunkt
             </h2>
             <p className="mb-3 max-w-3xl text-base leading-relaxed text-muted-foreground md:text-lg">
               Henrik Nilsson är legitimerad fysioterapeut med 10 års erfarenhet
@@ -158,18 +159,17 @@ const ForeningTranare = () => {
               tränare i IFK Stocksunds herrlag i Division 1.
             </p>
             <p className="mb-3 max-w-3xl text-base leading-relaxed text-muted-foreground md:text-lg">
-              Mottagningen ligger 25 meter från en fullstor fotbollsplan, vilket
-              gör att bedömning och rehab kan ske i den miljö spelaren ska tillbaka
-              till. Rehabiliteringen utgår från vad spelaren behöver kunna på
-              planen, med realistisk testning inför återgång till träning och
-              match – maxlöpningar, inlägg och skott.
+              Mottagningen ligger 25 meter från en fullstor fotbollsplan som
+              möjliggör verklighetsnära rehab och testning inför återgång till
+              träning och tävling, till exempel maxlöpningar och
+              idrottsspecifika moment.
             </p>
             <p className="mb-4 max-w-3xl text-base leading-relaxed text-muted-foreground md:text-lg">
               Acceleration och snabbhet mäts på löparbanan med laserportar, och
               styrkan följs upp med dynamometer. Vid behov används ultraljud i
               diagnostiken och stötvågsbehandling som del av rehabiliteringen.
               För hälsmärta som drabbar
-              många unga fotbollsspelare som växer tillverkas hälkoppsinlägg
+              många unga medlemmar som växer tillverkas hälkoppsinlägg
               individuellt.
             </p>
             <div className="mt-5">
@@ -198,10 +198,10 @@ const ForeningTranare = () => {
             </figure>
             <div className="min-w-0 w-full max-w-xl">
               <h2 className="mb-3 text-2xl font-bold tracking-tight text-foreground sm:text-3xl md:text-4xl">
-                Tydlig vägledning kring spelarens återgång till spel
+                Tydlig vägledning kring medlemmens återgång till spel
               </h2>
               <p className="mb-5 text-pretty text-base leading-relaxed text-muted-foreground md:text-lg">
-                Efter bedömning, och med spelarens eller vårdnadshavarens
+                Efter bedömning, och med medlemmens eller vårdnadshavarens
                 samtycke, får du som tränare konkret vägledning:
               </p>
               <ul className="space-y-2.5">
@@ -298,7 +298,7 @@ const ForeningTranare = () => {
                 Länk för att boka tid
               </h2>
               <p className="mb-5 max-w-3xl text-base leading-relaxed text-muted-foreground md:text-lg">
-                Kopiera länken till bokningssidan och dela med spelare eller
+                Kopiera länken till bokningssidan och dela med medlemmar eller
                 vårdnadshavare. Där bokar de själva tiden för besöket.
               </p>
               <SharePlayerLink />

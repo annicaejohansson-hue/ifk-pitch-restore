@@ -363,7 +363,7 @@ const CoachInterestButton = () => {
                             />
                           </FormControl>
                           <FormDescription>
-                            Ange inga uppgifter om enskilda spelares hälsa eller
+                            Ange inga uppgifter om enskilda medlemmars hälsa eller
                             skador.
                           </FormDescription>
                           <FormMessage />

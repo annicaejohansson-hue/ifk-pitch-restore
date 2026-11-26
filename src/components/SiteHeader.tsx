@@ -10,9 +10,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { SAMARBETE_PATH } from "@/data/forening";
+
 const NAV_LINKS = [
   { to: "/tjanster", label: "Tjänster", match: "prefix" as const },
-  { to: "/forening", label: "För fotbollsföreningar", match: "prefix" as const },
+  { to: SAMARBETE_PATH, label: "Föreningssamarbete", match: "prefix" as const },
   { to: "/om", label: "Om", match: "exact" as const },
   { to: "/kontakt", label: "Kontakt", match: "exact" as const },
 ];

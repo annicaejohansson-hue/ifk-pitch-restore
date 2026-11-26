@@ -25,6 +25,7 @@ import {
   CASELO_PHONE_DIGITS,
 } from "@/data/caseloCompany";
 import type { ProcessStep } from "@/components/forening/ProcessSteps";
+import { SAMARBETE_LAG_PATH } from "@/data/forening";
 
 const ADDRESS_LINE_1 = "Rinkebyvägen 4";
 const ADDRESS_LINE_2 = "182 36 Danderyd";
@@ -47,26 +48,23 @@ const clubSteps: ProcessStep[] = [
     title: "Hör av er",
     text: "Maila Henrik eller slå en signal. Vi pratar ihop oss om ett möjligt upplägg.",
     detail: (
-      <span className="flex flex-col gap-2.5">
-        <span className="flex flex-col gap-0.5">
-          <a
-            href={`mailto:${CASELO_EMAIL}`}
-            className="inline-flex min-h-10 max-w-full items-center gap-2 font-medium leading-snug text-primary underline-offset-4 hover:underline"
-            aria-label={`Mejla ${CASELO_EMAIL}`}
-          >
-            <Mail className="h-5 w-5 shrink-0" aria-hidden="true" />
-            <span className="min-w-0 break-all">{CASELO_EMAIL}</span>
-          </a>
-          <a
-            href={`tel:${CASELO_PHONE_DIGITS}`}
-            className="inline-flex min-h-10 max-w-full items-center gap-2 font-medium leading-snug text-primary underline-offset-4 hover:underline"
-            aria-label={`Ring ${CASELO_PHONE}`}
-          >
-            <Phone className="h-5 w-5 shrink-0" aria-hidden="true" />
-            <span>{CASELO_PHONE}</span>
-          </a>
-        </span>
-        <span>Berätta kort om föreningens behov så tar vi det därifrån.</span>
+      <span className="flex flex-col gap-0.5">
+        <a
+          href={`mailto:${CASELO_EMAIL}`}
+          className="inline-flex min-h-10 max-w-full items-center gap-2 font-medium leading-snug text-primary underline-offset-4 hover:underline"
+          aria-label={`Mejla ${CASELO_EMAIL}`}
+        >
+          <Mail className="h-5 w-5 shrink-0" aria-hidden="true" />
+          <span className="min-w-0 break-all">{CASELO_EMAIL}</span>
+        </a>
+        <a
+          href={`tel:${CASELO_PHONE_DIGITS}`}
+          className="inline-flex min-h-10 max-w-full items-center gap-2 font-medium leading-snug text-primary underline-offset-4 hover:underline"
+          aria-label={`Ring ${CASELO_PHONE}`}
+        >
+          <Phone className="h-5 w-5 shrink-0" aria-hidden="true" />
+          <span>{CASELO_PHONE}</span>
+        </a>
       </span>
     ),
   },
@@ -85,7 +83,7 @@ const clubSteps: ProcessStep[] = [
     title: "Dela vidare",
     text: "Vi skickar länken till er personliga bokningssida. Ni tipsar medlemmarna - sedan är vi igång!",
     detail:
-      "Tipsa spelare, tränare och föräldrar. Vi hjälper gärna till med enkla formuleringar att klistra in i mejl eller på hemsidan.",
+      "Tipsa medlemmar, tränare och föräldrar. Vi hjälper gärna till med enkla formuleringar att klistra in i mejl eller på hemsidan.",
   },
 ];
 
@@ -110,7 +108,7 @@ const ForeningKlubb = () => {
         <title>För föreningsledning – Caselo Idrottsmedicin</title>
         <meta
           name="description"
-          content="För klubbchef, sportchef, styrelse och kansli: enkel väg till bedömning och rehab, rabatterade priser för medlemmarna och stöd till tränarna när spelare skadar sig."
+          content="För klubbchef, sportchef, styrelse och kansli: enkel väg till bedömning och rehab, rabatterade priser för medlemmarna och stöd till tränarna när medlemmar skadar sig."
         />
       </Helmet>
 
@@ -118,7 +116,7 @@ const ForeningKlubb = () => {
         <div className="mx-auto w-full min-w-0 max-w-5xl">
           <div className="mb-4 flex justify-end md:mb-5">
             <AudienceSwitch
-              to="/forening/tranare"
+              to={SAMARBETE_LAG_PATH}
               label="Företräder du ett lag? →"
             />
           </div>
@@ -132,7 +130,7 @@ const ForeningKlubb = () => {
               >
                 <p>
                   Caselo är en idrottsmedicinsk mottagning vid Danderyd Arena.
-                  Här får era spelare hjälp med bedömning och rehab, och era
+                  Här får era medlemmar hjälp med bedömning och rehab, och era
                   tränare en personlig kontakt och ett bollplank.
                 </p>
               </PageIntro>
@@ -153,7 +151,7 @@ const ForeningKlubb = () => {
                 <div className="aspect-[4/5] w-full md:aspect-[5/4]">
                   <img
                     src={rehabFoto}
-                    alt="Henrik Nilsson undersöker en fotbollsspelare på planen vid Danderyd Arena"
+                    alt="Henrik Nilsson undersöker en medlem på planen vid Danderyd Arena"
                     className="h-full w-full object-cover object-[42%_38%] md:object-[40%_42%]"
                     width={1200}
                     height={900}
@@ -188,10 +186,10 @@ const ForeningKlubb = () => {
             </ul>
             <p className="mb-6 max-w-3xl text-base leading-relaxed text-muted-foreground md:text-lg">
               Mottagningen på Danderyd Arena ligger 25 meter från en fullstor
-              fotbollsplan, så bedömning och rehab kan ske i den miljö spelarna
-              ska tillbaka till. Vid behov används ultraljud och
-              stötvågsbehandling, och vid hälsmärta kan individuella
-              hälkoppsinlägg utformas.
+              fotbollsplan som möjliggör verklighetsnära rehab och testning inför
+              återgång till träning och tävling, till exempel maxlöpningar och
+              idrottsspecifika moment. Vid behov används ultraljud och stötvågsbehandling, och
+              vid hälsmärta kan individuella hälkoppsinlägg utformas.
             </p>
             <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <Button asChild variant="secondary" className={goldCtaClass}>
@@ -235,8 +233,8 @@ const ForeningKlubb = () => {
                   Samarbete som passar er förening
                 </h2>
                 <p className="mb-3 text-pretty text-base leading-relaxed text-muted-foreground md:text-lg">
-                  Flera föreningar samarbetar redan med Caselo så att spelare får
-                  rabatterade priser vid bokning. De värdesätter särskilt snabb
+                  Flera föreningar samarbetar redan med Caselo så att medlemmar får
+                  rabatterade priser vid bokning. De värdesätter snabb
                   tillgång till bedömning, personlig kontakt för tränarna och en
                   tydlig vårdväg tillbaka till spel – utan merarbete för
                   föreningen.
@@ -268,7 +266,7 @@ const ForeningKlubb = () => {
               <p className="text-pretty text-base leading-relaxed text-muted-foreground md:text-lg">
                 Det ger föreningen en kontakt som både förstår vårdvägen och
                 fotbollens krav – från bedömning och rehab till hur träningen
-                kan anpassas när spelaren är på väg tillbaka.
+                kan anpassas när medlemmen är på väg tillbaka.
               </p>
             </div>
             <figure className="mx-auto w-full max-w-[22rem] shrink-0 overflow-hidden max-md:order-1 md:mx-0 md:ml-auto md:w-[20rem] md:min-h-0 lg:w-[22rem]">
@@ -379,7 +377,7 @@ const ForeningKlubb = () => {
                 för tränare och ledare.
               </p>
               <Button asChild variant="secondary" className={goldCtaClass}>
-                <Link to="/forening/tranare">Till lagsidan</Link>
+                <Link to={SAMARBETE_LAG_PATH}>Till lagsidan</Link>
               </Button>
             </div>
           </div>

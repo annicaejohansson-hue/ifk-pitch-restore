@@ -5,12 +5,16 @@ import { ChevronRight } from "lucide-react";
 import PageIntro from "@/components/PageIntro";
 import clubFoto from "@/assets/caselo-banner-kontakt.jpg";
 import teamFoto from "@/assets/forening-tranare.jpg";
+import {
+  SAMARBETE_FORENING_PATH,
+  SAMARBETE_LAG_PATH,
+} from "@/data/forening";
 
 const choices = [
   {
-    to: "/forening/klubb",
+    to: SAMARBETE_FORENING_PATH,
     title: "Jag företräder en förening",
-    text: "Erbjud föreningens spelare en enkel väg till bedömning och rehab med rabatterade priser, och ett personligt bollplank till era tränare.",
+    text: "Erbjud föreningens medlemmar en enkel väg till bedömning och rehab med rabatterade priser, och ett personligt bollplank till era tränare.",
     mobileText:
       "Enkel väg till bedömning och rehab med rabatter, och bollplank till tränarna.",
     fits: "Ex. Klubbchef, Sportchef, Styrelse",
@@ -19,11 +23,11 @@ const choices = [
     imageClass: "object-[72%_35%]",
   },
   {
-    to: "/forening/tranare",
+    to: SAMARBETE_LAG_PATH,
     title: "Jag företräder ett lag",
-    text: "Få en enkel kontaktväg när en spelare i laget får ont eller skadar sig – med tydlig återkoppling till dig som tränare kring spelarens träning och nästa steg.",
+    text: "Få en enkel kontaktväg när en medlem i laget får ont eller skadar sig – med tydlig återkoppling till dig som tränare kring medlemmens träning och nästa steg.",
     mobileText:
-      "Kontaktväg och återkoppling när en spelare skadar sig.",
+      "Kontaktväg och återkoppling när en medlem skadar sig.",
     fits: "Ex. Tränare, Ledare, Fysansvarig",
     image: teamFoto,
     imageAlt: "Tränare med taktikbräda på fotbollsplanen",
@@ -42,7 +46,7 @@ const Forening = () => {
         <title>För fotbollsföreningar – Caselo Idrottsmedicin</title>
         <meta
           name="description"
-          content="När spelare får ont kan Caselo hjälpa till med bedömning, rehabilitering och återkoppling. För föreningsledning och lag."
+          content="När medlemmar får ont kan Caselo hjälpa till med bedömning, rehabilitering och återkoppling. För föreningsledning och lag."
         />
       </Helmet>
 
@@ -50,8 +54,8 @@ const Forening = () => {
         <div className="mx-auto flex w-full max-w-5xl min-h-0 flex-1 flex-col max-sm:min-h-0">
           <PageIntro
             className="mb-1 shrink-0 [&_p]:mb-2 min-[375px]:mb-3 min-[375px]:[&_p]:mb-3 sm:mb-4 md:mb-8"
-            eyebrow="För fotbollsföreningar"
-            title={"När spelare får ont eller skadar\u00a0sig"}
+            eyebrow="Föreningssamarbete"
+            title={"När medlemmar får ont eller skadar\u00a0sig"}
           />
           <p className="mb-4 hidden max-w-3xl text-base leading-relaxed text-muted-foreground sm:mb-5 sm:block sm:text-lg md:mb-6 md:text-xl">
             Caselo hjälper föreningar och lag med bedömning, rehabilitering och

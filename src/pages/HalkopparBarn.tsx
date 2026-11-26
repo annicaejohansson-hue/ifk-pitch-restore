@@ -444,7 +444,7 @@ const HalkopparBarn = () => {
             </div>
             <p className="mt-6 text-base leading-relaxed text-muted-foreground md:text-lg">
               För idrottande barn som spelar fotboll finns också information för{" "}
-              <Link to="/forening" className={inlineLinkClass}>
+              <Link to="/samarbete" className={inlineLinkClass}>
                 fotbollsföreningar
               </Link>{" "}
               och möjlighet att{" "}

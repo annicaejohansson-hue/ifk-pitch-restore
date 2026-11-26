@@ -39,6 +39,36 @@
       "source": "/tjanster/fysisk-prestation",
       "destination": "/personligtraning",
       "permanent": true
+    },
+    {
+      "source": "/forening",
+      "destination": "/samarbete",
+      "permanent": true
+    },
+    {
+      "source": "/forening/klubb",
+      "destination": "/samarbete/forening",
+      "permanent": true
+    },
+    {
+      "source": "/samarbete/klubb",
+      "destination": "/samarbete/forening",
+      "permanent": true
+    },
+    {
+      "source": "/forening/tranare",
+      "destination": "/samarbete/lag",
+      "permanent": true
+    },
+    {
+      "source": "/samarbete/tranare",
+      "destination": "/samarbete/lag",
+      "permanent": true
+    },
+    {
+      "source": "/forening/spelare",
+      "destination": "/boka",
+      "permanent": true
     }
   ],
   "rewrites": [
