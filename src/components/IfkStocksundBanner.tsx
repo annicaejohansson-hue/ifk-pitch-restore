@@ -31,7 +31,7 @@ const IfkStocksundBanner = () => {
           <Link
             to="/"
             onClick={() => setVisitorType("general")}
-            className="inline-flex min-h-11 items-center underline underline-offset-2 decoration-muted-foreground/40 hover:text-muted-foreground hover:decoration-muted-foreground/70 sm:min-h-0"
+            className="relative underline underline-offset-2 decoration-muted-foreground/40 hover:text-muted-foreground hover:decoration-muted-foreground/70 after:absolute after:-inset-x-1 after:-inset-y-3 after:content-[''] sm:after:hidden"
           >
             Följ denna länk
           </Link>

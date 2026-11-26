@@ -40,12 +40,7 @@ const SiteHeader = () => {
 
   return (
     <header className="no-print overflow-x-hidden border-b-2 border-primary bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div
-        className={[
-          "container min-w-0 px-8 md:px-4 py-2.5 sm:py-3 md:flex md:min-h-28 md:items-center md:gap-4 md:py-2 lg:gap-6",
-          isPartner ? "md:flex-wrap lg:flex-nowrap" : "",
-        ].join(" ")}
-      >
+      <div className="container min-w-0 px-8 md:px-4 py-2.5 sm:py-3 md:flex md:min-h-28 md:items-center md:gap-4 md:py-2 lg:gap-6">
         <div className="flex items-center justify-between gap-3 md:contents">
           <Link
             to="/"
@@ -92,16 +87,15 @@ const SiteHeader = () => {
           </DropdownMenu>
         </div>
 
-        {isPartner ? (
-          <>
-            <div className="hidden flex-1 md:block lg:hidden" aria-hidden="true" />
-            <div className="mt-2 w-full min-w-0 md:order-last md:mt-2 md:flex md:justify-start lg:order-none lg:mt-0 lg:w-auto lg:shrink-0 lg:px-2">
-              <IfkStocksundBanner />
-            </div>
-          </>
-        ) : (
-          <div className="hidden flex-1 md:block" aria-hidden="true" />
-        )}
+        {/* Same flex-1 slot with or without partner so nav stays put */}
+        <div
+          className={[
+            "min-w-0 flex-1 md:flex md:items-center md:justify-start md:overflow-hidden md:pl-2 lg:pl-4",
+            isPartner ? "mt-2 md:mt-0" : "hidden md:block",
+          ].join(" ")}
+        >
+          {isPartner ? <IfkStocksundBanner /> : null}
+        </div>
 
         <nav
           className="hidden shrink-0 items-center gap-x-4 md:flex lg:gap-x-10 xl:gap-x-14"

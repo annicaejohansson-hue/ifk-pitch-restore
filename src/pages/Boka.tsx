@@ -268,10 +268,7 @@ const LocationPicker = ({
   onChoose: (id: LocationId) => void;
   partner: PartnerConfig | null;
 }) => (
-  <div className="mx-auto w-full max-w-2xl">
-    <h2 className="mb-4 text-balance text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-      Var vill du boka?
-    </h2>
+  <div className="w-full max-w-2xl" role="group" aria-label="Välj mottagning">
     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:items-stretch sm:gap-4">
       {LOCATION_IDS.map((id) => {
         const location = LOCATIONS[id];
@@ -678,7 +675,7 @@ const Boka = () => {
                 <button
                   type="button"
                   onClick={startChangeLocation}
-                  className="self-start py-1 text-sm font-medium text-primary underline underline-offset-4 hover:text-primary/80"
+                  className="inline-flex min-h-11 items-center self-start text-sm font-medium text-primary underline underline-offset-4 hover:text-primary/80 sm:min-h-0 sm:py-1"
                 >
                   Byt ort
                 </button>
@@ -811,7 +808,7 @@ const Boka = () => {
                       <button
                         type="button"
                         onClick={clearSelectedService}
-                        className="self-start text-sm font-medium text-primary underline underline-offset-4 hover:text-primary/80"
+                        className="inline-flex min-h-11 items-center self-start text-sm font-medium text-primary underline underline-offset-4 hover:text-primary/80 sm:min-h-0"
                       >
                         Byt tjänst
                       </button>
