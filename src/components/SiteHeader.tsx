@@ -55,8 +55,8 @@ const SiteHeader = () => {
             <img
               src="/caselo-logo-blue.png"
               alt="Caselo Idrottsmedicin"
-              width={1200}
-              height={479}
+              width={1024}
+              height={409}
               className="h-14 w-auto max-w-[11.5rem] object-contain md:h-20 md:max-w-[16rem]"
             />
           </Link>
