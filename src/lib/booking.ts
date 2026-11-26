@@ -14,6 +14,9 @@ export const ENEBYBERGS_IF_BOOKING_URL = PARTNERS["enebybergs-if"].bookingUrl;
 /** FC Djursholm booking destination — same layout as /boka, partner prices. */
 export const FC_DJURSHOLM_BOOKING_URL = PARTNERS["fc-djursholm"].bookingUrl;
 
+/** Parsian IF booking destination — Danderyd partner prices. */
+export const PARSIAN_IF_BOOKING_URL = PARTNERS["parsian-if"].bookingUrl;
+
 /** IFK Mariefred booking destination — Mariefred partner prices. */
 export const IFK_MARIEFRED_BOOKING_URL = PARTNERS["ifk-mariefred"].bookingUrl;
 

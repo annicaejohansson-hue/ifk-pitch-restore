@@ -19,6 +19,7 @@ import IfkStocksund from "@/pages/IfkStocksund";
 import IfkMariefred from "@/pages/IfkMariefred";
 import EnebybergsIf from "@/pages/EnebybergsIf";
 import FcDjursholm from "@/pages/FcDjursholm";
+import ParsianIf from "@/pages/ParsianIf";
 import Kontakt from "@/pages/Kontakt";
 import Om from "@/pages/Om";
 import Tjanster from "@/pages/Tjanster";
@@ -79,6 +80,7 @@ const router = createBrowserRouter(
       <Route path="/ifk-mariefred" element={<IfkMariefred />} />
       <Route path="/enebybergs-if" element={<EnebybergsIf />} />
       <Route path="/fc-djursholm" element={<FcDjursholm />} />
+      <Route path="/parsian-if" element={<ParsianIf />} />
       <Route path="/boka" element={<Boka />} />
       <Route path="/tjanster" element={<Tjanster />} />
       <Route path="/tjanster/halkoppar-barn" element={<HalkopparBarn />} />

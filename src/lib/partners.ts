@@ -2,6 +2,7 @@ export type PartnerId =
   | "ifk-stocksund"
   | "enebybergs-if"
   | "fc-djursholm"
+  | "parsian-if"
   | "ifk-mariefred";
 
 export type PartnerConfig = {
@@ -91,6 +92,19 @@ export const PARTNERS: Record<PartnerId, PartnerConfig> = {
     kaddioCalFilter: PARTNER_DANDERYD_KADDIO_CAL_FILTER,
     kaddioNameSuffix: " (FC Djursholm)",
   },
+  "parsian-if": {
+    id: "parsian-if",
+    name: "Parsian IF",
+    landingPath: "/parsian-if",
+    bookingUrl: "/boka?partner=parsian-if",
+    logoSrc: "/parsian-if-logo.png",
+    logoAlt: "Parsian IF",
+    logoWidth: 191,
+    logoHeight: 256,
+    kaddioBookingUrl: PARTNER_DANDERYD_KADDIO_BOOKING_URL,
+    kaddioCalFilter: PARTNER_DANDERYD_KADDIO_CAL_FILTER,
+    kaddioNameSuffix: " (Parsian IF)",
+  },
   "ifk-mariefred": {
     id: "ifk-mariefred",
     name: "IFK Mariefred",
@@ -111,6 +125,7 @@ export function isPartnerId(value: string | null | undefined): value is PartnerI
     value === "ifk-stocksund" ||
     value === "enebybergs-if" ||
     value === "fc-djursholm" ||
+    value === "parsian-if" ||
     value === "ifk-mariefred"
   );
 }

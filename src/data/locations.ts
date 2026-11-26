@@ -32,21 +32,18 @@ export type LocationConfig = {
   /** Valfri avslutande text under punkterna (t.ex. BalanZe-erbjudande). */
   placeFooter?: string;
   /**
-   * Kaddio calendar filter segment under /cal/{filter}/…
-   * Tom sträng = samma som tidigare (Danderyd / defaultkalender).
-   * Saknad filter för Mariefred ⇒ ingen Danderyd-kalender ska visas.
+   * Kaddio booking-page / calendar filter segment:
+   * /booking/{filter} and /booking/cal/{filter}/{slug}
    */
   kaddioCalFilter: string;
-  /**
-   * false tills Mariefreds Kaddio-kalender/filter är konfigurerat.
-   * Då visas tjänster men inte Danderyds bokningsiframe.
-   */
   bookingEnabled: boolean;
 };
 
+const KADDIO_ORIGIN = "https://caseloidrottsmedicin.kaddio.com";
+
 const mariefredFilter = (
-  import.meta.env.VITE_KADDIO_MARIEFRED_CAL_FILTER ?? ""
-).trim();
+  import.meta.env.VITE_KADDIO_MARIEFRED_CAL_FILTER ?? "mariefred"
+).trim() || "mariefred";
 
 export const LOCATIONS: Record<LocationId, LocationConfig> = {
   danderyd: {
@@ -65,7 +62,7 @@ export const LOCATIONS: Record<LocationId, LocationConfig> = {
     placeHighlights: [
       "Fullstor fotbollsplan 25 meter från kliniken som möjliggör rehab och testning inför återgång till träning och tävling, till exempel maxlöpningar och idrottsspecifika moment",
     ],
-    kaddioCalFilter: "",
+    kaddioCalFilter: "danderyd",
     bookingEnabled: true,
   },
   mariefred: {
@@ -87,6 +84,14 @@ export const LOCATIONS: Record<LocationId, LocationConfig> = {
     bookingEnabled: true,
   },
 };
+
+/** Kaddio-bokningssida för vanlig (icke-partner) bokning på orten. */
+export function locationKaddioBookingUrl(
+  location: LocationConfig | null | undefined,
+): string | null {
+  if (!location?.kaddioCalFilter) return null;
+  return `${KADDIO_ORIGIN}/booking/${location.kaddioCalFilter}`;
+}
 
 export const LOCATION_IDS: LocationId[] = ["danderyd", "mariefred"];
 

@@ -44,6 +44,7 @@ import {
   isLocationId,
   LOCATION_IDS,
   LOCATIONS,
+  locationKaddioBookingUrl,
   type LocationConfig,
   type LocationId,
 } from "@/data/locations";
@@ -108,7 +109,7 @@ const slugifyForKaddio = (value: string) => {
 /**
  * Build Kaddio calendar URL filter segment under /cal/{filter}/…
  * Partner + ort: partner-danderyd / partner-mariefred.
- * Utan partner: ortens filter (t.ex. Mariefred när det är öppet).
+ * Utan partner: danderyd / mariefred.
  */
 const calendarFilterFor = (
   location: LocationConfig | null,
@@ -551,6 +552,7 @@ const Boka = () => {
           calendarPartner,
         )
       : partnerKaddioBookingUrl(activePartner, activeLocationId) ??
+        locationKaddioBookingUrl(activeLocation) ??
         KADDIO_BOOKING_URL;
 
   useEffect(() => {
