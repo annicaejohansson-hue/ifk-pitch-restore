@@ -294,16 +294,6 @@ const partnerServiceName = (
   return `${service.name}${partner.kaddioNameSuffix}`;
 };
 
-const ordinaryPriceAtLocation = (
-  service: BookingService,
-  locationId: LocationId | null,
-): number => {
-  if (locationId && service.byLocation?.[locationId]) {
-    return service.byLocation[locationId].priceSek;
-  }
-  return service.priceSek;
-};
-
 export const resolveServiceForVisitor = (
   service: BookingService,
   partner: PartnerConfig | null,
@@ -315,9 +305,8 @@ export const resolveServiceForVisitor = (
         ? service.ifk.priceByLocation[locationId]
         : undefined;
     const partnerPrice = locationPrice ?? service.ifk.priceSek;
-    // Överstruket = ordinarie på samma ort (eller kampanjens ordinaryPriceSek).
-    const comparePrice =
-      service.ordinaryPriceSek ?? ordinaryPriceAtLocation(service, locationId);
+    // Överstruket = ordinarie listpris (Danderyd) / kampanjens ordinaryPriceSek.
+    const comparePrice = service.ordinaryPriceSek ?? service.priceSek;
 
     return {
       ...service,
@@ -330,15 +319,19 @@ export const resolveServiceForVisitor = (
 
   if (locationId && service.byLocation?.[locationId]) {
     const loc = service.byLocation[locationId];
+    // Mariefred m.fl.: visa lokalt pris med ordinarie (t.ex. 895/695) överstruket.
+    const comparePrice =
+      service.ordinaryPriceSek && service.ordinaryPriceSek !== loc.priceSek
+        ? service.ordinaryPriceSek
+        : loc.priceSek !== service.priceSek
+          ? service.priceSek
+          : undefined;
+
     return {
       ...service,
       name: loc.name,
       priceSek: loc.priceSek,
-      // Behåll kampanjens ordinaryPriceSek (t.ex. Snabbhetspaketet) om det finns.
-      ordinaryPriceSek:
-        service.ordinaryPriceSek && service.ordinaryPriceSek !== loc.priceSek
-          ? service.ordinaryPriceSek
-          : undefined,
+      ordinaryPriceSek: comparePrice,
     };
   }
 
