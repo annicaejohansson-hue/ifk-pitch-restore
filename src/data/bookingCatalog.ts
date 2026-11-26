@@ -59,9 +59,11 @@ export type BookingCategory = {
 /** Kaddio-namn för vanlig bokning (utan partnerbanner). */
 const SMARTA_NYBESOK_NAME = "Smärta och skador - NYBESÖK";
 const SMARTA_ATERBESOK_NAME = "Smärta och skador - ÅTERBESÖK";
-/** Kaddio-namn för partners i Danderyd (IFK Stocksund, Enebyberg, FC Djursholm, …). */
-const SMARTA_NYBESOK_PARTNER_NAME = "Smärta och skador - NYBESÖK (Partner)";
-const SMARTA_ATERBESOK_PARTNER_NAME = "Smärta och skador - ÅTERBESÖK (Partner)";
+/** Kaddio-namn för partners i Danderyd (IFK Stocksund, Enebyberg, FC Djursholm, Parsian IF, …). */
+const SMARTA_NYBESOK_PARTNER_NAME =
+  "Smärta och skador - NYBESÖK (Partner Danderyd)";
+const SMARTA_ATERBESOK_PARTNER_NAME =
+  "Smärta och skador - ÅTERBESÖK (Partner Danderyd)";
 /** Kaddio-namn för partners i Mariefred. */
 const SMARTA_NYBESOK_PARTNER_MF_NAME =
   "Smärta och skador - NYBESÖK (Partner Mariefred)";
@@ -140,7 +142,7 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
         },
         ifk: {
           priceSek: 1270,
-          name: "Hälkoppsinlägg Vuxen - NYBESÖK (Partner)",
+          name: "Hälkoppsinlägg Vuxen - NYBESÖK (Partner Danderyd)",
           sharedAcrossPartners: true,
           nameByLocation: {
             mariefred: "Hälkoppsinlägg Vuxen - NYBESÖK (Partner Mariefred)",
@@ -163,7 +165,7 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
         },
         ifk: {
           priceSek: 1100,
-          name: "Hälkoppsinlägg Vuxen - ÅTERBESÖK (Partner)",
+          name: "Hälkoppsinlägg Vuxen - ÅTERBESÖK (Partner Danderyd)",
           sharedAcrossPartners: true,
           nameByLocation: {
             mariefred: "Hälkoppsinlägg Vuxen - ÅTERBESÖK (Partner Mariefred)",
@@ -186,7 +188,7 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
         },
         ifk: {
           priceSek: 1100,
-          name: "Hälkoppsinlägg Barn - NYBESÖK (Partner)",
+          name: "Hälkoppsinlägg Barn - NYBESÖK (Partner Danderyd)",
           sharedAcrossPartners: true,
           nameByLocation: {
             mariefred: "Hälkoppsinlägg Barn - NYBESÖK (Partner Mariefred)",
@@ -209,7 +211,7 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
         },
         ifk: {
           priceSek: 930,
-          name: "Hälkoppsinlägg Barn - ÅTERBESÖK (Partner)",
+          name: "Hälkoppsinlägg Barn - ÅTERBESÖK (Partner Danderyd)",
           sharedAcrossPartners: true,
           nameByLocation: {
             mariefred: "Hälkoppsinlägg Barn - ÅTERBESÖK (Partner Mariefred)",
@@ -238,7 +240,7 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
         },
         ifk: {
           priceSek: 840,
-          name: "Personlig Träning (Partner)",
+          name: "Personlig Träning (Partner Danderyd)",
           sharedAcrossPartners: true,
           nameByLocation: {
             mariefred: "Personlig Träning (Partner Mariefred)",
@@ -262,7 +264,7 @@ export const BOOKING_CATEGORIES: BookingCategory[] = [
         },
         ifk: {
           priceSek: 1000,
-          name: "Snabbhetspaketet (Partner)",
+          name: "Snabbhetspaketet (Partner Danderyd)",
           sharedAcrossPartners: true,
           nameByLocation: {
             mariefred: "Snabbhetspaketet (Partner Mariefred)",
